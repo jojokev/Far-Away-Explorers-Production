@@ -28,7 +28,15 @@ const images = await Promise.all(
   imagesID.map(async (id: number) => {
     const res = await fetch(`https://wp.farawayexplorers.com/wp-json/wp/v2/media/${id}`);
     const imgData = await res.json();
-    return {src: imgData.media_details.sizes.medium_large.source_url, alt: imgData.alt_text || "Tour image"};
+    const previewSrc =
+      imgData?.media_details?.sizes?.medium_large?.source_url ??
+      imgData?.media_details?.sizes?.large?.source_url ??
+      imgData?.media_details?.sizes?.medium?.source_url ??
+      imgData?.media_details?.sizes?.full?.source_url ??
+      imgData?.source_url ??
+      defaultImage.src;
+
+    return { src: previewSrc, alt: imgData?.alt_text || "Tour image" };
   })
 );
 
@@ -36,7 +44,14 @@ const imagesBanner = await Promise.all(
   imagesID.map(async (id: number) => {
     const res = await fetch(`https://wp.farawayexplorers.com/wp-json/wp/v2/media/${id}`);
     const imgData = await res.json();
-    return {src: imgData.media_details.sizes.full.source_url, alt: imgData.alt_text || "Tour image"};
+    const fullSrc =
+      imgData?.media_details?.sizes?.full?.source_url ??
+      imgData?.source_url ??
+      imgData?.media_details?.sizes?.large?.source_url ??
+      imgData?.media_details?.sizes?.medium_large?.source_url ??
+      defaultImage.src;
+
+    return { src: fullSrc, alt: imgData?.alt_text || "Tour image" };
   })
 );
 
