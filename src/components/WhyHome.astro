@@ -1,0 +1,298 @@
+---
+import borderTop from "../assets/icons/border-01.png";
+import borderButton from "../assets/icons/border-02.png";
+import { Icon } from "astro-icon/components";
+
+const whyUsWaveImage       = borderTop.src;
+const whyUsBottomWaveImage = borderButton.src;
+
+const whyUsItems = [
+  {
+    icon: "ion:shield-checkmark-outline",
+    title: "Viajes 100% Seguros",
+    description: "Todos nuestros tours cuentan con seguros de viaje, guías certificados y protocolos de seguridad para que disfrutes sin preocupaciones.",
+  },
+  {
+    icon: "ion:earth-outline",
+    title: "Destinos Únicos",
+    description: "Accede a experiencias exclusivas en los destinos más impresionantes del Perú, desde Machu Picchu hasta las Líneas de Nazca.",
+  },
+  {
+    icon: "ion:people-outline",
+    title: "Guías Expertos",
+    description: "Nuestros guías locales con años de experiencia te sumergen en la cultura, historia y tradiciones de cada destino.",
+  },
+  {
+    icon: "ion:calendar-outline",
+    title: "Itinerarios Flexibles",
+    description: "Diseñamos tu viaje a medida. Elige fechas, duración y actividades según tus intereses y ritmo de viaje.",
+  },
+  {
+    icon: "ion:pricetag-outline",
+    title: "Mejor Precio Garantizado",
+    description: "Ofrecemos tarifas competitivas y paquetes completos sin costos ocultos. Si encuentras mejor precio, lo igualamos.",
+  },
+  {
+    icon: "ion:headset-outline",
+    title: "Soporte 24 / 7",
+    description: "Nuestro equipo está disponible en todo momento antes, durante y después de tu viaje para atender cualquier necesidad.",
+  },
+];
+---
+
+<section class="whyus">
+
+  <img
+    src={whyUsWaveImage}
+    alt=""
+    aria-hidden="true"
+    class="whyus__wave whyus__wave--top"
+    loading="lazy"
+  />
+
+  <div class="whyus__body">
+    <div class="container">
+
+      <!-- ── Header ───────────────────────────────── -->
+      <div class="whyus__header">
+        <p class="whyus__eyebrow">NUESTRA DIFERENCIA</p>
+        <h2 class="whyus__title">¿Por qué elegirnos?</h2>
+        <p class="whyus__lead">
+          Más de 10 años creando experiencias inolvidables en el Perú.
+          Cada viaje es único, cada viajero es especial.
+        </p>
+      </div>
+
+      <!-- ── Grid de items ────────────────────────── -->
+      <div class="whyus__grid">
+        {whyUsItems.map((item) => (
+          <article class="whyus__item">
+            <div class="whyus__item-icon-wrapper">
+              <Icon name={item.icon} class="whyus__item-icon" aria-hidden="true" />
+            </div>
+            <div class="whyus__item-content">
+              <h3 class="whyus__item-title">{item.title}</h3>
+              <p class="whyus__item-desc">{item.description}</p>
+            </div>
+          </article>
+        ))}
+      </div>
+
+    </div>
+  </div>
+
+  <img
+    src={whyUsBottomWaveImage}
+    alt=""
+    aria-hidden="true"
+    class="whyus__wave whyus__wave--bottom"
+    loading="lazy"
+  />
+
+</section>
+
+<style lang="scss">
+  @use '../styles/abstract/variables' as *;
+  @use '../styles/abstract/mixins'   as *;
+
+  // ─── Variables locales ──────────────────────────────────────────────────────
+  $whyus-icon-size:         1.6rem;
+  $whyus-icon-wrapper-size: 3.25rem;
+  $whyus-wave-bottom-max-h: 80px;
+  $whyus-item-bg:           rgba($color-white, 0.08);
+  $whyus-item-bg-hover:     rgba($color-white, 0.15);
+  $whyus-item-border:       rgba($color-white, 0.14);
+  $whyus-item-border-hover: rgba($color-white, 0.35);
+
+  // ─── Section ────────────────────────────────────────────────────────────────
+  .whyus {
+    display: flex;
+    flex-direction: column;
+  }
+
+  // ─── Waves ──────────────────────────────────────────────────────────────────
+  .whyus__wave {
+    display: block;
+    width: 100%;
+    height: auto;
+
+    &--bottom {
+      max-height: $whyus-wave-bottom-max-h;
+      object-fit: cover;
+    }
+  }
+
+  // ─── Body ───────────────────────────────────────────────────────────────────
+  .whyus__body {
+    background-color: $color-primary;
+    // ← patrón de puntos sutil sobre el fondo para dar textura
+    background-image: radial-gradient(
+      rgba($color-white, 0.07) 1px,
+      transparent 1px
+    );
+    background-size: 24px 24px;
+    padding-block: 3rem;
+
+    @include md { padding-block: 4.5rem; }
+  }
+
+  // ─── Header ─────────────────────────────────────────────────────────────────
+  .whyus__header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+    width: 100%;
+    text-align: center;
+    color: $color-white;
+  }
+
+  .whyus__eyebrow {
+    font-size: $font-size-sm;
+    font-weight: $font-weight-bold;
+    letter-spacing: 0.16em;
+    color: rgba($color-white, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.625rem;
+
+    &::before,
+    &::after {
+      content: '';
+      display: inline-block;
+      width: 2.5rem;
+      height: 1.5px;
+      background-color: rgba($color-white, 0.4);
+      border-radius: 2px;
+    }
+  }
+
+  .whyus__title {
+    font-size: 2rem;
+    font-weight: $font-weight-bold;
+    line-height: 1.15;
+    letter-spacing: 0.01em;
+    color: $color-white;
+    // ← sombra suave para destacar sobre el patrón de fondo
+    text-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
+
+    @include md { font-size: 2.5rem; }
+  }
+
+  // ← línea corta bajo el título como acento visual
+  .whyus__title::after {
+    content: '';
+    display: block;
+    width: 3rem;
+    height: 3px;
+    background-color: rgba($color-white, 0.5);
+    border-radius: 2px;
+    margin: 0.5rem auto 0;
+  }
+
+  // ← subtítulo nuevo bajo el título
+  .whyus__lead {
+    max-width: 520px;
+    font-size: $font-size-base;
+    font-weight: $font-weight-regular;
+    line-height: 1.7;
+    color: rgba($color-white, 0.78);
+    margin-top: 0.25rem;
+  }
+
+  // ─── Grid ───────────────────────────────────────────────────────────────────
+  .whyus__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    margin-top: 3rem;
+
+    @include sm  { grid-template-columns: repeat(2, 1fr); gap: 1.25rem; }
+    @include lg  { grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-top: 4rem; }
+  }
+
+  // ─── Item (card glass) ──────────────────────────────────────────────────────
+  .whyus__item {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1.5rem;                    // ← padding interno como card
+    border-radius: 12px;
+    background-color: $whyus-item-bg;
+    border: 1px solid $whyus-item-border;
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    color: $color-white;
+    transition:
+      background-color 0.3s ease,
+      border-color     0.3s ease,
+      transform        0.3s ease,
+      box-shadow       0.3s ease;
+
+    &:hover {
+      background-color: $whyus-item-bg-hover;
+      border-color: $whyus-item-border-hover;
+      transform: translateY(-3px);
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.15);
+    }
+  }
+
+  // ─── Icono wrapper ───────────────────────────────────────────────────────────
+  .whyus__item-icon-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: $whyus-icon-wrapper-size;
+    height: $whyus-icon-wrapper-size;
+    border-radius: 10px;               // ← rounded square en lugar de círculo
+    background-color: rgba($color-white, 0.15);
+    border: 1.5px solid rgba($color-white, 0.25);
+    transition:
+      background-color 0.3s ease,
+      border-color     0.3s ease,
+      transform        0.3s ease;
+
+    .whyus__item:hover & {
+      background-color: rgba($color-white, 0.28);
+      border-color: rgba($color-white, 0.55);
+      transform: scale(1.08) rotate(4deg); // ← leve rotación al hover
+    }
+  }
+
+  // ─── Icono ──────────────────────────────────────────────────────────────────
+  .whyus__item-icon {
+    width: $whyus-icon-size;
+    height: $whyus-icon-size;
+    color: $color-white;
+    transition: transform 0.3s ease;
+
+    .whyus__item:hover & {
+      transform: scale(1.1);
+    }
+  }
+
+  // ─── Contenido ──────────────────────────────────────────────────────────────
+  .whyus__item-content {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.375rem;
+  }
+
+  .whyus__item-title {
+    font-size: $font-size-base;
+    font-weight: $font-weight-semibold;
+    line-height: 1.3;
+    letter-spacing: 0.01em;
+    color: $color-white;
+  }
+
+  .whyus__item-desc {
+    font-size: $font-size-sm;          // ← sm: más aire, título más protagonismo
+    line-height: 1.65;
+    letter-spacing: 0.01em;
+    color: rgba($color-white, 0.78);
+  }
+</style>

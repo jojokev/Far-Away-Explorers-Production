@@ -1,0 +1,531 @@
+---
+import Layout from "../../layouts/layout.astro";
+import defaultImage from "../../assets/default.webp";
+import { Icon } from "astro-icon/components";
+
+const res = await fetch("https://wp.farawayexplorers.com/wp-json/wp/v2/tour?categories=7&_embed");
+const data = await res.json();
+
+const category = {
+  name:        "Lima",
+  description: "Lima es historia, cultura y gastronomía frente al océano Pacífico. Su centro histórico colonial, barrios vibrantes como Miraflores y Barranco, y su reconocida cocina convierten a la capital del Perú en el inicio perfecto para descubrir el país.",
+  total:       data.length,
+};
+---
+
+<Layout title={`${category.name} | Far Away Expeditions`}>
+  <div class="category-page">
+
+    <!-- ══ Hero ══════════════════════════════════════════════════════════ -->
+    <section class="cat-hero">
+      <div class="cat-hero__bg" aria-hidden="true">
+        <img src={defaultImage.src} alt="" class="cat-hero__bg-img" />
+        <div class="cat-hero__bg-overlay"></div>
+        <div class="cat-hero__bg-dots"></div>
+      </div>
+
+      <div class="container">
+        <div class="cat-hero__inner">
+          <h1 class="cat-hero__title">{category.name}</h1>
+          <p class="cat-hero__desc">{category.description}</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ Breadcrumb + contador ══════════════════════════════════════════ -->
+    <div class="cat-topbar">
+      <div class="container">
+        <div class="cat-topbar__inner">
+
+          <nav class="cat-topbar__breadcrumb" aria-label="Breadcrumb">
+            <a href="/" class="cat-topbar__breadcrumb-link">Inicio</a>
+            <Icon name="ion:chevron-forward" class="cat-topbar__breadcrumb-sep" aria-hidden="true" />
+            <a href="/destinos" class="cat-topbar__breadcrumb-link">Destinos</a>
+            <Icon name="ion:chevron-forward" class="cat-topbar__breadcrumb-sep" aria-hidden="true" />
+            <span class="cat-topbar__breadcrumb-current">{category.name}</span>
+          </nav>
+
+          <div class="cat-topbar__right">
+            <p class="cat-topbar__count">
+              <strong>{data.length}</strong> tours disponibles
+            </p>
+            <div class="cat-topbar__view-toggle" role="group" aria-label="Cambiar vista">
+              <button type="button" class="cat-topbar__view-btn cat-topbar__view-btn--active" aria-label="Vista cuadrícula" data-view="grid">
+                <Icon name="ion:grid-outline" aria-hidden="true" />
+              </button>
+              <button type="button" class="cat-topbar__view-btn" aria-label="Vista lista" data-view="list">
+                <Icon name="ion:list-outline" aria-hidden="true" />
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ Resultados ═════════════════════════════════════════════════════ -->
+    <section class="cat-results">
+      <div class="container">
+        <div class="cat-grid" id="tours-grid">
+          {data.map((tour: any) => (
+            <article class="cat-card">
+
+              <a href={`/lima/${tour.slug}`} class="cat-card__img-link" tabindex="-1" aria-hidden="true">
+                <img
+                  src={tour._embedded?.["wp:featuredmedia"]?.[0]?.media_details?.sizes?.medium_large?.source_url ?? defaultImage.src}
+                  alt={tour.title_plain}
+                  class="cat-card__img"
+                  loading="lazy"
+                />
+              </a>
+
+              <div class="cat-card__body">
+
+                <div class="cat-card__meta">
+                  <span class="cat-card__meta-item">
+                    <Icon name="ion:time-outline" aria-hidden="true" />
+                    {tour.acf.duracion}
+                  </span>
+                  <span class="cat-card__meta-item">
+                    <Icon name="ion:people-outline" aria-hidden="true" />
+                    Máx. {tour.acf.group}
+                  </span>
+                </div>
+
+                <h2 class="cat-card__title">
+                  <a href={`/lima/${tour.slug}`} class="cat-card__title-link">
+                    {tour.title_plain}
+                  </a>
+                </h2>
+
+                <div class="cat-card__footer">
+                  <div class="cat-card__price-block">
+                    <span class="cat-card__price-from">Desde</span>
+                    <span class="cat-card__price">${tour.acf.price}</span>
+                    <span class="cat-card__price-per">/ persona</span>
+                  </div>
+                  <a href={`/lima/${tour.slug}`} class="cat-card__cta">
+                    Ver tour
+                    <Icon name="ion:arrow-forward" class="cat-card__cta-icon" aria-hidden="true" />
+                  </a>
+                </div>
+
+              </div>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+  </div>
+</Layout>
+
+<style lang="scss">
+  @use '../../styles/abstract/variables' as *;
+  @use '../../styles/abstract/mixins'   as *;
+
+  // ─── Variables locales ──────────────────────────────────────────────────────
+  $cat-hero-min-h:        400px;
+  $cat-hero-overlay:      linear-gradient(160deg, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.48) 55%, rgba($color-primary, 0.22) 100%);
+  $cat-card-img-h:        220px;
+  $cat-card-radius:       12px;
+  $cat-card-shadow:       0 2px 14px rgba(0,0,0,0.07);
+  $cat-card-shadow-hover: 0 14px 36px rgba(0,0,0,0.13);
+  $cat-topbar-bg:         #faf8f5;
+  $cat-color-muted:       rgba(80,80,80,0.82);
+  $cat-color-text:        #151515;
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // HERO
+  // ═══════════════════════════════════════════════════════════════════════════
+  .cat-hero {
+    position: relative;
+    min-height: $cat-hero-min-h;
+    display: flex;
+    align-items: flex-end;
+    padding-bottom: 3.5rem;
+    overflow: hidden;
+  }
+
+  .cat-hero__bg {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+  }
+
+  .cat-hero__bg-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    transform: scale(1.04);
+    transition: transform 8s ease;
+
+    .cat-hero:hover & { transform: scale(1); }
+  }
+
+  .cat-hero__bg-overlay {
+    position: absolute;
+    inset: 0;
+    background: $cat-hero-overlay;
+  }
+
+  .cat-hero__bg-dots {
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(rgba(255,255,255,0.055) 1px, transparent 1px);
+    background-size: 24px 24px;
+    pointer-events: none;
+  }
+
+  .cat-hero__inner {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding-top: 4rem;
+    max-width: 640px;
+  }
+
+  .cat-hero__title {
+    font-size: 2.75rem;
+    font-weight: $font-weight-bold;
+    line-height: 1.08;
+    color: $color-white;
+    text-shadow: 0 2px 20px rgba(0,0,0,0.4);
+
+    @include md { font-size: 3.5rem; }
+  }
+
+  // ← línea decorativa bajo el título
+  .cat-hero__title::after {
+    content: '';
+    display: block;
+    width: 3.5rem;
+    height: 3px;
+    background-color: $color-primary;
+    border-radius: 2px;
+    margin-top: 0.75rem;
+  }
+
+  .cat-hero__desc {
+    font-size: $font-size-base;
+    line-height: 1.7;
+    color: rgba($color-white, 0.82);
+  }
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // TOPBAR: breadcrumb + contador + toggle vista
+  // ═══════════════════════════════════════════════════════════════════════════
+  .cat-topbar {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background-color: $cat-topbar-bg;
+    border-bottom: 1px solid rgba(0,0,0,0.07);
+    box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+  }
+
+  .cat-topbar__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    padding-block: 0.75rem;
+  }
+
+  // Breadcrumb
+  .cat-topbar__breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    flex-wrap: wrap;
+  }
+
+  .cat-topbar__breadcrumb-link {
+    font-size: $font-size-sm;
+    font-weight: $font-weight-medium;
+    color: $cat-color-muted;
+    transition: color 0.2s ease;
+
+    &:hover { color: $color-primary; }
+  }
+
+  .cat-topbar__breadcrumb-sep {
+    font-size: 0.7rem;
+    color: rgba(0,0,0,0.25);
+    flex-shrink: 0;
+  }
+
+  .cat-topbar__breadcrumb-current {
+    font-size: $font-size-sm;
+    font-weight: $font-weight-semibold;
+    color: $color-primary;
+  }
+
+  // Derecha: contador + toggle
+  .cat-topbar__right {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .cat-topbar__count {
+    font-size: $font-size-sm;
+    color: $cat-color-muted;
+
+    strong {
+      color: $cat-color-text;
+      font-weight: $font-weight-semibold;
+    }
+  }
+
+  .cat-topbar__view-toggle {
+    display: flex;
+    align-items: center;
+    gap: 0.2rem;
+    border: 1.5px solid rgba(0,0,0,0.1);
+    border-radius: 8px;
+    padding: 0.2rem;
+    background-color: $color-white;
+  }
+
+  .cat-topbar__view-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.875rem;
+    height: 1.875rem;
+    border: none;
+    border-radius: 5px;
+    background: transparent;
+    color: $cat-color-muted;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.2s ease, color 0.2s ease;
+
+    &:hover { color: $color-primary; }
+
+    &--active {
+      background-color: $color-primary;
+      color: $color-white;
+    }
+  }
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // RESULTADOS
+  // ═══════════════════════════════════════════════════════════════════════════
+  .cat-results {
+    padding-block: 2.5rem 4.5rem;
+    @include md { padding-block: 3rem 5rem; }
+  }
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // GRID
+  // ═══════════════════════════════════════════════════════════════════════════
+  .cat-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+
+    @include sm { grid-template-columns: repeat(2, 1fr); }
+    @include lg { grid-template-columns: repeat(3, 1fr); }
+  }
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // CARD
+  // ═══════════════════════════════════════════════════════════════════════════
+  .cat-card {
+    display: flex;
+    flex-direction: column;
+    border-radius: $cat-card-radius;
+    overflow: hidden;
+    background-color: $color-white;
+    border: 1px solid rgba(0,0,0,0.06);
+    box-shadow: $cat-card-shadow;
+    transition:
+      transform    0.3s ease,
+      box-shadow   0.3s ease,
+      border-color 0.3s ease;
+
+    &:hover {
+      transform: translateY(-4px);
+      box-shadow: $cat-card-shadow-hover;
+      border-color: rgba($color-primary, 0.2);
+    }
+  }
+
+  // ─── Imagen ─────────────────────────────────────────────────────────────────
+  .cat-card__img-link {
+    display: block;
+    overflow: hidden;
+    height: $cat-card-img-h;
+    flex-shrink: 0;
+
+    &:focus-visible {
+      outline: 2px solid $color-primary;
+      outline-offset: 2px;
+    }
+  }
+
+  .cat-card__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.45s ease;
+    will-change: transform;
+
+    .cat-card:hover & { transform: scale(1.05); }
+  }
+
+  // ─── Body ───────────────────────────────────────────────────────────────────
+  .cat-card__body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 1.125rem 1.125rem 1.25rem;
+    flex: 1;
+  }
+
+  .cat-card__meta {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .cat-card__meta-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: 0.75rem;
+    color: $cat-color-muted;
+
+    svg {
+      font-size: 0.8rem;
+      color: $color-primary;
+      flex-shrink: 0;
+    }
+  }
+
+  .cat-card__title {
+    font-size: 1rem;
+    font-weight: $font-weight-semibold;
+    line-height: 1.35;
+    color: $cat-color-text;
+    margin: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .cat-card__title-link {
+    color: inherit;
+    transition: color 0.2s ease;
+
+    &:hover { color: $color-primary; }
+
+    &:focus-visible {
+      outline: 2px solid rgba($color-primary, 0.6);
+      outline-offset: 2px;
+      border-radius: 2px;
+    }
+  }
+
+  // ─── Footer de la card ───────────────────────────────────────────────────────
+  .cat-card__footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: auto;
+    padding-top: 0.75rem;
+    border-top: 1px solid rgba(0,0,0,0.06);
+  }
+
+  .cat-card__price-block {
+    display: flex;
+    align-items: baseline;
+    gap: 0.2rem;
+  }
+
+  .cat-card__price-from,
+  .cat-card__price-per {
+    font-size: 0.75rem;
+    color: $cat-color-muted;
+  }
+
+  .cat-card__price {
+    font-size: 1.375rem;
+    font-weight: $font-weight-bold;
+    color: $color-primary;
+    line-height: 1;
+  }
+
+  .cat-card__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: $font-size-sm;
+    font-weight: $font-weight-semibold;
+    color: $color-primary;
+    border-bottom: 1.5px solid transparent;
+    padding-bottom: 1px;
+    transition: border-color 0.25s ease, gap 0.25s ease;
+
+    &:hover {
+      border-bottom-color: $color-primary;
+      gap: 0.4rem;
+    }
+  }
+
+  .cat-card__cta-icon {
+    font-size: 0.8rem;
+    transition: transform 0.2s ease;
+
+    .cat-card__cta:hover & { transform: translateX(2px); }
+  }
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // VISTA LISTA
+  // ═══════════════════════════════════════════════════════════════════════════
+  .cat-grid--list {
+    grid-template-columns: 1fr;
+
+    .cat-card {
+      flex-direction: row;
+    }
+
+    .cat-card__img-link {
+      width: 220px;
+      height: auto;
+      flex-shrink: 0;
+      border-radius: 0;
+
+      @include md { width: 260px; }
+    }
+
+    .cat-card__body {
+      justify-content: center;
+    }
+
+    .cat-card__footer {
+      margin-top: 0.5rem;
+    }
+  }
+</style>
+
+<script>
+  // ─── Toggle vista grid / lista ─────────────────────────────────────────────
+  const viewBtns = document.querySelectorAll(".cat-topbar__view-btn");
+  const grid     = document.getElementById("tours-grid");
+
+  viewBtns.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      viewBtns.forEach((b) => b.classList.remove("cat-topbar__view-btn--active"));
+      btn.classList.add("cat-topbar__view-btn--active");
+      grid?.classList.toggle("cat-grid--list", btn.getAttribute("data-view") === "list");
+    });
+  });
+</script>

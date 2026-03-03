@@ -1,0 +1,1055 @@
+---
+import type { GetStaticPaths } from "astro";
+import Layout from "../../layouts/layout.astro";
+import defaultImage from "../../assets/default.webp";
+import GalleryTour from "../../components/GalleryTour.astro";
+
+interface tourSlug { slug: String }
+
+export const getStaticPaths = (async () => {
+  const res  = await fetch("https://wp.farawayexplorers.com/wp-json/wp/v2/tour?per_page=100&categories=7&_fields=slug");
+  const data = await res.json();
+  return data.map((tour: tourSlug) => ({ params: { slug: tour.slug } }));
+}) satisfies GetStaticPaths;
+
+const { slug } = Astro.params;
+const res       = await fetch(`https://wp.farawayexplorers.com/wp-json/wp/v2/tour?slug=${slug}&_fields=featured_media,acf,title_plain,content,descripcion_formatted,incluye_formatted,recomendaciones_formatted,informacion_formatted`);
+const [data]    = await res.json();
+
+const imagesID = [
+  data.featured_media,
+  data.acf.imagen_1,
+  data.acf.imagen_2,
+  data.acf.imagen_3,
+  data.acf.imagen_4,
+].filter(Boolean);
+
+const images = await Promise.all(
+  imagesID.map(async (id: number) => {
+    const res = await fetch(`https://wp.farawayexplorers.com/wp-json/wp/v2/media/${id}`);
+    const imgData = await res.json();
+    return {src: imgData.media_details.sizes.medium_large.source_url, alt: imgData.alt_text || "Tour image"};
+  })
+);
+
+const imagesBanner = await Promise.all(
+  imagesID.map(async (id: number) => {
+    const res = await fetch(`https://wp.farawayexplorers.com/wp-json/wp/v2/media/${id}`);
+    const imgData = await res.json();
+    return {src: imgData.media_details.sizes.full.source_url, alt: imgData.alt_text || "Tour image"};
+  })
+);
+
+const similarTours = [
+  { title: "Montaña 7 colores",        type: "Full Day",  price: "Desde $50", image: defaultImage.src },
+  { title: "Laguna Humantay",          type: "Full Day",  price: "Desde $50", image: defaultImage.src },
+  { title: "City Tour Cusco",          type: "Full Day",  price: "Desde $20", image: defaultImage.src },
+  { title: "Valle Sagrado Tradicional",type: "4 Horas",   price: "Desde $40", image: defaultImage.src },
+  { title: "Valle Sagrado Vip",        type: "10 horas",  price: "Desde $47", image: defaultImage.src },
+];
+---
+
+<Layout title="Tour">
+
+  <!-- ── Galería ──────────────────────────────────── -->
+  <GalleryTour galleryImages={images} imagesBanner={imagesBanner}></GalleryTour>
+
+  <!-- ── Título del tour ──────────────────────────── -->
+  <section class="tour-title">
+    <div class="container">
+      <div class="tour-title__inner">
+        <h1 class="tour-title__heading">{data.title_plain}</h1>
+        <div class="text-page">
+          <p>
+            Embárcate en una aventura única hacia la Laguna Humantay, ubicada a 3,880 metros de altitud.
+            Explora sus cristalinas aguas rodeadas de imponentes montañas, conecta con la tradición andina y
+            disfruta de paisajes naturales únicos. <a href="#">Enlace</a> Este viaje es perfecto para quienes buscan escapar del
+            bullicio de la ciudad y respirar la pureza de los Andes.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Layout de dos columnas ───────────────────── -->
+  <section class="tour-layout">
+    <div class="container">
+      <div class="tour-layout__grid">
+
+        <!-- ── Columna izquierda ────────────────────── -->
+        <div class="tour-layout__main">
+
+          <!-- Datos importantes -->
+          <section class="tour-data">
+            <h2 class="tour-data__title">Datos importantes</h2>
+            <ul class="tour-data__list">
+              <li>
+                <span class="tour-data__icon">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <circle cx="12" cy="12" r="10"/>
+                    <polyline points="12 6 12 12 16 14"/>
+                  </svg>
+                </span>
+                <span class="tour-data__label">Duración</span>
+                <span class="tour-data__value">{data.acf.duracion}</span>
+              </li>
+              <li>
+                <span class="tour-data__icon">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                    <circle cx="9" cy="7" r="4"/>
+                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                  </svg>
+                </span>
+                <span class="tour-data__label">Tipo de tour</span>
+                <span class="tour-data__value">{data.acf.tipo_de_tour}</span>
+              </li>
+              <li>
+                <span class="tour-data__icon">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                  </svg>
+                </span>
+                <span class="tour-data__label">Idioma</span>
+                <span class="tour-data__value">{data.acf.idiomas}</span>
+              </li>
+              <li>
+                <span class="tour-data__icon">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                  </svg>
+                </span>
+                <span class="tour-data__label">Tipo de servicio</span>
+                <span class="tour-data__value">{data.acf.tipo_de_servicio}</span>
+              </li>
+              <li>
+                <span class="tour-data__icon">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                    <circle cx="12" cy="10" r="3"/>
+                  </svg>
+                </span>
+                <span class="tour-data__label">Lugar de finalización</span>
+                <span class="tour-data__value">{data.acf.lugar_de_finalizacion}</span>
+              </li>
+            </ul>
+          </section>
+
+          <!-- Tabs -->
+          <section class="tour-tabs" data-tabs-root>
+
+            <div class="tour-tabs__nav" role="tablist" aria-label="Información del tour">
+              <button type="button" role="tab" aria-selected="true"
+                data-tab-button data-tab-target="tab-itinerario"
+                class="tour-tabs__btn tour-tabs__btn--active">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="tour-tabs__btn-icon" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+                <span>Itinerario</span>
+              </button>
+              <button type="button" role="tab" aria-selected="false"
+                data-tab-button data-tab-target="tab-incluye"
+                class="tour-tabs__btn">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="tour-tabs__btn-icon" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h11M9 6h11M9 18h11M3 6h.01M3 12h.01M3 18h.01" />
+                </svg>
+                <span>Incluye / No incluye</span>
+              </button>
+              <button type="button" role="tab" aria-selected="false"
+                data-tab-button data-tab-target="tab-recomendaciones"
+                class="tour-tabs__btn">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="tour-tabs__btn-icon" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="m12 17.3-5.2 2.7 1-5.7-4.1-4 5.7-.8L12 4l2.6 5.5 5.7.8-4.1 4 1 5.7Z" />
+                </svg>
+                <span>Recomendaciones</span>
+              </button>
+              {data.informacion_formatted &&
+                <button type="button" role="tab" aria-selected="false"
+                  data-tab-button data-tab-target="tab-informacion"
+                  class="tour-tabs__btn">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="tour-tabs__btn-icon" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <circle cx="12" cy="12" r="9" />
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 10v6M12 7h.01" />
+                  </svg>
+                  <span>Información</span>
+                </button>
+              }
+            </div>
+
+            <div id="tab-itinerario" data-tab-panel class="tour-tabs__panel">
+              <div class="text-page" set:html={data.content.rendered}>
+              </div>
+            </div>
+
+            <div id="tab-incluye" data-tab-panel class="tour-tabs__panel hidden">
+              <div class="text-page" set:html={data.incluye_formatted}>
+              </div>
+            </div>
+
+            <div id="tab-recomendaciones" data-tab-panel class="tour-tabs__panel hidden">
+              <div class="text-page" set:html={data.recomendaciones_formatted}>
+              </div>
+            </div>
+            {data.informacion_formatted &&
+              <div id="tab-informacion" data-tab-panel class="tour-tabs__panel hidden">
+                <div class="text-page" set:html={data.informacion_formatted}>
+                </div>
+              </div>
+            }
+          </section>
+        </div>
+
+        <!-- ── Columna derecha (sidebar) ───────────── -->
+        <aside class="tour-sidebar">
+
+          <!-- Booking card -->
+          <section class="tour-booking">
+            <p class="tour-booking__name">{data.title_plain}</p>
+            <div class="tour-booking__price-row">
+              <span class="tour-booking__price-from">Desde</span>
+              <span class="tour-booking__price">${data.acf.price}</span>
+              <span class="tour-booking__price-per">/per person</span>
+            </div>
+            <div class="tour-booking__badges">
+              <div class="tour-booking__badge">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="18" viewBox="0 0 20 18" fill="none" aria-hidden="true">
+                  <path d="M0.915433 14.709C0.409821 14.709 0 15.0521 0 15.4751V17.234C0 17.657 0.409821 18 0.915433 18C1.42097 18 1.83087 17.657 1.83087 17.234V15.4751C1.83087 15.0521 1.4209 14.709 0.915433 14.709Z" fill="currentColor"/><path d="M5.30954 11.0317C4.804 11.0317 4.3941 11.3748 4.3941 11.7978V17.2339C4.3941 17.6569 4.804 18 5.30954 18C5.81508 18 6.22497 17.6569 6.22497 17.2339V11.7978C6.22497 11.3748 5.815 11.0317 5.30954 11.0317Z" fill="currentColor"/><path d="M9.70358 7.35449C9.19804 7.35449 8.78815 7.69752 8.78815 8.12058V17.234C8.78815 17.6571 9.19804 18 9.70358 18C10.209 18 10.619 17.6571 10.619 17.234V8.12058C10.619 7.69752 10.209 7.35449 9.70358 7.35449Z" fill="currentColor"/><path d="M14.0977 3.67725C13.5921 3.67725 13.1823 4.02027 13.1823 4.44334V17.234C13.1823 17.657 13.5921 18 14.0977 18C14.6032 18 15.0131 17.657 15.0131 17.234V4.44334C15.0131 4.02027 14.6032 3.67725 14.0977 3.67725Z" fill="currentColor"/><path d="M18.4917 0C17.9862 0 17.5763 0.343025 17.5763 0.76609V17.234C17.5763 17.657 17.9862 18 18.4917 18C18.9973 18 19.4072 17.657 19.4072 17.234V0.76609C19.4072 0.343025 18.9973 0 18.4917 0Z" fill="currentColor"/>
+                </svg>
+                <span>{data.acf.dificultad}</span>
+              </div>
+              <div class="tour-booking__badge">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="currentColor" aria-hidden="true">
+                  <path d="M10.6364 9.81818C10.64 10.0948 10.679 10.3697 10.7525 10.6364H7.24745C7.321 10.3697 7.36004 10.0948 7.36364 9.81818H10.6364ZM7.77273 6.54545H10.2273C10.5339 6.54656 10.8363 6.61697 11.1119 6.75143C11.3875 6.88589 11.6291 7.08091 11.8186 7.32191C12.0278 7.1445 12.2584 6.99414 12.5051 6.87436C12.2405 6.51947 11.8969 6.23106 11.5016 6.03196C11.1062 5.83286 10.6699 5.72854 10.2273 5.72727H7.77273C7.33007 5.72854 6.89378 5.83286 6.49842 6.03196C6.10306 6.23106 5.75949 6.51947 5.49491 6.87436C5.74189 6.99408 5.97281 7.14444 6.18218 7.32191C6.37167 7.08102 6.61315 6.88606 6.88857 6.75161C7.16399 6.61715 7.46624 6.54668 7.77273 6.54545ZM6.54545 2.45455C6.54545 1.96908 6.68941 1.49452 6.95912 1.09087C7.22883 0.687226 7.61218 0.372621 8.06069 0.186842C8.5092 0.00106351 9.00272-0.0475447 9.47886 0.0471645C9.95499 0.141874 10.3924 0.375646 10.7356 0.718921C11.0789 1.0622 11.3127 1.49955 11.4074 1.97569C11.5021 2.45182 11.4535 2.94535 11.2677 3.39386C11.0819 3.84237 10.7673 4.22572 10.3637 4.49543C9.96002 4.76514 9.48546 4.90909 9 4.90909C8.34921 4.90844 7.72527 4.64963 7.26509 4.18945C6.80492 3.72928 6.5461 3.10533 6.54545 2.45455ZM7.36364 2.45455C7.36364 2.77819 7.45961 3.09456 7.63941 3.36366C7.81922 3.63276 8.07478 3.8425 8.37379 3.96635C8.6728 4.0902 9.00181 4.12261 9.31924 4.05947C9.63666 3.99633 9.92823 3.84048 10.1571 3.61163C10.3859 3.38278 10.5418 3.09121 10.6049 2.77379C10.6681 2.45636 10.6357 2.12734 10.5118 1.82834C10.3879 1.52933 10.1782 1.27377 9.90911 1.09396C9.64002 0.914154 9.32364 0.818183 9 0.818183C8.56614 0.818616 8.15018 0.991157 7.84339 1.29794C7.53661 1.60472 7.36407 2.02069 7.36364 2.45455ZM2.86364 13.0909H5.31818C6.0774 13.0918 6.80527 13.3938 7.34212 13.9306C7.87897 14.4675 8.18095 15.1953 8.18182 15.9545V18H0V15.9545C0.000866193 15.1953 0.302848 14.4675 0.839696 13.9306C1.37654 13.3938 2.10442 13.0918 2.86364 13.0909ZM2.86364 13.9091C2.32135 13.9097 1.80146 14.1255 1.418 14.5089C1.03454 14.8924 0.818831 15.4123 0.818182 15.9545V17.1818H7.36364V15.9545C7.36299 15.4123 7.14728 14.8924 6.76382 14.5089C6.38036 14.1255 5.86047 13.9097 5.31818 13.9091H2.86364ZM4.09091 12.2727C3.60545 12.2727 3.13088 12.1288 2.72724 11.8591C2.32359 11.5894 2.00898 11.206 1.8232 10.7575C1.63743 10.309 1.58882 9.81546 1.68353 9.33932C1.77824 8.86319 2.01201 8.42583 2.35528 8.08256C2.69856 7.73928 3.13592 7.50551 3.61205 7.4108C4.08819 7.31609 4.58171 7.3647 5.03022 7.55048C5.47873 7.73626 5.86208 8.05086 6.13179 8.45451C6.4015 8.85816 6.54545 9.33272 6.54545 9.81818C6.5448 10.469 6.28599 11.0929 5.82582 11.5531C5.36564 12.0133 4.7417 12.2721 4.09091 12.2727ZM4.09091 11.4545C4.41455 11.4545 4.73093 11.3586 5.00002 11.1788C5.26912 10.999 5.47886 10.7434 5.60271 10.4444C5.72656 10.1454 5.75897 9.81637 5.69583 9.49894C5.63269 9.18152 5.47684 8.88995 5.24799 8.6611C5.01914 8.43225 4.72757 8.2764 4.41015 8.21326C4.09272 8.15012 3.76371 8.18253 3.4647 8.30638C3.16569 8.43023 2.91013 8.63997 2.73032 8.90907C2.55052 9.17817 2.45455 9.49454 2.45455 9.81818C2.45498 10.252 2.62752 10.668 2.9343 10.9748C3.24109 11.2816 3.65705 11.4541 4.09091 11.4545ZM18 15.9545V18H9.81818V15.9545C9.81905 15.1953 10.121 14.4675 10.6579 13.9306C11.1947 13.3938 11.9226 13.0918 12.6818 13.0909H15.1364C15.8956 13.0918 16.6235 13.3938 17.1603 13.9306C17.6972 14.4675 17.9991 15.1953 18 15.9545ZM17.1818 15.9545C17.1812 15.4123 16.9655 14.8924 16.582 14.5089C16.1985 14.1255 15.6787 13.9097 15.1364 13.9091H12.6818C12.1395 13.9097 11.6196 14.1255 11.2362 14.5089C10.8527 14.8924 10.637 15.4123 10.6364 15.9545V17.1818H17.1818V15.9545ZM16.3636 9.81818C16.3636 10.3036 16.2197 10.7782 15.95 11.1819C15.6803 11.5855 15.2969 11.9001 14.8484 12.0859C14.3999 12.2717 13.9064 12.3203 13.4302 12.2256C12.9541 12.1309 12.5167 11.8971 12.1735 11.5538C11.8302 11.2105 11.5964 10.7732 11.5017 10.297C11.407 9.8209 11.4556 9.32738 11.6414 8.87887C11.8272 8.43036 12.1418 8.04701 12.5454 7.7773C12.9491 7.50759 13.4236 7.36364 13.9091 7.36364C14.5599 7.36429 15.1838 7.6231 15.644 8.08327C16.1042 8.54345 16.363 9.1674 16.3636 9.81818ZM15.5455 9.81818C15.5455 9.49454 15.4495 9.17817 15.2697 8.90907C15.0899 8.63997 14.8343 8.43023 14.5353 8.30638C14.2363 8.18253 13.9073 8.15012 13.5899 8.21326C13.2724 8.2764 12.9809 8.43225 12.752 8.6611C12.5232 8.88995 12.3673 9.18152 12.3042 9.49894C12.241 9.81637 12.2734 10.1454 12.3973 10.4444C12.5211 10.7434 12.7309 10.999 13 11.1788C13.2691 11.3586 13.5854 11.4545 13.9091 11.4545C14.3429 11.4541 14.7589 11.2816 15.0657 10.9748C15.3725 10.668 15.545 10.252 15.5455 9.81818Z"/>
+                </svg>
+                <span>{data.acf.group}</span>
+              </div>
+            </div>
+            <a id="open-booking-dialog" href="#" class="tour-booking__cta">
+              Booking Now
+            </a>
+          </section>
+
+          <!-- ¿Por qué reservar? -->
+          <section class="tour-why">
+            <h3 class="tour-why__title">¿Por qué reservar con nosotros?</h3>
+            <ul class="tour-why__list">
+              <li class="tour-why__item">
+                <span class="tour-why__check" aria-hidden="true">✓</span>
+                <span>Brindamos asesoría personalizada.</span>
+              </li>
+              <li class="tour-why__item">
+                <span class="tour-why__check" aria-hidden="true">✓</span>
+                <span>Manejamos grupos de todos los tamaños.</span>
+              </li>
+              <li class="tour-why__item">
+                <span class="tour-why__check" aria-hidden="true">✓</span>
+                <span>Ofrecemos diferentes opciones de trenes.</span>
+              </li>
+              <li class="tour-why__item">
+                <span class="tour-why__check" aria-hidden="true">✓</span>
+                <span>Ofrecemos diferentes opciones de trenes.</span>
+              </li>
+            </ul>
+            <div class="tour-why__contact">
+              <p class="tour-why__contact-label">Tienes alguna consulta?</p>
+              <a href="#" class="tour-why__contact-link">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="tour-why__contact-icon" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16v12H4z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" d="m4 7 8 6 8-6" />
+                </svg>
+                <span>info@company.com</span>
+              </a>
+              <a href="#" class="tour-why__contact-link">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="tour-why__contact-icon" fill="currentColor" aria-hidden="true">
+                  <path d="M19.11 4.89A9.94 9.94 0 0 0 12.03 2C6.5 2 2 6.48 2 12c0 1.77.47 3.5 1.36 5.02L2 22l5.13-1.34A9.95 9.95 0 0 0 12.03 22C17.56 22 22 17.52 22 12c0-2.67-1.04-5.18-2.89-7.11ZM12.03 20.2a8.2 8.2 0 0 1-4.18-1.15l-.3-.18-3.04.79.81-2.96-.2-.31A8.18 8.18 0 1 1 12.03 20.2Zm4.5-6.13c-.25-.13-1.47-.73-1.7-.81-.23-.09-.4-.13-.57.13-.16.25-.65.81-.79.98-.15.17-.29.19-.54.06-.25-.13-1.05-.39-1.99-1.24-.73-.65-1.23-1.46-1.37-1.71-.14-.25-.01-.39.11-.52.11-.11.25-.29.38-.43.13-.15.17-.25.25-.42.08-.17.04-.31-.02-.44-.06-.13-.57-1.38-.78-1.89-.2-.49-.41-.42-.57-.43h-.49c-.17 0-.44.06-.67.31-.23.25-.88.86-.88 2.09s.9 2.42 1.03 2.59c.13.17 1.77 2.7 4.29 3.79.6.26 1.06.42 1.42.54.6.19 1.15.16 1.59.1.48-.07 1.47-.6 1.68-1.18.21-.58.21-1.07.15-1.18-.06-.1-.23-.16-.48-.29Z" />
+                </svg>
+                <span>Ejecutivo de ventas</span>
+              </a>
+            </div>
+          </section>
+
+          <!-- Tours similares -->
+          <section class="tour-similar">
+            <h3 class="tour-similar__title">Tours Similares</h3>
+            <div class="tour-similar__list">
+              {similarTours.map((t) => (
+                <article class="tour-similar__item">
+                  <a href="#" class="tour-similar__img-link">
+                    <img src={t.image} alt={t.title} class="tour-similar__img" loading="lazy" />
+                  </a>
+                  <a href="#" class="tour-similar__info">
+                    <h4 class="tour-similar__name">{t.title}</h4>
+                    <p class="tour-similar__type">{t.type}</p>
+                    <p class="tour-similar__price">{t.price}</p>
+                  </a>
+                </article>
+              ))}
+            </div>
+          </section>
+
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Dialog booking ───────────────────────────── -->
+  <dialog id="booking-dialog" class="booking-dialog">
+    <div class="booking-dialog__header">
+      <h3 class="booking-dialog__title">Book This Tour</h3>
+      <button type="button" id="close-booking-dialog" class="booking-dialog__close" aria-label="Close dialog">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+    <form class="booking-form" method="dialog">
+      <div class="booking-form__field">
+        <label for="booking-tour">Tour</label>
+        <input id="booking-tour" name="tour" type="text" value={data.title_plain} readonly />
+      </div>
+      <div class="booking-form__field">
+        <label for="booking-name">Name</label>
+        <input id="booking-name" name="name" type="text" placeholder="Your name" required />
+      </div>
+      <div class="booking-form__field">
+        <label for="booking-email">Email</label>
+        <input id="booking-email" name="email" type="email" placeholder="you@example.com" required />
+      </div>
+      <div class="booking-form__field">
+        <label for="booking-phone">Phone</label>
+        <input id="booking-phone" name="phone" type="tel" placeholder="+1 555 000 0000" required />
+      </div>
+      <div class="booking-form__field">
+        <label for="booking-message">Message</label>
+        <textarea id="booking-message" name="message" rows="4" placeholder="Write your message..."></textarea>
+      </div>
+      <div class="booking-form__actions">
+        <button type="button" id="cancel-booking-dialog" class="booking-form__btn booking-form__btn--cancel">Cancel</button>
+        <button type="submit" class="booking-form__btn booking-form__btn--submit">Send</button>
+      </div>
+    </form>
+  </dialog>
+
+</Layout>
+
+<style lang="scss">
+  @use '../../styles/abstract/variables' as *;
+  @use '../../styles/abstract/mixins'   as *;
+
+  // ─── Variables locales ──────────────────────────────────────────────────────
+  $tour-sidebar-w:        400px;
+  $tour-color-muted:      rgba(80, 80, 80, 0.87);
+  $tour-color-border:     #ccc;
+  $tour-color-why-bg:     rgba(255, 243, 219, 0.71);
+  $tour-color-text-dark:  #111827;
+  $tour-shadow-card:      0 2px 12px rgba(0, 0, 0, 0.07);
+  $tour-shadow-dialog:    0 24px 48px rgba(0, 0, 0, 0.18);
+  $tour-radius:           8px;
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // TÍTULO DEL TOUR
+  // ═══════════════════════════════════════════════════════════════════════════
+  .tour-title {
+    padding-top: 2rem;
+  }
+
+  .tour-title__inner {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2rem;
+    color: $color-text-dark;
+  }
+
+  .tour-title__heading {
+    font-size: 2.25rem;
+    font-weight: $font-weight-semibold;
+    line-height: 1.15;
+    color: $color-text-dark;
+  }
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // LAYOUT DOS COLUMNAS
+  // ═══════════════════════════════════════════════════════════════════════════
+  .tour-layout {
+    padding-block: 2rem;
+  }
+
+  .tour-layout__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    align-items: start;
+
+    @include lg {
+      grid-template-columns: minmax(0, 1fr) #{$tour-sidebar-w};
+    }
+  }
+
+  .tour-layout__main {
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+    width: 100%;
+  }
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // DATOS IMPORTANTES
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  .tour-data {
+      &__title {
+        font-size: 1.125rem;
+        font-weight: $font-weight-semibold;
+        color: $color-primary;
+        letter-spacing: 0.01em;
+        padding-bottom: 0.6rem;
+        border-bottom: 1px dashed $color-primary;
+        margin-bottom: 0.25rem;
+      }
+
+      &__list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+
+        // Separador entre items
+        li + li {
+          border-top: 1px solid #f0ece8;
+        }
+
+        li {
+          display: grid;
+          grid-template-columns: 2rem 1fr 1fr;
+          align-items: center;
+          gap: 0.5rem 0.75rem;
+          padding: 0.75rem 0.5rem;
+          border-radius: 6px;
+          transition: background-color 0.15s ease;
+
+          &:hover {
+            background-color: rgba($color-primary, 0.04);
+          }
+
+          @include sm {
+            padding: 0.75rem 1rem;
+          }
+        }
+      }
+
+      &__icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 2rem;
+        height: 2rem;
+        border-radius: 6px;
+        background-color: rgba($color-primary, 0.08);
+        color: $color-primary;
+        flex-shrink: 0;
+
+        svg {
+          width: 1rem;
+          height: 1rem;
+          stroke: currentColor;
+        }
+      }
+
+      &__label {
+        font-size: $font-size-base;
+        font-weight: $font-weight-semibold;
+        color: #4a4a4a;
+        letter-spacing: 0.01em;
+      }
+
+      &__value {
+        font-size: $font-size-base;
+        color: #1a1a1a;
+        font-weight: $font-weight-regular;
+        text-align: right;
+
+      }
+  }
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // TABS
+  // ═══════════════════════════════════════════════════════════════════════════
+  .tour-tabs {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .tour-tabs__nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+
+    @include md { gap: 0.75rem; }
+  }
+
+  .tour-tabs__btn {
+    display: inline-flex;
+    flex: 1;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    white-space: nowrap;
+    border-radius: $tour-radius;
+    border: 1px solid $tour-color-border;
+    background-color: $color-white;
+    padding: 0.75rem 1rem;
+    font-size: $font-size-base;
+    font-weight: $font-weight-medium;
+    line-height: 1.25;
+    letter-spacing: 0.2px;
+    color: $color-text-dark;
+    cursor: pointer;
+    transition:
+      background-color 0.2s ease,
+      border-color     0.2s ease,
+      color            0.2s ease,
+      box-shadow       0.2s ease;
+
+    &:hover:not(.tour-tabs__btn--active) {
+      border-color: rgba($color-primary, 0.4);
+      color: $color-primary;
+    }
+
+    @include md { padding-inline: 1.5rem; }
+
+    &--active {
+      background-color: $color-primary;
+      border-color: $color-primary;
+      color: $color-white;
+      box-shadow: 0 4px 12px rgba($color-primary, 0.25);
+    }
+  }
+
+  .tour-tabs__btn-icon {
+    width: 1rem;
+    height: 1rem;
+    flex-shrink: 0;
+  }
+
+  .tour-tabs__panel {
+    width: 100%;
+    border-radius: $tour-radius;
+    border: 1px solid $tour-color-border;
+    padding: 1.5rem;
+
+    &.hidden { display: none; }
+  }
+
+  // Transición de fade en los panels
+  .tab-panel-fade     { transition: opacity 220ms ease; }
+  .tab-panel-visible  { opacity: 1; }
+  .tab-panel-hidden   { opacity: 0; }
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // SIDEBAR
+  // ═══════════════════════════════════════════════════════════════════════════
+  .tour-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    width: 100%;
+
+    @include lg { max-width: $tour-sidebar-w; }
+  }
+
+  // ─── Booking card ───────────────────────────────────────────────────────────
+  .tour-booking {
+    border-radius: $tour-radius;
+    border: 1px solid $tour-color-border;
+    padding: 1rem;
+    box-shadow: $tour-shadow-card;
+    background-color: $color-white;
+  }
+
+  .tour-booking__name {
+    text-align: center;
+    max-width: 295px;
+    margin-inline: auto;
+    font-size: $font-size-base;
+    font-weight: $font-weight-semibold;
+    line-height: 1.25;
+    letter-spacing: 0.2px;
+    color: $color-text-dark;
+  }
+
+  .tour-booking__price-row {
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 0.25rem;
+    padding-block: 1rem;
+  }
+
+  .tour-booking__price-from,
+  .tour-booking__price-per {
+    font-size: 0.875rem;
+    line-height: 1.375;
+    letter-spacing: 0.2px;
+    color: $tour-color-muted;
+    padding-bottom: 0.125rem;
+  }
+
+  .tour-booking__price {
+    font-size: 1.5rem;
+    font-weight: $font-weight-bold;
+    line-height: 1.2;
+    color: $color-text-dark;
+  }
+
+  .tour-booking__badges {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .tour-booking__badge {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: $font-size-base;
+    line-height: 1.625;
+    letter-spacing: 0.2px;
+    color: $color-text-dark;
+
+    svg { flex-shrink: 0; }
+  }
+
+  .tour-booking__cta {
+    display: inline-flex;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    gap: 0.25rem;
+    margin-top: 0.5rem;
+    border-radius: 4px;
+    background-color: $color-primary;
+    border: 2px solid $color-primary;
+    padding: 0.625rem 0.75rem;
+    font-size: $font-size-base;
+    font-weight: $font-weight-medium;
+    line-height: 1.25;
+    letter-spacing: 0.2px;
+    color: $color-white;
+    transition:
+      background-color 0.25s ease,
+      color            0.25s ease,
+      transform        0.2s ease,
+      box-shadow       0.2s ease;
+
+    &:hover {
+      background-color: $color-white;
+      color: $color-primary;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba($color-primary, 0.25);
+    }
+  }
+
+  // ─── ¿Por qué reservar? ─────────────────────────────────────────────────────
+  .tour-why {
+    border-radius: $tour-radius;
+    background-color: $tour-color-why-bg;
+    padding: 1rem;
+  }
+
+  .tour-why__title {
+    font-size: 1.25rem;
+    font-weight: $font-weight-semibold;
+    line-height: 1.25;
+    letter-spacing: 0.2px;
+    color: $color-primary;
+    margin-bottom: 1.5rem;
+  }
+
+  .tour-why__list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .tour-why__item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    padding-inline: 0.25rem;
+    font-size: $font-size-base;
+    line-height: 1.625;
+    letter-spacing: 0.2px;
+    color: $color-text-dark;
+  }
+
+  .tour-why__check {
+    color: $color-primary;
+    font-weight: $font-weight-bold;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .tour-why__contact {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 1rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+  }
+
+  .tour-why__contact-label {
+    width: 100%;
+    font-size: 0.875rem;
+    color: $color-text-dark;
+  }
+
+  .tour-why__contact-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: 0.875rem;
+    font-weight: $font-weight-medium;
+    color: $color-primary;
+    background-color: $color-white;
+    padding: 0.25rem 0.5rem;
+    border-radius: 6px;
+    width: fit-content;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+
+    &:hover {
+      opacity: 0.8;
+      transform: translateX(2px);
+    }
+  }
+
+  .tour-why__contact-icon {
+    width: 1rem;
+    height: 1rem;
+    flex-shrink: 0;
+  }
+
+  // ─── Tours similares ────────────────────────────────────────────────────────
+  .tour-similar {
+    border-radius: $tour-radius;
+    border: 1px solid #ddd;
+    background-color: $color-white;
+    padding: 1rem;
+    box-shadow: $tour-shadow-card;
+  }
+
+  .tour-similar__title {
+    font-size: 1.5rem;
+    font-weight: $font-weight-semibold;
+    line-height: 1.2;
+    color: $color-text-dark;
+    margin-bottom: 0.75rem;
+  }
+
+  .tour-similar__list {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .tour-similar__item {
+    display: flex;
+    gap: 0;
+    padding-bottom: 0.5rem;
+    margin-bottom: 0.5rem;
+    border-bottom: 1px dashed #ddd;
+    transition: opacity 0.2s ease;
+
+    &:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    &:hover { opacity: 0.85; }
+  }
+
+  .tour-similar__img-link {
+    width: 30%;
+    flex-shrink: 0;
+    overflow: hidden;
+    border-radius: 4px;
+    max-height: 80px;
+  }
+
+  .tour-similar__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.3s ease;
+
+    .tour-similar__item:hover & { transform: scale(1.04); }
+  }
+
+  .tour-similar__info {
+    width: 70%;
+    padding: 0.25rem 0.25rem 0.25rem 0.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+  }
+
+  .tour-similar__name {
+    font-size: 1.05rem;
+    font-weight: $font-weight-medium;
+    color: $color-text-dark;
+    line-height: 1.3;
+    transition: color 0.2s ease;
+
+    .tour-similar__item:hover & { color: $color-primary; }
+  }
+
+  .tour-similar__type,
+  .tour-similar__price {
+    font-size: 0.875rem;
+    color: $color-text-dark;
+    line-height: 1.4;
+  }
+
+  .tour-similar__price {
+    color: $color-primary;
+    font-weight: $font-weight-semibold;
+  }
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // DIALOG / BOOKING MODAL
+  // ═══════════════════════════════════════════════════════════════════════════
+  .booking-dialog {
+    width: min(560px, calc(100vw - 2rem));
+    border: none;
+    border-radius: 12px;
+    padding: 0;
+    overflow: hidden;
+    margin: auto;
+    max-height: calc(100vh - 2rem);
+    box-shadow: $tour-shadow-dialog;
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+    transition:
+      opacity   0.3s ease-out,
+      transform 0.3s ease-out,
+      display   0.3s ease-out allow-discrete;
+
+    &[open] {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    @starting-style {
+      &[open] {
+        opacity: 0;
+        transform: translateY(20px) scale(0.95);
+      }
+    }
+
+    &::backdrop {
+      background: rgba(0, 0, 0, 0);
+      transition:
+        display          0.3s ease-out allow-discrete,
+        overlay          0.3s ease-out allow-discrete,
+        background-color 0.3s ease-out;
+    }
+
+    &[open]::backdrop { background: rgba(0, 0, 0, 0.5); }
+
+    @starting-style {
+      &[open]::backdrop { background: rgba(0, 0, 0, 0); }
+    }
+  }
+
+  .booking-dialog__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid #e5e7eb;
+    background-color: $color-white;
+  }
+
+  .booking-dialog__title {
+    font-size: 1.125rem;
+    font-weight: $font-weight-semibold;
+    color: $tour-color-text-dark;
+  }
+
+  .booking-dialog__close {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    border: none;
+    border-radius: 6px;
+    background: transparent;
+    cursor: pointer;
+    color: #6b7280;
+    transition: background-color 0.2s ease, color 0.2s ease;
+
+    svg { width: 1.1rem; height: 1.1rem; }
+
+    &:hover {
+      background-color: #f3f4f6;
+      color: $tour-color-text-dark;
+    }
+  }
+
+  // ─── Formulario ─────────────────────────────────────────────────────────────
+  .booking-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1.25rem;
+    background-color: $color-white;
+    overflow-y: auto;
+    max-height: calc(100vh - 10rem);
+  }
+
+  .booking-form__field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.375rem;
+
+    label {
+      font-size: 0.875rem;
+      font-weight: $font-weight-medium;
+      color: $tour-color-text-dark;
+    }
+
+    input,
+    textarea {
+      width: 100%;
+      border: 1px solid #d1d5db;
+      border-radius: $tour-radius;
+      padding: 0.625rem 0.75rem;
+      font-size: 0.95rem;
+      color: $tour-color-text-dark;
+      background-color: $color-white;
+      font-family: inherit;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+
+      &:focus {
+        outline: none;
+        border-color: $color-primary;
+        box-shadow: 0 0 0 3px rgba($color-primary, 0.15);
+      }
+
+      &[readonly] { background-color: #f9fafb; }
+    }
+
+    textarea { resize: vertical; }
+  }
+
+  .booking-form__actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    margin-top: 0.25rem;
+  }
+
+  .booking-form__btn {
+    border: none;
+    border-radius: $tour-radius;
+    padding: 0.625rem 1.25rem;
+    font-size: 0.9rem;
+    font-weight: $font-weight-semibold;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+
+    &--cancel {
+      background-color: #f3f4f6;
+      color: $tour-color-text-dark;
+
+      &:hover { background-color: #e5e7eb; }
+    }
+
+    &--submit {
+      background-color: $color-primary;
+      color: $color-white;
+      border: 2px solid $color-primary;
+
+      &:hover {
+        background-color: $color-white;
+        color: $color-primary;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba($color-primary, 0.25);
+      }
+    }
+  }
+</style>
+
+<script>
+  // ─── Tabs ────────────────────────────────────────────────────────────────────
+  const tabsRoots      = document.querySelectorAll("[data-tabs-root]");
+  const tabFadeDuration = 220;
+
+  tabsRoots.forEach((root) => {
+    const buttons = root.querySelectorAll("[data-tab-button]");
+    const panels  = root.querySelectorAll("[data-tab-panel]");
+
+    panels.forEach((panel) => {
+      panel.classList.add("tab-panel-fade");
+      panel.classList.add(panel.classList.contains("hidden") ? "tab-panel-hidden" : "tab-panel-visible");
+    });
+
+    buttons.forEach((button) => {
+      button.addEventListener("click", () => {
+        const targetId    = button.getAttribute("data-tab-target");
+        const targetPanel = targetId ? root.querySelector(`#${targetId}`) : null;
+        const currentPanel = Array.from(panels).find((p) => !p.classList.contains("hidden"));
+
+        if (!targetPanel || targetPanel === currentPanel) return;
+
+        buttons.forEach((btn) => {
+          btn.setAttribute("aria-selected", "false");
+          btn.classList.remove("tour-tabs__btn--active");
+        });
+
+        button.setAttribute("aria-selected", "true");
+        button.classList.add("tour-tabs__btn--active");
+
+        if (currentPanel) {
+          currentPanel.classList.replace("tab-panel-visible", "tab-panel-hidden");
+        }
+
+        setTimeout(() => {
+          currentPanel?.classList.add("hidden");
+          targetPanel.classList.remove("hidden", "tab-panel-hidden");
+          requestAnimationFrame(() => targetPanel.classList.add("tab-panel-visible"));
+        }, tabFadeDuration);
+      });
+    });
+  });
+
+  // ─── Booking dialog ──────────────────────────────────────────────────────────
+  const bookingDialog    = document.getElementById("booking-dialog") as HTMLDialogElement;
+  const openBtn          = document.getElementById("open-booking-dialog");
+  const closeBtn         = document.getElementById("close-booking-dialog");
+  const cancelBtn        = document.getElementById("cancel-booking-dialog");
+
+  const openDialog  = (e: Event) => { e.preventDefault(); bookingDialog?.showModal(); document.body.style.overflow = "hidden"; };
+  const closeDialog = () => { bookingDialog?.close(); };
+
+  openBtn?.addEventListener("click", openDialog);
+  closeBtn?.addEventListener("click", closeDialog);
+  cancelBtn?.addEventListener("click", closeDialog);
+  bookingDialog?.addEventListener("close", () => { document.body.style.overflow = ""; });
+
+  bookingDialog?.addEventListener("click", (e) => {
+    const rect = bookingDialog.getBoundingClientRect();
+    const outside = e.clientY < rect.top || e.clientY > rect.bottom || e.clientX < rect.left || e.clientX > rect.right;
+    if (outside) closeDialog();
+  });
+</script>

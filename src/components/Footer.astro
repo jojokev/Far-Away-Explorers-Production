@@ -1,0 +1,471 @@
+---
+import logoAsset from "../assets/logo-far-away.webp";
+import avatar from "../assets/icons/metodos-pago.webp";
+import reclamaciones from "../assets/icons/reclamaciones.webp";
+import esnna from "../assets/icons/esnna.webp";
+import { Icon } from "astro-icon/components";
+
+const logo = logoAsset.src;
+const protectedBadge = esnna.src;
+const claimsBook = reclamaciones.src;
+const paymentMethods = avatar.src;
+
+const destinations = ["Arequipa", "Puno", "Cusco", "Nazca", "Ica", "Lima"];
+const aboutLinks = [
+  "Contact Us",
+  "Our Blog",
+  "Our Quality Policy",
+  "Terminos y condiciones",
+  "About Us",
+];
+const packages = [
+  "Huacachina, Machupicchu, Isla Uros Puno",
+  "Huacachina, MachupicLima, Isla Palomino",
+  "Lima, Ica, Huacachina, Machupicchu",
+  "Senderismo en la Naturaleza",
+  "Trekking en las Montañas",
+  "Cusco, Machupicchu, Laguna Humantay",
+];
+---
+
+<footer class="footer">
+  <section class="footer__main">
+    <div class="container">
+      <div class="footer__grid">
+
+        <div class="footer__brand">
+          <div class="footer__info">
+            <img src={logo} alt="Far Away Explorers" class="footer__logo" />
+            <p class="footer__meta">
+              <span class="footer__meta-label">Business name:</span>
+              <span> Far Away explorer</span>
+            </p>
+            <p class="footer__meta">
+              <span class="footer__meta-label">RUC:</span>
+              <span> 2009879456123146</span>
+            </p>
+          </div>
+
+          <div class="footer__contact">
+            <a href="mailto:infor@farawayexplorer.com" class="footer__contact-item">
+              <Icon name="ion:mail-outline" class="footer__contact-icon" aria-hidden="true" />
+              infor@farawayexplorer.com
+            </a>
+            <a href="mailto:reservas@farawayexplorer.com" class="footer__contact-item">
+              <Icon name="ion:mail-outline" class="footer__contact-icon" aria-hidden="true" />
+              reservas@farawayexplorer.com
+            </a>
+            <a href="tel:+51987654231" class="footer__contact-item">
+              <Icon name="ion:call-outline" class="footer__contact-icon" aria-hidden="true" />
+              +51 987 654 231
+            </a>
+            <a href="#" class="footer__contact-item footer__contact-item--align-top">
+              <Icon name="ion:location-outline" class="footer__contact-icon footer__contact-icon--location" aria-hidden="true" />
+              <span>
+                <span class="footer__meta-label">Oficina principal:</span>
+                <span> Urb. Cusco ll-3 / Santiago Y - 12 B</span>
+              </span>
+            </a>
+          </div>
+
+          <div class="footer__social">
+            <p class="footer__social-title">Follow us :</p>
+            <div class="footer__social-links">
+              <a href="#" aria-label="TikTok" class="footer__social-btn">
+                <Icon name="ion:logo-tiktok" class="footer__social-icon" aria-hidden="true" />
+              </a>
+              <a href="#" aria-label="Facebook" class="footer__social-btn">
+                <Icon name="ion:logo-facebook" class="footer__social-icon" aria-hidden="true" />
+              </a>
+              <a href="#" aria-label="YouTube" class="footer__social-btn">
+                <Icon name="ion:logo-youtube" class="footer__social-icon" aria-hidden="true" />
+              </a>
+              <a href="#" aria-label="WhatsApp" class="footer__social-btn">
+                <Icon name="ion:logo-whatsapp" class="footer__social-icon" aria-hidden="true" />
+              </a>
+              <a href="#" aria-label="Instagram" class="footer__social-btn">
+                <Icon name="ion:logo-instagram" class="footer__social-icon" aria-hidden="true" />
+              </a>
+            </div>
+          </div>
+
+          <div class="footer__badges">
+            <img src={protectedBadge} alt="Protégenos" class="footer__badge" />
+            <img src={claimsBook} alt="Libro de Reclamaciones" class="footer__badge footer__badge--claims" />
+          </div>
+        </div>
+
+        <div class="footer__menu">
+          <h2 class="footer__menu-title">MENU</h2>
+          <div class="footer__menu-grid">
+            <div class="footer__menu-col">
+              <div class="footer__menu-group">
+                <h3 class="footer__menu-heading">Destinos</h3>
+                <ul class="footer__menu-list">
+                  {destinations.map((item) => (
+                    <li><a href="#" class="footer__menu-link">{item}</a></li>
+                  ))}
+                </ul>
+              </div>
+              <div class="footer__menu-group">
+                <h3 class="footer__menu-heading">Who we are</h3>
+                <ul class="footer__menu-list">
+                  {aboutLinks.map((item) => (
+                    <li><a href="#" class="footer__menu-link">{item}</a></li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+            <div class="footer__menu-col">
+              <div class="footer__menu-group">
+                <h3 class="footer__menu-heading">Paquetes</h3>
+                <ul class="footer__menu-list">
+                  {packages.map((item) => (
+                    <li><a href="#" class="footer__menu-link">{item}</a></li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <div class="footer__bottom">
+    <div class="container">
+      <div class="footer__bottom-inner">
+        <p class="footer__copyright">
+          copyright © 2024 Chullpi Expeditions todos los derechos
+        </p>
+        <div class="footer__payments">
+          <p class="footer__payments-label">Metodos de pago:</p>
+          <img src={paymentMethods} alt="Metodos de pago" class="footer__payments-img" />
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<style lang="scss">
+  @use '../styles/abstract/variables' as *;
+  @use '../styles/abstract/mixins' as *;
+
+
+  // ─── Footer base ────────────────────────────────────────────────────────────
+  .footer {
+    border-top: 2px solid $color-primary;
+    background-color: $color-white;
+  }
+
+  // ─── Main section ───────────────────────────────────────────────────────────
+  .footer__main {
+    padding-block: 2.5rem;
+    @include md { padding-block: 3.5rem; }
+  }
+
+  .footer__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 3rem;
+    @include lg {
+      grid-template-columns: 1fr 1.1fr;
+      gap: 4rem;
+    }
+  }
+
+  // ─── Brand ──────────────────────────────────────────────────────────────────
+  .footer__brand {
+    display: flex;
+    flex-direction: column;
+    gap: 1.75rem;
+  }
+
+  .footer__info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.375rem;
+  }
+
+  .footer__logo {
+    height: 5rem;
+    width: 151px;
+    object-fit: contain;
+    margin-bottom: 0.25rem;
+  }
+
+  // ─── Meta texto ─────────────────────────────────────────────────────────────
+  .footer__meta {
+    font-size: $font-size-base;
+    letter-spacing: 0.2px;
+    color: $color-text-dark;
+    line-height: 1.6;
+  }
+
+  .footer__meta-label {
+    font-weight: $font-weight-semibold;  // ← subido de medium a semibold
+    color: darken(#000, 0%);
+  }
+
+  // ─── Contacto ───────────────────────────────────────────────────────────────
+  .footer__contact {
+    display: flex;
+    flex-direction: column;
+    border-top: 1px solid #e8e8e8;      // ← separador superior sutil
+  }
+
+  .footer__contact-item {
+    display: flex;
+    align-items: center;
+    gap: $spacing-1;
+    padding-block: 0.6rem;
+    border-bottom: 1px dashed #ddd;
+    font-size: $font-size-base;
+    letter-spacing: 0.2px;
+    color: $color-text-dark;
+    transition: color 0.25s ease, padding-left 0.25s ease;
+
+    // ← hover: desplazamiento + color primario
+    &:hover {
+      color: $color-primary;
+      padding-left: 0.375rem;
+
+      .footer__contact-icon {
+        transform: scale(1.15);
+      }
+    }
+
+    &--align-top { align-items: flex-start; }
+  }
+
+  .footer__contact-icon {
+    color: $color-primary;
+    width: 1.25rem;
+    height: 1.25rem;
+    flex-shrink: 0;
+    transition: transform 0.25s ease;
+
+    &--location {
+      width: 14px;
+      height: 1.2rem;
+      margin-top: 3px;
+    }
+  }
+
+  // ─── Social ─────────────────────────────────────────────────────────────────
+  .footer__social {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .footer__social-title {
+    font-size: $font-size-sm;            // ← bajado un nivel, menos peso visual
+    font-weight: $font-weight-semibold;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;             // ← espaciado de letras para el label
+    color: $color-text-dark;
+  }
+
+  .footer__social-links {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.625rem;
+  }
+
+  .footer__social-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    background-color: $color-primary;
+    border-radius: 50%;                  // ← círculo perfecto
+    border: 2px solid transparent;
+    transition:
+      background-color 0.25s ease,
+      border-color     0.25s ease,
+      transform        0.2s ease,
+      box-shadow       0.25s ease;
+
+    // ← hover: outline del color primario + fondo blanco + sombra
+    &:hover {
+      background-color: $color-white;
+      border-color: $color-primary;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba($color-primary, 0.25);
+
+      .footer__social-icon {
+        color: $color-primary;
+      }
+    }
+  }
+
+  .footer__social-icon {
+    width: 1.1rem;
+    height: 1.1rem;
+    color: $color-white;
+    transition: color 0.25s ease;
+  }
+
+  // ─── Badges ─────────────────────────────────────────────────────────────────
+  .footer__badges {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding-top: 0.5rem;
+    border-top: 1px solid #e8e8e8;      // ← separador superior sutil
+  }
+
+  .footer__badge {
+    height: 50px;
+    width: 130px;
+    object-fit: contain;
+    transition: opacity 0.25s ease;
+    &:hover { opacity: 0.8; }
+    &--claims { width: 87px; }
+  }
+
+  // ─── Menú ───────────────────────────────────────────────────────────────────
+  .footer__menu {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    letter-spacing: 0.2px;
+    color: $color-text-dark;
+  }
+
+  .footer__menu-title {
+    font-size: $font-size-lg;
+    font-weight: $font-weight-bold;      // ← subido a bold para dar más jerarquía
+    letter-spacing: 0.12em;
+    color: $color-primary;
+    padding-bottom: 0.5rem;
+    display: inline-block;
+  }
+
+  .footer__menu-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    @include sm { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  .footer__menu-col {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .footer__menu-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.625rem;
+  }
+
+  .footer__menu-heading {
+    font-size: $font-size-base;
+    font-weight: $font-weight-semibold;
+    line-height: 1.25;
+    color: $color-text-dark;
+    padding-bottom: 0.375rem;
+    border-bottom: 1px solid #e8e8e8;   // ← separador bajo cada título de grupo
+  }
+
+  .footer__menu-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    padding-left: 0;                     // ← quitado el padding, usamos el pseudo
+    list-style: none;
+    font-size: $font-size-base;
+    line-height: 1.6;
+  }
+
+  // ─── Links del menú con indicador animado ───────────────────────────────────
+  .footer__menu-link {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    color: #444;                          // ← gris oscuro en reposo, no negro puro
+    padding-left: 0.875rem;
+    transition: color 0.25s ease, padding-left 0.25s ease;
+
+    // ← guion decorativo en reposo
+    &::before {
+      content: '–';
+      position: absolute;
+      left: 0;
+      color: #ccc;
+      font-weight: $font-weight-regular;
+      transition: color 0.25s ease, transform 0.25s ease;
+    }
+
+    &:hover {
+      color: $color-primary;
+      padding-left: 1.25rem;             // ← leve empuje hacia la derecha
+
+      &::before {
+        color: $color-primary;
+        transform: translateX(2px);
+      }
+    }
+  }
+
+  // ─── Bottom bar ─────────────────────────────────────────────────────────────
+  .footer__bottom {
+    background-color: $color-primary;
+  }
+
+  .footer__bottom-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding-block: $spacing-2;
+
+    @include md {
+      flex-direction: row;
+      padding-block: 0;
+    }
+  }
+
+  .footer__copyright {
+    font-size: $font-size-sm;            // ← sm, menos protagonismo
+    line-height: 1.5;
+    letter-spacing: 0.2px;
+    color: rgba($color-white, 0.85);     // ← blanco con leve transparencia
+    text-align: center;
+    @include md { text-align: left; }
+  }
+
+  .footer__payments {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: $spacing-1;
+    padding-block: $spacing-1;
+
+    @include md {
+      align-items: flex-start;
+      padding: 10px;
+    }
+  }
+
+  .footer__payments-label {
+    font-size: $font-size-sm;
+    font-weight: $font-weight-semibold;  // ← más presencia
+    letter-spacing: 0.05em;
+    color: $color-white;
+  }
+
+  .footer__payments-img {
+    height: auto;
+    width: 136px;
+    object-fit: contain;
+  }
+</style>

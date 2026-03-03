@@ -1,0 +1,73 @@
+@use 'variables' as *;
+
+// Responsive breakpoints
+@mixin sm {
+  @media (min-width: #{$bp-sm}) { @content; }
+}
+
+@mixin md {
+  @media (min-width: #{$bp-md}) { @content; }
+}
+
+@mixin lg {
+  @media (min-width: #{$bp-lg}) { @content; }
+}
+
+// Flex helpers
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+}
+
+@mixin flex-center-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+// Link base interactivo
+@mixin interactive-link($hover-color: $color-primary) {
+  transition: $transition-base;
+  &:hover { color: $hover-color; }
+}
+
+// Botón primario
+@mixin btn-primary {
+  @include flex-center;
+  gap: $spacing-1;
+  background-color: $color-primary;
+  color: $color-white;
+  padding: $spacing-2 $spacing-4;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  border-radius: 2px;
+  transition: $transition-fast;
+
+  &:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+  }
+
+  @include md {
+    font-size: $font-size-base;
+  }
+}
+
+@mixin eyebrow {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-bold;
+  letter-spacing: 0.14em;
+  color: $color-primary;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  &::after {
+    content: '';
+    display: inline-block;
+    width: 2rem;
+    height: 2px;
+    background-color: $color-primary;
+    border-radius: 2px;
+  }
+}

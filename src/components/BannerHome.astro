@@ -1,0 +1,168 @@
+---
+import defaultImage from "../assets/default.webp";
+const bannerImg = defaultImage.src;
+---
+
+<section class="banner">
+  <img src={bannerImg} alt="" class="banner__img" />
+  <div class="banner__overlay" aria-hidden="true"></div>
+
+  <div class="banner__content">
+    <h2 class="banner__title">
+      Tu Puerta a la Aventura en Peru
+    </h2>
+    <p class="banner__description">
+      Descubre la majestuosidad de Machu Picchu con nuestra agencia. Te
+      ofrecemos visitas guiadas, rutas de trekking y experiencias autenticas
+      para que vivas la historia inca de manera inolvidable.
+    </p>
+    <p class="banner__description">Descubre</p>
+    <div class="banner__actions">
+      <a href="#" class="banner__btn banner__btn--primary">
+        Ver tours <span aria-hidden="true">&rarr;</span>
+      </a>
+      <a href="#" class="banner__btn banner__btn--dark">
+        Tour destacado <span aria-hidden="true">&rarr;</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<style lang="scss">
+  @use '../styles/abstract/variables' as *;
+  @use '../styles/abstract/mixins' as *;
+
+  .banner {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 80vh;
+    padding-bottom: 4rem;
+    padding-inline: 1.5rem;
+    overflow: hidden;
+    margin-top: -80px;
+    padding-top: calc(80px + 4rem);
+  }
+
+  .banner__img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    transition: transform 6s ease;
+  }
+
+  .banner:hover .banner__img {
+    transform: scale(1.03);
+  }
+
+  // ← gradiente más opaco arriba para contrastar con el nav transparente
+  .banner__overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0.55) 0%,
+      rgba(0, 0, 0, 0.25) 40%,
+      rgba(0, 0, 0, 0.45) 100%
+    );
+  }
+
+  .banner__content {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+    width: 100%;
+    max-width: 56rem;
+    text-align: center;
+    color: $color-white;
+  }
+
+  .banner__title {
+    font-size: 2.25rem;
+    font-weight: $font-weight-bold;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    text-shadow: 0 2px 16px rgba(0, 0, 0, 0.5);
+
+    @include md { font-size: 3rem; }
+    @include lg { font-size: 3.75rem; line-height: 1; }
+  }
+
+  .banner__description {
+    width: 100%;
+    max-width: 600px;
+    font-size: $font-size-base;
+    font-weight: $font-weight-medium;
+    line-height: 1.75;
+    letter-spacing: 0.2px;
+    color: rgba($color-white, 0.9);
+    text-shadow: 0 1px 8px rgba(0, 0, 0, 0.35);
+
+    @include md { font-size: 1.125rem; line-height: 1.625; }
+  }
+
+  .banner__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    @include md { gap: 2rem; }
+  }
+
+  .banner__btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.625rem 1.5rem;
+    font-size: 1.125rem;
+    font-weight: $font-weight-semibold;
+    line-height: 1.625;
+    letter-spacing: 0.2px;
+    border-radius: 8px;
+    border: 2px solid transparent;
+    transition:
+      background-color 0.25s ease,
+      color            0.25s ease,
+      border-color     0.25s ease,
+      transform        0.2s ease,
+      box-shadow       0.25s ease;
+
+    &--primary {
+      background-color: $color-primary;
+      border-color: $color-primary;
+      color: $color-white;
+
+      &:hover {
+        background-color: $color-white;
+        color: $color-primary;
+        transform: translateY(-2px);
+        box-shadow: 0 10px 24px rgba($color-primary, 0.35);
+      }
+    }
+
+    &--dark {
+      background-color: rgba(0, 0, 0, 0.55);
+      border-color: rgba($color-white, 0.4);
+      color: $color-white;
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+
+      &:hover {
+        background-color: $color-white;
+        border-color: $color-white;
+        color: #111;
+        transform: translateY(-2px);
+        box-shadow: 0 10px 24px rgba(0, 0, 0, 0.35);
+      }
+    }
+  }
+</style>

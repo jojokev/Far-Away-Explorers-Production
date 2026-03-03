@@ -1,0 +1,562 @@
+---
+import defaultImage from "../assets/default.webp";
+import prevIcon from "../assets/icons/Vector-2.png";
+import nextIcon from "../assets/icons/Vector-1.png";
+
+const tourImage = defaultImage.src;
+const navPrevIcon = prevIcon.src;
+const navNextIcon = nextIcon.src;
+
+const tours = [
+  {
+    title: "Trekking Montana Arcoiris Palcoyo",
+    location: "Machupicchu",
+    price: "$135.00",
+    capacity: "max. 16",
+    duration: "4 Dias / 3 Noches",
+    featured: "Destacado",
+  },
+  {
+    title: "Trekking Montana Arcoiris Palcoyo",
+    location: "Machupicchu",
+    price: "$135.00",
+    capacity: "max. 16",
+    duration: "4 Dias / 3 Noches",
+    featured: "Destacado",
+  },
+  {
+    title: "Trekking Montana Arcoiris Palcoyo",
+    location: "Machupicchu",
+    price: "$135.00",
+    capacity: "max. 16",
+    duration: "4 Dias / 3 Noches",
+    featured: "Destacado",
+  },
+  {
+    title: "Trekking Montana Arcoiris Palcoyo",
+    location: "Machupicchu",
+    price: "$135.00",
+    capacity: "max. 16",
+    duration: "4 Dias / 3 Noches",
+    featured: "Destacado",
+  },
+];
+---
+
+<section class="tours">
+  <div class="container">
+    <div class="tours__inner">
+
+      <div class="tours__header">
+        <p class="tours__eyebrow">EXPLORE</p>
+        <h2 class="tours__title">The Best Places to Visit in Cusco and Peru</h2>
+      </div>
+      <p class="tours__subtitle">Explore the wonders of our popular destinations</p>
+
+      <div class="tours__slider-wrapper">
+
+        <button type="button" class="tours__nav tours__nav--prev tours-button-prev" aria-label="Anterior">
+          <img src={navPrevIcon} alt="" class="tours__nav-icon" />
+        </button>
+        <button type="button" class="tours__nav tours__nav--next tours-button-next" aria-label="Siguiente">
+          <img src={navNextIcon} alt="" class="tours__nav-icon" />
+        </button>
+
+        <div class="swiper tours-swiper">
+          <div class="swiper-wrapper">
+            {tours.map((tour) => (
+              <article class="swiper-slide tours__card">
+
+                <div class="tours__card-media">
+                  <a href="#" class="tours__card-img-link">
+                    <img
+                      src={tourImage}
+                      alt={tour.title}
+                      class="tours__card-img"
+                      loading="lazy"
+                    />
+                  </a>
+                  <span class="tours__card-badge">{tour.featured}</span>
+                  <div class="tours__card-meta">
+                    <div class="tours__card-meta-item">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="tours__icon" aria-hidden="true">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                        <circle cx="12" cy="7" r="4" />
+                      </svg>
+                      <span>{tour.capacity}</span>
+                    </div>
+                    <div class="tours__card-meta-item">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="tours__icon" aria-hidden="true">
+                        <rect x="3" y="4" width="18" height="18" rx="2" />
+                        <line x1="16" y1="2" x2="16" y2="6" />
+                        <line x1="8" y1="2" x2="8" y2="6" />
+                        <line x1="3" y1="10" x2="21" y2="10" />
+                      </svg>
+                      <span>{tour.duration}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="tours__card-body">
+                  <div class="tours__card-info">
+                    <a href="#" class="tours__card-title-link">
+                      <h3 class="tours__card-title">{tour.title}</h3>
+                    </a>
+                    <div class="tours__card-location">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="tours__icon" aria-hidden="true">
+                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 1 1 18 0z" />
+                        <circle cx="12" cy="10" r="3" />
+                      </svg>
+                      <span>{tour.location}</span>
+                    </div>
+                  </div>
+
+                  <div class="tours__card-footer">
+                    <div class="tours__card-price">
+                      <p class="tours__card-price-label">Desde</p>
+                      <p class="tours__card-price-value">{tour.price}</p>
+                    </div>
+                    <a href="#" class="tours__card-cta">
+                      Explora
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="tours__icon" aria-hidden="true">
+                        <path d="M5 12h14" />
+                        <path d="m13 6 6 6-6 6" />
+                      </svg>
+                    </a>
+                  </div>
+                </div>
+
+              </article>
+            ))}
+          </div>
+        </div>
+
+        <div class="tours__pagination-wrapper">
+          <div class="tours-pagination" aria-label="Paginacion de tours"></div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<style lang="scss">
+  @use '../styles/abstract/variables' as *;
+  @use '../styles/abstract/mixins' as *;
+
+  // ─── Variables locales ──────────────────────────────────────────────────────
+  $tours-text-muted:    rgba(80, 80, 80, 0.87);
+  $tours-border:        rgba(221, 221, 221, 0.87);
+  $tours-img-height:    220px;
+  $tours-meta-offset:   206px;           // sincronizado con img-height - 14px
+  $tours-meta-width:    88%;             // ← % en vez de px fijo: se adapta al slide
+  $tours-shadow-card:   0 2px 16px rgba(0, 0, 0, 0.07);
+  $tours-shadow-hover:  0 12px 32px rgba(0, 0, 0, 0.13);
+  $tours-shadow-meta:   0 4px 12px rgba(140, 140, 140, 0.2);
+
+  // ─── Section ────────────────────────────────────────────────────────────────
+  .tours {
+    padding-block: 2.5rem;
+    @include md { padding-block: 2.5rem; }
+  }
+
+  .tours__inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+    width: 100%;
+    font-style: normal;
+    padding-block: 2rem;
+  }
+
+  // ─── Header ─────────────────────────────────────────────────────────────────
+  .tours__header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;      // ← era flex-start
+    gap: 0.375rem;
+    width: 100%;
+    text-align: center;       // ← era left
+  }
+
+  .tours__eyebrow {
+    font-size: $font-size-sm;
+    font-weight: $font-weight-bold;
+    letter-spacing: 0.14em;
+    color: $color-primary;
+    display: flex;
+    align-items: center;
+    justify-content: center;  // ← añadido
+    gap: 0.5rem;
+
+    // ← líneas simétricas a ambos lados
+    &::before,
+    &::after {
+      content: '';
+      display: inline-block;
+      width: 2rem;
+      height: 2px;
+      background-color: $color-primary;
+      border-radius: 2px;
+    }
+  }
+
+  .tours__title {
+    font-size: 1.625rem;
+    font-weight: $font-weight-bold;
+    line-height: 1.2;
+    color: $color-text-dark;
+    text-align: center;
+
+    @include md { font-size: 1.875rem; }
+  }
+
+  .tours__subtitle {
+    width: 100%;
+    max-width: 740px;
+    font-size: $font-size-base;
+    font-weight: $font-weight-medium;
+    line-height: 1.5;
+    letter-spacing: 0.2px;
+    color: $tours-text-muted;
+    text-align: center;
+  }
+
+  // ─── Slider wrapper ─────────────────────────────────────────────────────────
+  .tours__slider-wrapper {
+    position: relative;
+    width: 100%;
+    padding-inline: 0rem;
+    @include md { padding-inline: 3rem; }
+  }
+
+  // ─── Botones nav ────────────────────────────────────────────────────────────
+  .tours__nav {
+    display: none;
+    position: absolute;
+    top: 45%;                           // ← levemente arriba del centro (zona imagen)
+    z-index: 10;
+    transform: translateY(-50%);
+    background-color: $color-white;     // ← fondo blanco: más visibles y clickeables
+    border: 1.5px solid rgba($color-primary, 0.25);
+    border-radius: 50%;
+    width: 2.5rem;
+    height: 2.5rem;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition:
+      background-color 0.2s ease,
+      border-color     0.2s ease,
+      transform        0.2s ease,
+      box-shadow       0.2s ease;
+
+    &:hover {
+      background-color: $color-primary;
+      border-color: $color-primary;
+      transform: translateY(-50%) scale(1.08);
+      box-shadow: 0 4px 14px rgba($color-primary, 0.3);
+
+      // ← icono se invierte a blanco al hover
+      .tours__nav-icon { filter: brightness(0) invert(1); }
+    }
+
+    &--prev { left: 0; }
+    &--next { right: 0; }
+
+    @include md { display: flex; }
+  }
+
+  .tours__nav-icon {
+    height: 1rem;
+    width: auto;
+    transition: filter 0.2s ease;
+  }
+
+  // ─── Card ───────────────────────────────────────────────────────────────────
+  .tours__card {
+    border-radius: 10px;
+    background-color: $color-white;
+    text-align: left;
+    box-shadow: $tours-shadow-card;
+    border: 1px solid rgba(0, 0, 0, 0.05); // ← borde sutil en reposo
+    transition:
+      box-shadow 0.3s ease,
+      transform  0.3s ease,
+      border-color 0.3s ease;
+    overflow: visible;                   // ← necesario para la meta flotante
+
+    &:hover {
+      box-shadow: $tours-shadow-hover;
+      transform: translateY(-3px);
+      border-color: rgba($color-primary, 0.15);
+    }
+  }
+
+  // ─── Media ──────────────────────────────────────────────────────────────────
+  .tours__card-media {
+    position: relative;
+  }
+
+  .tours__card-img-link {
+    display: block;
+    overflow: hidden;
+    border-radius: 10px 10px 0 0;       // ← solo esquinas superiores
+  }
+
+  .tours__card-img {
+    height: $tours-img-height;
+    width: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+    will-change: transform;
+
+    .tours__card-img-link:hover & { transform: scale(1.06); }
+  }
+
+  // ─── Badge ──────────────────────────────────────────────────────────────────
+  .tours__card-badge {
+    position: absolute;
+    top: 0.625rem;
+    right: 0.625rem;
+    background-color: $color-primary;  // ← fondo primario: más legible y llamativo
+    color: $color-white;
+    font-size: 0.7rem;
+    font-weight: $font-weight-bold;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 0.2rem 0.6rem;
+    border-radius: 99px;               // ← pill en lugar de rect
+  }
+
+  // ─── Meta flotante ──────────────────────────────────────────────────────────
+  .tours__card-meta {
+    position: absolute;
+    left: 50%;
+    top: $tours-meta-offset;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: $tours-meta-width;
+    background-color: $color-white;
+    border-radius: 8px;
+    padding: 0.375rem 1rem;
+    box-shadow: $tours-shadow-meta;
+    border: 1px solid rgba(0, 0, 0, 0.06);
+  }
+
+  .tours__card-meta-item {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-size: $font-size-sm;
+    line-height: 1.375;
+    letter-spacing: 0.2px;
+    color: $tours-text-muted;
+  }
+
+  .tours__icon {
+    width: 0.9rem;
+    height: 0.9rem;
+    flex-shrink: 0;
+  }
+
+  // ─── Body ───────────────────────────────────────────────────────────────────
+  .tours__card-body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 1.75rem 1rem 1rem;        // ← pt generoso por la meta flotante
+  }
+
+  // ─── Info ───────────────────────────────────────────────────────────────────
+  .tours__card-info {
+    border-bottom: 1px solid $tours-border;
+    padding-bottom: 0.625rem;
+  }
+
+  .tours__card-title-link {
+    display: inline-flex;
+    transition: color 0.2s ease, transform 0.2s ease;
+
+    &:hover {
+      transform: translateY(-1px);
+
+      .tours__card-title { color: $color-primary; } // ← color primario en hover
+    }
+  }
+
+  .tours__card-title {
+    font-size: $font-size-base;        // ← base: más compacto y limpio
+    font-weight: $font-weight-semibold;// ← semibold en lugar de medium
+    line-height: 1.4;
+    letter-spacing: 0.2px;
+    color: $color-text-dark;
+    transition: color 0.2s ease;
+  }
+
+  .tours__card-location {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    margin-top: 0.3rem;
+    font-size: $font-size-sm;
+    line-height: 1.375;
+    letter-spacing: 0.2px;
+    color: $tours-text-muted;
+
+    // ← icono de location en color primario para destacar
+    .tours__icon { color: $color-primary; }
+  }
+
+  // ─── Footer ─────────────────────────────────────────────────────────────────
+  .tours__card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .tours__card-price {
+    letter-spacing: 0.2px;
+  }
+
+  .tours__card-price-label {
+    font-size: 0.7rem;                 // ← más pequeño para jerarquía
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: $tours-text-muted;
+    line-height: 1.2;
+  }
+
+  .tours__card-price-value {
+    font-size: 1.25rem;                // ← más grande: protagonismo del precio
+    font-weight: $font-weight-bold;
+    line-height: 1.2;
+    color: $color-primary;            // ← color primario: el precio es el CTA visual
+  }
+
+  // ─── CTA ────────────────────────────────────────────────────────────────────
+  .tours__card-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    background-color: $color-primary;
+    color: $color-white;
+    border: 2px solid $color-primary;
+    border-radius: 6px;
+    padding: 0.5rem 1rem;
+    font-size: $font-size-sm;
+    font-weight: $font-weight-semibold;
+    letter-spacing: 0.03em;
+    transition:
+      background-color 0.2s ease,
+      color            0.2s ease,
+      transform        0.2s ease,
+      box-shadow       0.2s ease;
+
+    .tours__icon {
+      width: 0.8rem;
+      height: 0.8rem;
+      transition: transform 0.2s ease;
+    }
+
+    &:hover {
+      background-color: $color-white;
+      color: $color-primary;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba($color-primary, 0.25);
+
+      .tours__icon { transform: translateX(2px); } // ← flecha se mueve al hover
+    }
+  }
+
+  // ─── Paginación ─────────────────────────────────────────────────────────────
+  .tours__pagination-wrapper {
+    display: flex;
+    justify-content: center;
+    margin-top: 1.75rem;
+  }
+
+  .tours-pagination {
+    display: flex;
+    gap: 0.375rem;
+    justify-content: center;
+    align-items: center;
+  }
+
+  :global(.tours-pagination .tours-pagination-bullet) {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 8px;
+    height: 8px;
+    border-radius: 9999px;
+    border: 1.5px solid $color-primary;
+    background: transparent;
+    cursor: pointer;
+    transition:
+      background-color 0.2s ease,
+      width            0.25s ease, // ← bullet activo se alarga
+      border-color     0.2s ease,
+      box-shadow       0.2s ease,
+      transform        0.2s ease;
+
+    &:hover {
+      background-color: rgba($color-primary, 0.4);
+      transform: scale(1.15);
+    }
+
+    &:focus-visible {
+      outline: 2px solid rgba($color-primary, 0.45);
+      outline-offset: 2px;
+    }
+  }
+
+  // ← bullet activo se convierte en píldora alargada
+  :global(.tours-pagination .tours-pagination-bullet-active) {
+    background-color: $color-primary;
+    border-color: $color-primary;
+    width: 20px;
+    border-radius: 9999px;
+    box-shadow: 0 4px 10px rgba($color-primary, 0.3);
+  }
+
+  :global(.tours-nav-disabled) {
+    opacity: 0.3;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+</style>
+
+<script>
+  import Swiper from "swiper";
+  import { Navigation, Pagination } from "swiper/modules";
+  import "swiper/css";
+  import "swiper/css/pagination";
+
+  new Swiper(".tours-swiper", {
+    modules: [Navigation, Pagination],
+    slidesPerView: 1.1,
+    spaceBetween: 12,
+    pagination: {
+      el: ".tours-pagination",
+      clickable: true,
+      bulletClass: "swiper-pagination-bullet tours-pagination-bullet",
+      bulletActiveClass:
+        "swiper-pagination-bullet-active tours-pagination-bullet-active",
+    },
+    navigation: {
+      prevEl: ".tours-button-prev",
+      nextEl: ".tours-button-next",
+      disabledClass: "tours-nav-disabled",
+    },
+    breakpoints: {
+      640: { slidesPerView: 2, spaceBetween: 16 },
+      1024: { slidesPerView: 3, spaceBetween: 24 },
+    },
+  });
+</script>

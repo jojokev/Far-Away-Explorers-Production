@@ -1,0 +1,96 @@
+---
+---
+
+<section class="about">
+  <div class="container">
+    <div class="about__inner">
+
+      <div class="about__header">
+        <p class="about__eyebrow">FARAWAY EXPLORER</p>
+        <h2 class="about__title">SOBRE NOSOTROS</h2>
+      </div>
+
+      <p class="about__body">
+        En Chullpi Expeditions, te invitamos a descubrir Peru de forma autentica y enriquecedora.
+        Disenamos experiencias unicas que conectan a los viajeros con la cultura, historia y paisajes de
+        este maravilloso pais.
+      </p>
+      <p class="about__body">
+        Con un equipo apasionado y guias expertos, cada recorrido esta cuidadosamente planificado para
+        brindarte una aventura segura y personalizada.
+      </p>
+      <p class="about__cta-text">
+        Explora, descubre y dejate sorprender por Peru con Chullpi Expeditions!
+      </p>
+
+    </div>
+  </div>
+</section>
+
+<style lang="scss">
+  @use '../styles/abstract/variables' as *;
+  @use '../styles/abstract/mixins' as *;
+
+  // ─── Section ────────────────────────────────────────────────────────────────
+  .about {
+    padding-block: 2.5rem;
+    @include md { padding-block: 2.5rem; }
+  }
+
+  // ─── Inner ──────────────────────────────────────────────────────────────────
+  .about__inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    width: 100%;
+    max-width: 57rem;       // ~912px
+    margin-inline: auto;
+    text-align: center;
+  }
+
+  // ─── Header del bloque ──────────────────────────────────────────────────────
+  .about__header {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    width: 100%;
+  }
+
+  .about__eyebrow {
+    font-size: $font-size-base;
+    font-weight: $font-weight-bold;
+    letter-spacing: 0.12em;          // ← más espacio para el label en caps
+    color: $color-primary;
+  }
+
+  .about__title {
+    font-size: 1.5rem;               // text-2xl
+    font-weight: $font-weight-bold;
+    line-height: 1.2;
+    letter-spacing: 0.06em;          // ← tracking para títulos en uppercase
+    color: $color-text-dark;
+
+    @include md { font-size: 1.875rem; } // text-3xl
+  }
+
+  // ─── Cuerpo ─────────────────────────────────────────────────────────────────
+  .about__body {
+    max-width: 57rem;
+    font-size: $font-size-base;
+    line-height: 1.625;
+    letter-spacing: 0.2px;
+    color: $color-text-dark;
+  }
+
+  // ─── Frase destacada ────────────────────────────────────────────────────────
+  .about__cta-text {
+    max-width: 57rem;
+    font-size: $font-size-lg;
+    font-weight: $font-weight-medium;
+    line-height: 1.625;
+    letter-spacing: 0.2px;
+    color: $color-primary;           // ← color primario para destacar la frase
+    margin-top: 0.5rem;
+  }
+</style>

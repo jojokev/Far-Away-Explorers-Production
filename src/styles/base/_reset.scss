@@ -1,0 +1,85 @@
+// src/styles/base/_reset.scss
+// Modern CSS Reset - Based on Andy Bell's reset + best practices
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  // Previene ajuste de tamaño de fuente en iOS al rotar pantalla
+  -webkit-text-size-adjust: 100%;
+  // Scroll suave (respeta preferencias del usuario)
+  @media (prefers-reduced-motion: no-preference) {
+    scroll-behavior: smooth;
+  }
+}
+
+body {
+  min-height: 100vh;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+// Elementos de bloque multimedia
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+// Herencia de fuente en inputs (los navegadores no la aplican por defecto)
+input,
+button,
+textarea,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+// Evita overflow en elementos de texto largos
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  overflow-wrap: break-word;
+}
+
+// Elimina estilos de lista solo cuando tiene role="list" (accesibilidad)
+ul[role="list"],
+ol[role="list"] {
+  list-style: none;
+}
+
+// Elimina decoración de links (opcional, depende del diseño)
+a {
+  text-decoration-skip-ink: auto;
+  color: inherit;
+  text-decoration: none;
+}
+
+// Tablas
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+// Elementos hidden nativos
+[hidden] {
+  display: none !important;
+}
+
+// Mejora renderizado de fuentes en Firefox
+* {
+  text-rendering: optimizeLegibility;
+}
