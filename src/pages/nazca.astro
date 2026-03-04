@@ -1,0 +1,141 @@
+﻿---
+import Layout from "../layouts/Layout.astro";
+import defaultImage from "../assets/default.webp";
+import { Icon } from "astro-icon/components";
+
+const res = await fetch("https://wp.farawayexplorers.com/wp-json/wp/v2/tour?categories=6&_embed");
+const data = await res.json();
+
+const category = {
+  name:        "Nazca",
+  description: "Nazca es un destino fascinante de desierto, arqueologia y misterio en la costa sur del Peru. Sus famosas Lineas de Nazca, acueductos ancestrales y sitios prehispanicos hacen de esta region una experiencia unica para viajeros curiosos.",
+  total:       data.length,
+};
+---
+
+<Layout title={`${category.name} | Far Away Expeditions`}>
+  <div class="category-page">
+
+    <!--  Hero  -->
+    <section class="cat-hero">
+      <div class="cat-hero__bg" aria-hidden="true">
+        <img src={defaultImage.src} alt="" class="cat-hero__bg-img" />
+        <div class="cat-hero__bg-overlay"></div>
+        <div class="cat-hero__bg-dots"></div>
+      </div>
+
+      <div class="container">
+        <div class="cat-hero__inner">
+          <h1 class="cat-hero__title">{category.name}</h1>
+          <p class="cat-hero__desc">{category.description}</p>
+        </div>
+      </div>
+    </section>
+
+    <!--  Breadcrumb + contador  -->
+    <div class="cat-topbar">
+      <div class="container">
+        <div class="cat-topbar__inner">
+
+          <nav class="cat-topbar__breadcrumb" aria-label="Breadcrumb">
+            <a href="/" class="cat-topbar__breadcrumb-link">Inicio</a>
+            <Icon name="ion:chevron-forward" class="cat-topbar__breadcrumb-sep" aria-hidden="true" />
+            <a href="/destinos" class="cat-topbar__breadcrumb-link">Destinos</a>
+            <Icon name="ion:chevron-forward" class="cat-topbar__breadcrumb-sep" aria-hidden="true" />
+            <span class="cat-topbar__breadcrumb-current">{category.name}</span>
+          </nav>
+
+          <div class="cat-topbar__right">
+            <p class="cat-topbar__count">
+              <strong>{data.length}</strong> tours disponibles
+            </p>
+            <div class="cat-topbar__view-toggle" role="group" aria-label="Cambiar vista">
+              <button type="button" class="cat-topbar__view-btn cat-topbar__view-btn--active" aria-label="Vista cuadrAcula" data-view="grid">
+                <Icon name="ion:grid-outline" aria-hidden="true" />
+              </button>
+              <button type="button" class="cat-topbar__view-btn" aria-label="Vista lista" data-view="list">
+                <Icon name="ion:list-outline" aria-hidden="true" />
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!--  Resultados  -->
+    <section class="cat-results">
+      <div class="container">
+        <div class="cat-grid" id="tours-grid">
+          {data.map((tour: any) => (
+            <article class="cat-card">
+
+              <a href={`/tour/${tour.slug}`} class="cat-card__img-link" tabindex="-1" aria-hidden="true">
+                <img
+                  src={tour._embedded?.["wp:featuredmedia"]?.[0]?.media_details?.sizes?.medium_large?.source_url ?? defaultImage.src}
+                  alt={tour.title_plain}
+                  class="cat-card__img"
+                  loading="lazy"
+                />
+              </a>
+
+              <div class="cat-card__body">
+
+                <div class="cat-card__meta">
+                  <span class="cat-card__meta-item">
+                    <Icon name="ion:time-outline" aria-hidden="true" />
+                    {tour.acf.duracion}
+                  </span>
+                  <span class="cat-card__meta-item">
+                    <Icon name="ion:people-outline" aria-hidden="true" />
+                    MAx. {tour.acf.group}
+                  </span>
+                </div>
+
+                <h2 class="cat-card__title">
+                  <a href={`/tour/${tour.slug}`} class="cat-card__title-link">
+                    {tour.title_plain}
+                  </a>
+                </h2>
+
+                <div class="cat-card__footer">
+                  <div class="cat-card__price-block">
+                    <span class="cat-card__price-from">Desde</span>
+                    <span class="cat-card__price">${tour.acf.price}</span>
+                    <span class="cat-card__price-per">/ persona</span>
+                  </div>
+                  <a href={`/tour/${tour.slug}`} class="cat-card__cta">
+                    Ver tour
+                    <Icon name="ion:arrow-forward" class="cat-card__cta-icon" aria-hidden="true" />
+                  </a>
+                </div>
+
+              </div>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+  </div>
+</Layout>
+
+<style lang="scss">
+  @use '../styles/categories-page.scss';
+</style>
+
+<script>
+  // Toggle vista grid / lista 
+  const viewBtns = document.querySelectorAll(".cat-topbar__view-btn");
+  const grid     = document.getElementById("tours-grid");
+
+  viewBtns.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      viewBtns.forEach((b) => b.classList.remove("cat-topbar__view-btn--active"));
+      btn.classList.add("cat-topbar__view-btn--active");
+      grid?.classList.toggle("cat-grid--list", btn.getAttribute("data-view") === "list");
+    });
+  });
+</script>
+
+

@@ -1,11 +1,14 @@
 ---
-import defaultImage from "../assets/default.webp";
+import imgArequipa from "../assets/cards/card-arequipa.webp";
+import imgLima from "../assets/cards/card-lima.webp";
+import imgIca from "../assets/cards/card-ica.webp";
+import imgCusco from "../assets/cards/card-cusco.webp";
 
 const destinations = {
-  arequipa: { title: "Arequipa", image: defaultImage.src },
-  lima:     { title: "Lima",     image: defaultImage.src },
-  ica:      { title: "Ica",      image: defaultImage.src },
-  cusco:    { title: "Cusco",    image: defaultImage.src },
+  arequipa: { title: "Arequipa", image: imgArequipa.src, link: "/arequipa" },
+  lima:     { title: "Lima",     image: imgLima.src, link: "/lima" },
+  ica:      { title: "Ica",      image: imgIca.src, link: "/ica" },
+  cusco:    { title: "Cusco",    image: imgCusco.src, link: "/cusco" },
 };
 ---
 
@@ -28,7 +31,7 @@ const destinations = {
 
       <!-- Tarjeta principal (Arequipa) -->
       <a
-        href="#"
+        href={destinations.arequipa.link}
         class="destinations__card destinations__card--featured"
         aria-label={destinations.arequipa.title}
       >
@@ -45,19 +48,19 @@ const destinations = {
       <!-- Sub-grid (Lima, Ica, Cusco) -->
       <div class="destinations__subgrid">
 
-        <a href="#" class="destinations__card" aria-label={destinations.lima.title}>
+        <a href={destinations.lima.link} class="destinations__card" aria-label={destinations.lima.title}>
           <img src={destinations.lima.image} alt={destinations.lima.title} class="destinations__card-img" loading="lazy" />
           <div class="destinations__card-overlay" aria-hidden="true"></div>
           <h3 class="destinations__card-label destinations__card-label--sm">{destinations.lima.title}</h3>
         </a>
 
-        <a href="#" class="destinations__card" aria-label={destinations.ica.title}>
+        <a href={destinations.ica.link} class="destinations__card" aria-label={destinations.ica.title}>
           <img src={destinations.ica.image} alt={destinations.ica.title} class="destinations__card-img" loading="lazy" />
           <div class="destinations__card-overlay" aria-hidden="true"></div>
           <h3 class="destinations__card-label destinations__card-label--sm">{destinations.ica.title}</h3>
         </a>
 
-        <a href="#" class="destinations__card destinations__card--wide" aria-label={destinations.cusco.title}>
+        <a href={destinations.cusco.link} class="destinations__card destinations__card--wide" aria-label={destinations.cusco.title}>
           <img src={destinations.cusco.image} alt={destinations.cusco.title} class="destinations__card-img" loading="lazy" />
           <div class="destinations__card-overlay" aria-hidden="true"></div>
           <h3 class="destinations__card-label destinations__card-label--sm">{destinations.cusco.title}</h3>

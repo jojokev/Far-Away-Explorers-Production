@@ -3,16 +3,20 @@ import { Icon } from "astro-icon/components";
 import logo from "../assets/logo-far-away.webp";
 
 const navLinks = [
-  { label: "Inicio",    href: "#", icon: "ion:home-outline" },
+  { label: "Inicio",    href: "/", icon: "ion:home-outline" },
   { label: "Destinos",  href: "#", icon: "ion:earth-outline",
     submenu: [
-      { label: "Ica",     href: "#", icon: "ion:sunny-outline" },
-      { label: "Lima",    href: "#", icon: "ion:business-outline" },
-      { label: "Cusco",   href: "#", icon: "ion:trail-sign-outline" },
-      { label: "Bolivia", href: "#", icon: "ion:flag-outline" },
+      { label: "Cusco",   href: "/cusco", icon: "ion:flag-outline" },
+      { label: "Arequipa", href: "/arequipa", icon: "ion:flag-outline" },
+      { label: "Lima",    href: "/lima", icon: "ion:flag-outline" },
+      { label: "Nazca", href: "/nazca", icon: "ion:flag-outline" },
+      { label: "Puno", href: "/puno", icon: "ion:flag-outline" },
+      { label: "Bolivia", href: "/bolivia", icon: "ion:flag-outline" },
+      { label: "Ica",     href: "/ica", icon: "ion:flag-outline" },
+      { label: "Nazca", href: "/nazca", icon: "ion:flag-outline" },
     ]
   },
-  { label: "Paquetes",  href: "#", icon: "ion:briefcase-outline" },
+  { label: "Paquetes",  href: "/paquetes", icon: "ion:briefcase-outline" },
   { label: "Full Day",  href: "#", icon: "ion:sunny-outline" },
   { label: "Trekking",  href: "#", icon: "ion:footsteps-outline" },
 ];
@@ -173,7 +177,7 @@ const { background = "light" } = Astro.props;
   $nav-height:            80px;
   $mobile-menu-speed:     0.32s;
   $submenu-speed:         0.25s;
-  $nav-link-color-rest:   rgba($color-white, 0.85);
+  $nav-link-color-rest:   rgba($color-white, 0.95);
   $submenu-bg:            #1a1208;       // ← más oscuro que el nav para contraste
   $submenu-shadow:        0 12px 32px rgba(0, 0, 0, 0.35);
 
@@ -440,9 +444,9 @@ const { background = "light" } = Astro.props;
   .header__submenu {
     position: absolute;
     top: calc(#{$nav-height} - 2px);
-    left: 50%;                                    // ← era 0%
+    left: 30%;                                    // ← era 0%
     transform: translateX(-50%) translateY(-8px);
-    min-width: 180px;
+    min-width: 250px;
     list-style: none;
     background-color: $submenu-bg;
     border: 1px solid rgba($color-primary, 0.3);
@@ -479,7 +483,7 @@ const { background = "light" } = Astro.props;
     padding: 0.625rem 1.125rem;
     font-size: $font-size-sm;
     font-weight: $font-weight-medium;
-    color: rgba($color-white, 0.72);
+    color: rgba($color-white, 0.9);
     letter-spacing: 0.03em;
     white-space: nowrap;
     border-left: 2px solid transparent;

@@ -1,24 +1,52 @@
 ---
-import defaultImage from "../assets/default.webp";
-import avatar from "../assets/comment-avatar.png";
 import prevIcon from "../assets/icons/Vector-3.png";
 import nextIcon from "../assets/icons/Vector-4.png";
 import score from "../assets/icons/Score.png";
 import tripadvisor from "../assets/icons/Tripadvisor.png";
 import { Icon } from "astro-icon/components";
 
-const reviewerAvatar   = avatar.src;
 const navPrevIcon      = prevIcon.src;
 const navNextIcon      = nextIcon.src;
 const reviewScoreImage = score.src;
 const tripadvisorIcon  = tripadvisor.src;
 
-const reviews = Array.from({ length: 4 }, () => ({
-  comment: "Thanks to Cristian and Jaier, we had an unforgettable experience on our Rainbow Mountain tour and are having the time or our lives in Peru. In spite of cloudy and snowy conditions, Cristian's patience and wisdom made our time at Rainbow Mountain simply magical.",
-  user:    "RyanNfromAthensUSA",
-  tag:     "Family",
-  date:    "Written July 14, 2025",
-}));
+const reviews = [
+  {
+    comment: "It was a rewarding experience, expectations were met above expectations leaving the illusion of returning to visit Peru. Thank you to Kevin for his kind attention and excellent service.",
+    user:    "Juan Carlos P",
+    tag:     "Couples",
+    date:    "Written March 1, 2026",
+    avatar:  "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/1a/f6/ef/32/default-avatar-2020-12.jpg?w=100&h=100&s=1",
+  },
+  {
+    comment: "The experience of the trip was the best, the tourist advice, the friendliness and courtesy of the group of people who attended us especially Kevin , was far above what was expected. They took it upon themselves to make this trip unforgettable, which we will keep in memory. We'll be back soon!",
+    user:    "Martha G",
+    tag:     "Couples",
+    date:    "Written March 1, 2026",
+    avatar:  "https://dynamic-media-cdn.tripadvisor.com/media/photo-l/01/2a/fd/94/avatar.jpg?w=100&h=100&s=1",
+  },
+  {
+    comment: "Unique service, personalized pending the smallest detail. Kevin I want an excellent person working tirelessly to make everything work for us and well. Super recommended we travel from Colombia with everything organized by Kevin!!! I don't miss anything.",
+    user:    "Pedro C",
+    tag:     "Solo",
+    date:    "Written February 28, 2026",
+    avatar:  "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/1a/f6/ef/9c/default-avatar-2020-14.jpg?w=100&h=100&s=1",
+  },
+  {
+    comment: "One of the best experiences we have had as a family, Kevin is a great person who helped us a lot throughout our stay, always attentive and willing to help us in any situation.",
+    user:    "Fredy R",
+    tag:     "Solo",
+    date:    "Written February 27, 2026",
+    avatar:  "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/1a/f6/ef/9c/default-avatar-2020-14.jpg?w=100&h=100&s=1",
+  },
+  {
+    comment: "I loved the service, the attention 10/10 treated me like family thank you for the nice experience, I recommend it more than a trip is a new experience!.",
+    user:    "Dreamer51700917596",
+    tag:     "Friends",
+    date:    "Written February 27, 2026",
+    avatar:  "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/1a/f6/f2/b8/default-avatar-2020-26.jpg?w=100&h=100&s=1",
+  },
+];
 ---
 
 <section class="reviews">
@@ -55,7 +83,7 @@ const reviews = Array.from({ length: 4 }, () => ({
 
                 <div class="reviews__card-author">
                   <img
-                    src={reviewerAvatar}
+                    src={review.avatar}
                     alt={review.user}
                     class="reviews__card-avatar"
                     loading="lazy"
@@ -100,7 +128,7 @@ const reviews = Array.from({ length: 4 }, () => ({
       </div>
 
       <!-- ── CTA ──────────────────────────────────── -->
-      <a href="#" class="reviews__cta">
+      <a href="https://www.tripadvisor.com/Attraction_Review-g294314-d34235732-Reviews-Far_Away_Explorers-Cusco_Cusco_Region.html" target="_blank" class="reviews__cta">
         View All Reviews
         <Icon name="ion:arrow-forward" class="reviews__cta-icon" aria-hidden="true" />
       </a>
@@ -118,7 +146,7 @@ const reviews = Array.from({ length: 4 }, () => ({
   $reviews-color-muted:       #666;
   $reviews-color-border:      rgba(221, 221, 221, 0.45);
   $reviews-color-tripadv:     #00852f;
-  $reviews-avatar-size:       5.5rem;
+  $reviews-avatar-size:       4rem;
   $reviews-tripadv-size:      2.5rem;
   $reviews-score-h:           14px;
   $reviews-score-w:           78px;

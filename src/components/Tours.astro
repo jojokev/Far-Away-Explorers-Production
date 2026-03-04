@@ -7,40 +7,9 @@ const tourImage = defaultImage.src;
 const navPrevIcon = prevIcon.src;
 const navNextIcon = nextIcon.src;
 
-const tours = [
-  {
-    title: "Trekking Montana Arcoiris Palcoyo",
-    location: "Machupicchu",
-    price: "$135.00",
-    capacity: "max. 16",
-    duration: "4 Dias / 3 Noches",
-    featured: "Destacado",
-  },
-  {
-    title: "Trekking Montana Arcoiris Palcoyo",
-    location: "Machupicchu",
-    price: "$135.00",
-    capacity: "max. 16",
-    duration: "4 Dias / 3 Noches",
-    featured: "Destacado",
-  },
-  {
-    title: "Trekking Montana Arcoiris Palcoyo",
-    location: "Machupicchu",
-    price: "$135.00",
-    capacity: "max. 16",
-    duration: "4 Dias / 3 Noches",
-    featured: "Destacado",
-  },
-  {
-    title: "Trekking Montana Arcoiris Palcoyo",
-    location: "Machupicchu",
-    price: "$135.00",
-    capacity: "max. 16",
-    duration: "4 Dias / 3 Noches",
-    featured: "Destacado",
-  },
-];
+const res = await fetch("https://wp.farawayexplorers.com/wp-json/wp/v2/tour?categories=7&per_page=5&_embed");
+const data = await res.json();
+
 ---
 
 <section class="tours">
@@ -64,26 +33,26 @@ const tours = [
 
         <div class="swiper tours-swiper">
           <div class="swiper-wrapper">
-            {tours.map((tour) => (
+            {data.map((tour:any) => (
               <article class="swiper-slide tours__card">
 
                 <div class="tours__card-media">
-                  <a href="#" class="tours__card-img-link">
+                  <a href={tour.link} class="tours__card-img-link">
                     <img
-                      src={tourImage}
-                      alt={tour.title}
+                      src={tour._embedded["wp:featuredmedia"] ? tour._embedded["wp:featuredmedia"][0].media_details.sizes.medium_large.source_url : tourImage}
+                      alt={tour.title_plain}
                       class="tours__card-img"
                       loading="lazy"
                     />
                   </a>
-                  <span class="tours__card-badge">{tour.featured}</span>
+                  <span class="tours__card-badge">{tour.acf.tipo_de_tour}</span>
                   <div class="tours__card-meta">
                     <div class="tours__card-meta-item">
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="tours__icon" aria-hidden="true">
                         <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
                         <circle cx="12" cy="7" r="4" />
                       </svg>
-                      <span>{tour.capacity}</span>
+                      <span>{tour.acf.group}</span>
                     </div>
                     <div class="tours__card-meta-item">
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="tours__icon" aria-hidden="true">
@@ -92,31 +61,31 @@ const tours = [
                         <line x1="8" y1="2" x2="8" y2="6" />
                         <line x1="3" y1="10" x2="21" y2="10" />
                       </svg>
-                      <span>{tour.duration}</span>
+                      <span>{tour.acf.duracion}</span>
                     </div>
                   </div>
                 </div>
 
                 <div class="tours__card-body">
                   <div class="tours__card-info">
-                    <a href="#" class="tours__card-title-link">
-                      <h3 class="tours__card-title">{tour.title}</h3>
+                    <a href={tour.link} class="tours__card-title-link">
+                      <h3 class="tours__card-title">{tour.title_plain}</h3>
                     </a>
                     <div class="tours__card-location">
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="tours__icon" aria-hidden="true">
                         <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 1 1 18 0z" />
                         <circle cx="12" cy="10" r="3" />
                       </svg>
-                      <span>{tour.location}</span>
+                      <span>{tour.acf.principales_lugares_visitados}</span>
                     </div>
                   </div>
 
                   <div class="tours__card-footer">
                     <div class="tours__card-price">
                       <p class="tours__card-price-label">Desde</p>
-                      <p class="tours__card-price-value">{tour.price}</p>
+                      <p class="tours__card-price-value">${tour.acf.price}</p>
                     </div>
-                    <a href="#" class="tours__card-cta">
+                    <a href={tour.link} class="tours__card-cta">
                       Explora
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="tours__icon" aria-hidden="true">
                         <path d="M5 12h14" />
