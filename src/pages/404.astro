@@ -1,0 +1,412 @@
+---
+import Layout from "../layouts/layout.astro";
+import { Icon } from "astro-icon/components";
+
+const suggestions = [
+  { label: "Inicio",    href: "/",          icon: "ion:home-outline" },
+  { label: "Destinos",  href: "/destinos",  icon: "ion:earth-outline" },
+  { label: "Trekking",  href: "/trekking",  icon: "ion:footsteps-outline" },
+  { label: "Contacto",  href: "/contacto",  icon: "ion:mail-outline" },
+];
+---
+
+<Layout title="Página no encontrada | Far Away Expeditions">
+  <div class="not-found">
+
+    <!-- ── Fondo decorativo ─────────────────────────────────────────────── -->
+    <div class="not-found__bg" aria-hidden="true">
+      <div class="not-found__bg-circle not-found__bg-circle--1"></div>
+      <div class="not-found__bg-circle not-found__bg-circle--2"></div>
+      <div class="not-found__bg-dots"></div>
+    </div>
+
+    <div class="container">
+      <div class="not-found__inner">
+
+        <!-- Ilustración del número 404 -->
+        <div class="not-found__visual" aria-hidden="true">
+          <span class="not-found__num not-found__num--4">4</span>
+          <div class="not-found__compass">
+            <div class="not-found__compass-ring"></div>
+            <div class="not-found__compass-ring not-found__compass-ring--inner"></div>
+            <Icon name="ion:compass-outline" class="not-found__compass-icon" />
+            <div class="not-found__compass-pulse"></div>
+          </div>
+          <span class="not-found__num not-found__num--4b">4</span>
+        </div>
+
+        <!-- Texto -->
+        <div class="not-found__content">
+          <p class="not-found__eyebrow">Error 404</p>
+          <h1 class="not-found__title">Ruta no encontrada</h1>
+          <p class="not-found__desc">
+            Parece que te perdiste en el camino. Esta página no existe o fue movida.
+            No te preocupes, tenemos muchas aventuras esperándote.
+          </p>
+        </div>
+
+        <!-- Links sugeridos -->
+        <div class="not-found__suggestions">
+          <p class="not-found__suggestions-label">Quizás buscabas:</p>
+          <div class="not-found__links">
+            {suggestions.map((s) => (
+              <a href={s.href} class="not-found__link">
+                <Icon name={s.icon} class="not-found__link-icon" aria-hidden="true" />
+                <span>{s.label}</span>
+              </a>
+            ))}
+          </div>
+        </div>
+
+        <!-- CTA principal -->
+        <a href="/" class="not-found__cta">
+          <Icon name="ion:home-outline" class="not-found__cta-icon" aria-hidden="true" />
+          Volver al inicio
+        </a>
+
+      </div>
+    </div>
+
+  </div>
+</Layout>
+
+<style lang="scss">
+  @use '../styles/abstract/variables' as *;
+  @use '../styles/abstract/mixins'   as *;
+
+  // ─── Variables locales ──────────────────────────────────────────────────────
+  $nf-num-size-mobile:   6rem;
+  $nf-num-size-md:       9rem;
+  $nf-compass-size:      7rem;
+  $nf-compass-size-md:   10rem;
+  $nf-color-text:        #151515;
+  $nf-color-muted:       rgba(80, 80, 80, 0.75);
+  $nf-circle-1:          rgba($color-primary, 0.07);
+  $nf-circle-2:          rgba($color-primary, 0.04);
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // WRAPPER
+  // ═══════════════════════════════════════════════════════════════════════════
+  .not-found {
+    position: relative;
+    min-height: calc(100vh - 160px); // ← descuenta header + footer aproximado
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    padding-block: 5rem;
+  }
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // FONDO DECORATIVO
+  // ═══════════════════════════════════════════════════════════════════════════
+  .not-found__bg {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  // Círculos difuminados de fondo
+  .not-found__bg-circle {
+    position: absolute;
+    border-radius: 50%;
+
+    &--1 {
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, $nf-circle-1 0%, transparent 70%);
+      top: -200px;
+      right: -150px;
+    }
+
+    &--2 {
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, $nf-circle-2 0%, transparent 70%);
+      bottom: -100px;
+      left: -100px;
+    }
+  }
+
+  // Patrón de puntos (coherente con hero y whyus)
+  .not-found__bg-dots {
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(rgba($color-primary, 0.08) 1px, transparent 1px);
+    background-size: 28px 28px;
+    opacity: 0.6;
+  }
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // INNER
+  // ═══════════════════════════════════════════════════════════════════════════
+  .not-found__inner {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 2.5rem;
+  }
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // VISUAL — 4 🧭 4
+  // ═══════════════════════════════════════════════════════════════════════════
+  .not-found__visual {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+
+    @include md { gap: 1.5rem; }
+  }
+
+  // Números "4"
+  .not-found__num {
+    font-size: $nf-num-size-mobile;
+    font-weight: $font-weight-bold;
+    line-height: 1;
+    color: $color-primary;
+    opacity: 0.15;
+    user-select: none;
+    letter-spacing: -0.04em;
+    // ← texto con stroke para estilo outline
+    -webkit-text-stroke: 2px $color-primary;
+    color: transparent;
+
+    @include md { font-size: $nf-num-size-md; }
+
+    &--4  { animation: nf-float 4s ease-in-out infinite; }
+    &--4b { animation: nf-float 4s ease-in-out infinite 0.5s; }
+  }
+
+  // Brújula central
+  .not-found__compass {
+    position: relative;
+    width: $nf-compass-size;
+    height: $nf-compass-size;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+
+    @include md {
+      width: $nf-compass-size-md;
+      height: $nf-compass-size-md;
+    }
+  }
+
+  .not-found__compass-ring {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    border: 2px solid rgba($color-primary, 0.25);
+    animation: nf-spin 12s linear infinite;
+
+    &--inner {
+      inset: 12px;
+      border-color: rgba($color-primary, 0.15);
+      animation-duration: 8s;
+      animation-direction: reverse;
+
+      @include md { inset: 16px; }
+    }
+  }
+
+  // Pulso detrás de la brújula
+  .not-found__compass-pulse {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba($color-primary, 0.12) 0%, transparent 70%);
+    animation: nf-pulse 3s ease-in-out infinite;
+  }
+
+  .not-found__compass-icon {
+    font-size: 3.25rem;
+    color: $color-primary;
+    animation: nf-compass-spin 6s ease-in-out infinite;
+    position: relative;
+    z-index: 1;
+
+    @include md { font-size: 4.5rem; }
+  }
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // CONTENIDO
+  // ═══════════════════════════════════════════════════════════════════════════
+  .not-found__content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+    max-width: 520px;
+  }
+
+  .not-found__eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: $font-size-sm;
+    font-weight: $font-weight-bold;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: $color-primary;
+
+    // ← líneas simétricas (coherente con el resto de secciones)
+    &::before,
+    &::after {
+      content: '';
+      display: inline-block;
+      width: 1.5rem;
+      height: 2px;
+      background-color: $color-primary;
+      border-radius: 2px;
+    }
+  }
+
+  .not-found__title {
+    font-size: 1.875rem;
+    font-weight: $font-weight-bold;
+    line-height: 1.2;
+    color: $nf-color-text;
+
+    @include md { font-size: 2.25rem; }
+  }
+
+  .not-found__desc {
+    font-size: $font-size-base;
+    line-height: 1.7;
+    color: $nf-color-muted;
+  }
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // LINKS SUGERIDOS
+  // ═══════════════════════════════════════════════════════════════════════════
+  .not-found__suggestions {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.875rem;
+  }
+
+  .not-found__suggestions-label {
+    font-size: $font-size-sm;
+    color: $nf-color-muted;
+    font-weight: $font-weight-medium;
+  }
+
+  .not-found__links {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.625rem;
+  }
+
+  .not-found__link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.45rem 1rem;
+    border-radius: 99px;
+    border: 1.5px solid rgba($color-primary, 0.3);
+    background-color: $color-white;
+    font-size: $font-size-sm;
+    font-weight: $font-weight-medium;
+    color: $nf-color-text;
+    transition:
+      background-color 0.25s ease,
+      border-color     0.25s ease,
+      color            0.25s ease,
+      transform        0.2s ease,
+      box-shadow       0.2s ease;
+
+    &:hover {
+      background-color: $color-primary;
+      border-color: $color-primary;
+      color: $color-white;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba($color-primary, 0.22);
+    }
+  }
+
+  .not-found__link-icon {
+    font-size: 0.95rem;
+    flex-shrink: 0;
+    transition: transform 0.2s ease;
+
+    .not-found__link:hover & { transform: scale(1.15); }
+  }
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // CTA PRINCIPAL
+  // ═══════════════════════════════════════════════════════════════════════════
+  .not-found__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background-color: $color-primary;
+    color: $color-white;
+    border: 2px solid $color-primary;
+    border-radius: 8px;
+    padding: 0.75rem 2rem;
+    font-size: $font-size-base;
+    font-weight: $font-weight-semibold;
+    letter-spacing: 0.02em;
+    transition:
+      background-color 0.25s ease,
+      color            0.25s ease,
+      transform        0.2s ease,
+      box-shadow       0.25s ease;
+
+    &:hover {
+      background-color: $color-white;
+      color: $color-primary;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba($color-primary, 0.28);
+    }
+  }
+
+  .not-found__cta-icon {
+    font-size: 1.1rem;
+    transition: transform 0.2s ease;
+
+    .not-found__cta:hover & { transform: translateX(-2px); }
+  }
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // ANIMACIONES
+  // ═══════════════════════════════════════════════════════════════════════════
+  @keyframes nf-float {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(-10px); }
+  }
+
+  @keyframes nf-spin {
+    to { transform: rotate(360deg); }
+  }
+
+  @keyframes nf-compass-spin {
+    0%   { transform: rotate(-15deg); }
+    25%  { transform: rotate(20deg); }
+    50%  { transform: rotate(-10deg); }
+    75%  { transform: rotate(15deg); }
+    100% { transform: rotate(-15deg); }
+  }
+
+  @keyframes nf-pulse {
+    0%, 100% { transform: scale(1);    opacity: 1; }
+    50%      { transform: scale(1.15); opacity: 0.6; }
+  }
+
+  // ─── Respeta prefers-reduced-motion ────────────────────────────────────────
+  @media (prefers-reduced-motion: reduce) {
+    .not-found__num,
+    .not-found__compass-ring,
+    .not-found__compass-icon,
+    .not-found__compass-pulse {
+      animation: none;
+    }
+  }
+</style>
