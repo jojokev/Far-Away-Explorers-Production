@@ -1,6 +1,6 @@
 ﻿---
 import Layout from "../layouts/Layout.astro";
-import defaultImage from "../assets/default.webp";
+import defaultImage from "../assets/banners/panoramico-bolivia.webp";
 import { Icon } from "astro-icon/components";
 
 const res = await fetch("https://wp.farawayexplorers.com/wp-json/wp/v2/tour?categories=10&_embed");
@@ -16,7 +16,7 @@ const category = {
 <Layout title={`${category.name} | Far Away Expeditions`}>
   <div class="category-page">
 
-    <!-- â•â• Hero â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+        <!-- Hero -->
     <section class="cat-hero">
       <div class="cat-hero__bg" aria-hidden="true">
         <img src={defaultImage.src} alt="" class="cat-hero__bg-img" />
@@ -32,7 +32,7 @@ const category = {
       </div>
     </section>
 
-    <!-- â•â• Breadcrumb + contador â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+        <!-- Breadcrumb + contador -->
     <div class="cat-topbar">
       <div class="container">
         <div class="cat-topbar__inner">
@@ -50,7 +50,7 @@ const category = {
               <strong>{data.length}</strong> tours disponibles
             </p>
             <div class="cat-topbar__view-toggle" role="group" aria-label="Cambiar vista">
-              <button type="button" class="cat-topbar__view-btn cat-topbar__view-btn--active" aria-label="Vista cuadrÃ­cula" data-view="grid">
+              <button type="button" class="cat-topbar__view-btn cat-topbar__view-btn--active" aria-label="Vista cuadrícula" data-view="grid">
                 <Icon name="ion:grid-outline" aria-hidden="true" />
               </button>
               <button type="button" class="cat-topbar__view-btn" aria-label="Vista lista" data-view="list">
@@ -63,7 +63,7 @@ const category = {
       </div>
     </div>
 
-    <!-- â•â• Resultados â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+        <!-- Resultados -->
     <section class="cat-results">
       <div class="container">
         <div class="cat-grid" id="tours-grid">
@@ -88,7 +88,7 @@ const category = {
                   </span>
                   <span class="cat-card__meta-item">
                     <Icon name="ion:people-outline" aria-hidden="true" />
-                    MÃ¡x. {tour.acf.group}
+                    Máx. {tour.acf.group}
                   </span>
                 </div>
 
@@ -125,7 +125,7 @@ const category = {
 </style>
 
 <script>
-  // â”€â”€â”€ Toggle vista grid / lista â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    // Toggle vista grid / lista
   const viewBtns = document.querySelectorAll(".cat-topbar__view-btn");
   const grid     = document.getElementById("tours-grid");
 
@@ -137,4 +137,6 @@ const category = {
     });
   });
 </script>
+
+
 
