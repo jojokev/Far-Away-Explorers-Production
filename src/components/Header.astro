@@ -22,6 +22,7 @@ const navLinks = [
 ];
 
 const { background = "light" } = Astro.props;
+const backgroundMode = background === "white" ? "dark" : background;
 ---
 
 <header class="header">
@@ -30,7 +31,9 @@ const { background = "light" } = Astro.props;
   <div class="header__topbar">
     <div class="container">
       <div class="header__topbar-inner">
-        <img src={logo.src} alt="Logo Far Away" class="header__logo header__logo--desktop" />
+        <a href="/">
+          <img src={logo.src} alt="Logo Far Away" class="header__logo header__logo--desktop" />
+        </a>
         <div class="header__actions">
           <div class="header__links">
             <a href="#" class="header__social" aria-label="Facebook">
@@ -42,26 +45,31 @@ const { background = "light" } = Astro.props;
             <a href="#" class="header__social" aria-label="TikTok">
               <Icon name="ion:logo-tiktok" class="header__social-icon" />
             </a>
+            <a href="https://www.tripadvisor.com/Attraction_Review-g294314-d34235732-Reviews-Far_Away_Explorers-Cusco_Cusco_Region.html" target="_blank" class="header__social" aria-label="TripAdvisor">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 36" fill="none" class="header__social-tripadvisor" aria-hidden="true">
+                <path d="M32.4566 14.4819L34.8261 12.1187H29.5715C26.941 10.4715 23.7641 9.51221 20.3283 9.51221C16.8969 9.51221 13.7289 10.4736 11.1027 12.1187H5.83496L8.20445 14.4819C6.75207 15.6966 5.84157 17.4463 5.84157 19.3891C5.84157 23.0555 9.08429 26.028 13.0839 26.028C14.9839 26.028 16.7149 25.3563 18.0072 24.2582L20.3284 26.575L22.6496 24.2602C23.9419 25.3583 25.6707 26.028 27.5706 26.028C31.5702 26.028 34.8173 23.0555 34.8173 19.3891C34.8195 17.4443 33.909 15.6946 32.4566 14.4819ZM13.086 23.8821C10.3787 23.8821 8.18475 21.871 8.18475 19.3891C8.18475 16.9073 10.3787 14.8961 13.086 14.8961C15.7934 14.8961 17.9873 16.9073 17.9873 19.3891C17.9873 21.871 15.7934 23.8821 13.086 23.8821ZM20.3305 19.2584C20.3305 16.3019 17.9852 13.7639 14.8895 12.6798C16.5635 12.0382 18.3998 11.6823 20.3283 11.6823C22.2568 11.6823 24.0953 12.0382 25.7694 12.6798C22.6759 13.7659 20.3305 16.302 20.3305 19.2584ZM27.5728 23.8821C24.8655 23.8821 22.6715 21.871 22.6715 19.3891C22.6715 16.9073 24.8655 14.8961 27.5728 14.8961C30.2802 14.8961 32.4741 16.9073 32.4741 19.3891C32.4741 21.871 30.2802 23.8821 27.5728 23.8821ZM27.5728 17.032C26.1533 17.032 25.0037 18.0859 25.0037 19.3871C25.0037 20.6883 26.1533 21.7422 27.5728 21.7422C28.9923 21.7422 30.142 20.6883 30.142 19.3871C30.1419 18.0879 28.9923 17.032 27.5728 17.032ZM15.6552 19.3891C15.6552 20.6903 14.5055 21.7442 13.086 21.7442C11.6666 21.7442 10.5169 20.6903 10.5169 19.3891C10.5169 18.0879 11.6666 17.034 13.086 17.034C14.5055 17.032 15.6552 18.0879 15.6552 19.3891Z" fill="currentColor"></path>
+              </svg>
+            </a>
             <span class="header__links-divider" aria-hidden="true"></span>
             <a href="#" class="header__link">Reviews</a>
             <a href="#" class="header__link">Blogs</a>
-            <a href="#" class="header__link">Nosotros</a>
+            <a href="/about-us" class="header__link">Nosotros</a>
             <a href="#" class="header__link header__link--hidden-xs">Terminos y condiciones</a>
           </div>
           <div class="header__contact">
-            <a href="tel:+51987654321" class="header__contact-item">
+            <a href="tel:+51900086730" class="header__contact-item">
               <svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" viewBox="0 0 19 19" fill="none">
                 <path d="M3 1H7L9 6L6.5 7.5C7.57096 9.67153 9.32847 11.429 11.5 12.5L13 10L18 12V16C18 16.5304 17.7893 17.0391 17.4142 17.4142C17.0391 17.7893 16.5304 18 16 18C12.0993 17.763 8.42015 16.1065 5.65683 13.3432C2.8935 10.5798 1.23705 6.90074 1 3C1 2.46957 1.21071 1.96086 1.58579 1.58579C1.96086 1.21071 2.46957 1 3 1Z" stroke="#AA5C00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
-              +51 987 654 321
+              +51 900 086 730
             </a>
-            <a href="mailto:info@farawayexpeditions.com" class="header__contact-item header__contact-item--hidden-xs">
+            <a href="mailto:info@farawayexplorers.com" class="header__contact-item header__contact-item--hidden-xs">
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
                 <path d="M3 7C3 6.46957 3.21071 5.96086 3.58579 5.58579C3.96086 5.21071 4.46957 5 5 5H19C19.5304 5 20.0391 5.21071 20.4142 5.58579C20.7893 5.96086 21 6.46957 21 7M3 7V17C3 17.5304 3.21071 18.0391 3.58579 18.4142C3.96086 18.7893 4.46957 19 5 19H19C19.5304 19 20.0391 18.7893 20.4142 18.4142C20.7893 18.0391 21 17.5304 21 17V7M3 7L12 13L21 7" stroke="#AA5C00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
-              info@farawayexpeditions.com
+              info@farawayexplorers.com
             </a>
-            <a href="#" class="header__contact-cta">
+            <a href="/contacto" class="header__contact-cta">
               Contactanos
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="14" viewBox="0 0 16 14" fill="none">
                 <path d="M1 7H15M15 7L9 13M15 7L9 1" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -74,7 +82,7 @@ const { background = "light" } = Astro.props;
   </div>
 
   <!-- ── Nav bar ─────────────────────────────────── -->
-  <nav class={`header__nav header__nav--${background}`} aria-label="Navegación principal">
+  <nav class={`header__nav header__nav--${backgroundMode}`} aria-label="Navegación principal">
     <div class="container">
       <div class="header__nav-inner">
 
@@ -130,7 +138,7 @@ const { background = "light" } = Astro.props;
   </nav>
 
   <!-- ── Mobile menu ─────────────────────────────── -->
-  <div id="mobile-menu" class="header__mobile-menu" aria-hidden="true">
+  <div id="mobile-menu" class={`header__mobile-menu header__mobile-menu--${backgroundMode}`} aria-hidden="true">
     <ul class="header__mobile-list" role="list">
       {navLinks.map((item) => (
         <li class="header__mobile-item">
@@ -266,6 +274,14 @@ const { background = "light" } = Astro.props;
 
   .header__social-icon { font-size: 1.15rem; display: block; }
 
+  .header__social-tripadvisor {
+    width: 2rem;
+    height: auto;
+    display: block;
+    transform: scale(1.2);
+    transform-origin: center;
+  }
+
   .header__contact {
     display: flex;
     align-items: center;
@@ -320,12 +336,11 @@ const { background = "light" } = Astro.props;
     position: relative;
     z-index: 100;
     display: flex;
-    border-bottom: 2px solid rgba($color-primary, 0.6);
 
     .container { width: 100%; }
 
     &--light { background-color: rgba(0, 0, 0, 0.2); }
-    &--dark  { background-color: rgba(26, 18, 8); }
+    &--dark  { background-color: rgba($color-white, 0.98); }
   }
 
 
@@ -341,13 +356,6 @@ const { background = "light" } = Astro.props;
     display: flex;
     align-items: center;
     @include md { display: none; }
-  }
-
-  .header__nav--scrolled {
-    background-color: $color-nav-bg;
-    backdrop-filter: none;
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.25);
-    transition: background-color 0.3s ease, box-shadow 0.3s ease;
   }
 
   // ─── Lista principal ────────────────────────────────────────────────────────
@@ -659,15 +667,93 @@ const { background = "light" } = Astro.props;
       padding-left: 1.5rem;
     }
   }
+
+  .header__nav--dark {
+    .header__nav-link {
+      color: $color-primary;
+
+      &:hover,
+      .header__nav-item--has-submenu:hover & {
+        color: #121212;
+        background-color: rgba(#000, 0.06);
+      }
+
+      &.active {
+        color: #121212;
+      }
+    }
+
+    .header__nav-link-icon,
+    .header__nav-link-chevron {
+      opacity: 0.9;
+    }
+
+    .header__hamburger {
+      border-color: rgba(#000, 0.35);
+
+      &:hover {
+        border-color: rgba($color-primary, 0.6);
+      }
+    }
+
+    .header__hamburger-bar {
+      background-color: #121212;
+    }
+
+    .header__submenu {
+      background-color: $color-white;
+      border: 1px solid rgba($color-primary, 0.22);
+      border-top: 2px solid $color-primary;
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.14);
+    }
+
+    .header__submenu-link {
+      color: #1f1f1f;
+
+      &:hover {
+        color: #111111;
+        background-color: rgba($color-primary, 0.14);
+      }
+    }
+  }
+
+  .header__mobile-menu--dark {
+    background-color: $color-white;
+    border-bottom: 2px solid rgba($color-primary, 0.35);
+
+    .header__mobile-link {
+      color: #1a1a1a;
+
+      &:hover,
+      &[aria-expanded="true"] {
+        color: #121212;
+        background-color: rgba(#000, 0.06);
+      }
+
+      &.active {
+        color: #121212;
+      }
+    }
+
+    .header__mobile-chevron {
+      color: rgba(#1f1f1f, 0.75);
+    }
+
+    .header__mobile-submenu {
+      background-color: rgba(#000, 0.04);
+    }
+
+    .header__mobile-sublink {
+      color: #2a2a2a;
+
+      &:hover {
+        color: #111111;
+      }
+    }
+  }
 </style>
 
 <script>
-
-  // ─── Nav bar scroll effect ─────────────────────────────────────────────────
-  const nav = document.querySelector(".header__nav") as HTMLElement;
-  window.addEventListener("scroll", () => {
-    nav?.classList.toggle("header__nav--scrolled", window.scrollY > 10);
-  }, { passive: true });
 
   // ─── Hamburger ──────────────────────────────────────────────────────────────
   const hamburger  = document.querySelector(".header__hamburger") as HTMLButtonElement;

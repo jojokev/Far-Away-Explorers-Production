@@ -62,7 +62,6 @@
     flex-direction: column;
     gap: 1rem;
     padding-top: 4rem;
-    max-width: 640px;
   }
 
   .cat-hero__title {
@@ -88,6 +87,7 @@
 
   .cat-hero__desc {
     font-size: $font-size-base;
+    font-weight: $font-weight-medium;
     line-height: 1.7;
     color: rgba($color-white, 0.82);
   }
