@@ -13,7 +13,7 @@ export const getStaticPaths = (async () => {
 }) satisfies GetStaticPaths;
 
 const { slug } = Astro.params;
-const res       = await fetch(`https://wp.farawayexplorers.com/wp-json/wp/v2/tour?slug=${slug}&_fields=featured_media,acf,title_plain,content,descripcion_formatted,incluye_formatted,recomendaciones_formatted,informacion_formatted`);
+const res       = await fetch(`https://wp.farawayexplorers.com/wp-json/wp/v2/tour?slug=${slug}&_embed&_fields=id,categories,featured_media,acf,title_plain,content,descripcion_formatted,incluye_formatted,recomendaciones_formatted,informacion_formatted`);
 const [data]    = await res.json();
 
 const imagesID = [
@@ -55,13 +55,39 @@ const imagesBanner = await Promise.all(
   })
 );
 
-const similarTours = [
-  { title: "Montaña 7 colores",        type: "Full Day",  price: "Desde $50", image: defaultImage.src },
-  { title: "Laguna Humantay",          type: "Full Day",  price: "Desde $50", image: defaultImage.src },
-  { title: "City Tour Cusco",          type: "Full Day",  price: "Desde $20", image: defaultImage.src },
-  { title: "Valle Sagrado Tradicional",type: "4 Horas",   price: "Desde $40", image: defaultImage.src },
-  { title: "Valle Sagrado Vip",        type: "10 horas",  price: "Desde $47", image: defaultImage.src },
-];
+// Tours similares — filtrado por categoría (igual al patrón de blog/[slug].astro)
+const categoryId = data.categories?.[0];
+
+let similarTours: { slug: string; title: string; type: string; price: string; image: string }[] = [];
+
+if (categoryId) {
+  const simRes     = await fetch(
+    `https://wp.farawayexplorers.com/wp-json/wp/v2/tour?categories=${categoryId}&exclude=${data.id}&per_page=5&_fields=slug,title_plain,acf,featured_media`
+  );
+  const simData: any[] = await simRes.json();
+
+  similarTours = await Promise.all(
+    simData.map(async (t) => {
+      let image = defaultImage.src;
+      if (t.featured_media) {
+        const mediaRes  = await fetch(`https://wp.farawayexplorers.com/wp-json/wp/v2/media/${t.featured_media}`);
+        const mediaData = await mediaRes.json();
+        image =
+          mediaData?.media_details?.sizes?.thumbnail?.source_url ??
+          mediaData?.media_details?.sizes?.medium?.source_url    ??
+          mediaData?.source_url                                   ??
+          defaultImage.src;
+      }
+      return {
+        slug:  t.slug,
+        title: t.title_plain,
+        type:  t.acf?.tipo_de_tour ?? "",
+        price: t.acf?.price ? `Desde $${t.acf.price}` : "",
+        image,
+      };
+    })
+  );
+}
 ---
 
 <Layout title="Tour">
@@ -246,6 +272,25 @@ const similarTours = [
             </a>
           </section>
 
+          <!-- Tours similares -->
+          <section class="tour-similar">
+            <h3 class="tour-similar__title">Tours Similares</h3>
+            <div class="tour-similar__list">
+              {similarTours.map((t) => (
+                <article class="tour-similar__item">
+                  <a href={`/tour/${t.slug}`} class="tour-similar__img-link">
+                    <img src={t.image} alt={t.title} class="tour-similar__img" loading="lazy" />
+                  </a>
+                  <a href={`/tour/${t.slug}`} class="tour-similar__info">
+                    <h4 class="tour-similar__name">{t.title}</h4>
+                    <p class="tour-similar__type">{t.type}</p>
+                    <p class="tour-similar__price">{t.price}</p>
+                  </a>
+                </article>
+              ))}
+            </div>
+          </section>
+
           <!-- ¿Por qué reservar? -->
           <section class="tour-why">
             <h3 class="tour-why__title">¿Por qué reservar con nosotros?</h3>
@@ -282,25 +327,6 @@ const similarTours = [
                 </svg>
                 <span>Ejecutivo de ventas</span>
               </a>
-            </div>
-          </section>
-
-          <!-- Tours similares -->
-          <section class="tour-similar">
-            <h3 class="tour-similar__title">Tours Similares</h3>
-            <div class="tour-similar__list">
-              {similarTours.map((t) => (
-                <article class="tour-similar__item">
-                  <a href="#" class="tour-similar__img-link">
-                    <img src={t.image} alt={t.title} class="tour-similar__img" loading="lazy" />
-                  </a>
-                  <a href="#" class="tour-similar__info">
-                    <h4 class="tour-similar__name">{t.title}</h4>
-                    <p class="tour-similar__type">{t.type}</p>
-                    <p class="tour-similar__price">{t.price}</p>
-                  </a>
-                </article>
-              ))}
             </div>
           </section>
 

@@ -1,0 +1,779 @@
+---
+import type { GetStaticPaths } from "astro";
+import Layout from "../../layouts/Layout.astro";
+import { Icon } from "astro-icon/components";
+import defaultImage from "../../assets/default.webp";
+
+interface PostSlug { slug: string }
+
+export const getStaticPaths = (async () => {
+  const res  = await fetch("https://wp.farawayexplorers.com/wp-json/wp/v2/blog?per_page=100&_fields=slug");
+  const data = await res.json();
+  return data.map((post: PostSlug) => ({ params: { slug: post.slug } }));
+}) satisfies GetStaticPaths;
+
+const { slug } = Astro.params;
+
+// Post actual
+const res     = await fetch(`https://wp.farawayexplorers.com/wp-json/wp/v2/blog?slug=${slug}&_embed`);
+const [post]  = await res.json();
+
+// Imagen destacada
+const featuredImage =
+  post._embedded?.["wp:featuredmedia"]?.[0]?.media_details?.sizes?.large?.source_url ??
+  post._embedded?.["wp:featuredmedia"]?.[0]?.source_url ??
+  defaultImage.src;
+
+const featuredAlt =
+  post._embedded?.["wp:featuredmedia"]?.[0]?.alt_text || post.title.rendered;
+
+// Categorías
+const categories = post._embedded?.["wp:term"]?.[0] ?? [];
+
+// Autor
+const author = post._embedded?.author?.[0];
+const authorName  = author?.name ?? "Far Away Explorers";
+const authorAvatar = author?.avatar_urls?.["96"] ?? null;
+
+// Fecha formateada
+const dateObj = new Date(post.date);
+const formattedDate = dateObj.toLocaleDateString("es-PE", {
+  day: "numeric",
+  month: "long",
+  year: "numeric",
+});
+
+// Tiempo de lectura estimado
+const wordCount = post.content.rendered.replace(/<[^>]+>/g, "").split(/\s+/).length;
+const readTime  = Math.max(1, Math.ceil(wordCount / 200));
+
+// Posts relacionados (misma categoría)
+
+let relatedPosts: any[] = [];
+  const relRes  = await fetch(`https://wp.farawayexplorers.com/wp-json/wp/v2/blog?exclude=${post.id}&per_page=3&_embed&_fields=id,slug,title,date,_links,_embedded`);
+  relatedPosts  = await relRes.json();
+---
+
+<Layout title={`${post.title.rendered} | Blog - Far Away Explorers`}>
+  <div class="blog-post">
+
+    <!-- Hero -->
+    <section class="blog-hero">
+      <div class="blog-hero__bg" aria-hidden="true">
+        <img src={featuredImage} alt="" class="blog-hero__bg-img" />
+        <div class="blog-hero__bg-overlay"></div>
+        <div class="blog-hero__bg-dots"></div>
+      </div>
+      <div class="container">
+        <div class="blog-hero__inner">
+          {categories.length > 0 && (
+            <div class="blog-hero__categories">
+              {categories.map((cat: any) => (
+                <span class="blog-hero__category">{cat.name}</span>
+              ))}
+            </div>
+          )}
+          <h1 class="blog-hero__title" set:html={post.title.rendered} />
+          <div class="blog-hero__meta">
+            <span class="blog-hero__meta-item">
+              <Icon name="ion:calendar-outline" class="blog-hero__meta-icon" aria-hidden="true" />
+              {formattedDate}
+            </span>
+            <span class="blog-hero__meta-divider" aria-hidden="true"></span>
+            <span class="blog-hero__meta-item">
+              <Icon name="ion:time-outline" class="blog-hero__meta-icon" aria-hidden="true" />
+              {readTime} min de lectura
+            </span>
+            <span class="blog-hero__meta-divider" aria-hidden="true"></span>
+            <span class="blog-hero__meta-item">
+              <Icon name="ion:person-outline" class="blog-hero__meta-icon" aria-hidden="true" />
+              {authorName}
+            </span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Breadcrumb -->
+    <div class="blog-topbar">
+      <div class="container">
+        <nav class="blog-topbar__breadcrumb" aria-label="Breadcrumb">
+          <a href="/" class="blog-topbar__breadcrumb-link">Inicio</a>
+          <Icon name="ion:chevron-forward" class="blog-topbar__breadcrumb-sep" aria-hidden="true" />
+          <span class="blog-topbar__breadcrumb-current" set:html={post.title.rendered} />
+        </nav>
+      </div>
+    </div>
+
+    <!-- Content layout -->
+    <section class="blog-layout">
+      <div class="container">
+        <div class="blog-layout__grid">
+
+          <!-- Main content -->
+          <article class="blog-layout__main">
+
+            <!-- Featured image -->
+            <figure class="blog-featured">
+              <img
+                src={featuredImage}
+                alt={featuredAlt}
+                class="blog-featured__img"
+                loading="eager"
+              />
+            </figure>
+
+            <!-- Article body -->
+            <div class="text-page" set:html={post.content.rendered} />
+
+            <!-- Share -->
+            <div class="blog-share">
+              <p class="blog-share__label">Comparte este articulo:</p>
+              <div class="blog-share__links">
+                <a
+                  href={`https://www.facebook.com/sharer/sharer.php?u=${Astro.url}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="blog-share__link blog-share__link--facebook"
+                  aria-label="Compartir en Facebook"
+                >
+                  <Icon name="ion:logo-facebook" class="blog-share__icon" aria-hidden="true" />
+                </a>
+                <a
+                  href={`https://twitter.com/intent/tweet?url=${Astro.url}&text=${encodeURIComponent(post.title.rendered)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="blog-share__link blog-share__link--twitter"
+                  aria-label="Compartir en Twitter"
+                >
+                  <Icon name="ion:logo-twitter" class="blog-share__icon" aria-hidden="true" />
+                </a>
+                <a
+                  href={`https://api.whatsapp.com/send?text=${encodeURIComponent(post.title.rendered + ' ' + Astro.url)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="blog-share__link blog-share__link--whatsapp"
+                  aria-label="Compartir en WhatsApp"
+                >
+                  <Icon name="ion:logo-whatsapp" class="blog-share__icon" aria-hidden="true" />
+                </a>
+              </div>
+            </div>
+
+            <!-- Author box -->
+            <div class="blog-author">
+              {authorAvatar && (
+                <img src={authorAvatar} alt={authorName} class="blog-author__avatar" />
+              )}
+              <div class="blog-author__info">
+                <p class="blog-author__label">Escrito por</p>
+                <p class="blog-author__name">{authorName}</p>
+              </div>
+            </div>
+
+          </article>
+
+          <!-- Sidebar -->
+          <aside class="blog-sidebar">
+
+            <!-- Related posts -->
+            {relatedPosts.length > 0 && (
+              <section class="blog-related">
+                <h3 class="blog-related__title">Articulos Relacionados</h3>
+                <div class="blog-related__list">
+                  {relatedPosts.map((related: any) => {
+                    const relImg =
+                      related._embedded?.["wp:featuredmedia"]?.[0]?.media_details?.sizes?.thumbnail?.source_url ??
+                      related._embedded?.["wp:featuredmedia"]?.[0]?.source_url ??
+                      defaultImage.src;
+                    const relDate = new Date(related.date).toLocaleDateString("es-PE", {
+                      day: "numeric",
+                      month: "short",
+                      year: "numeric",
+                    });
+                    return (
+                      <article class="blog-related__item">
+                        <a href={`/blog/${related.slug}`} class="blog-related__img-link">
+                          <img src={relImg} alt={related.title.rendered} class="blog-related__img" loading="lazy" />
+                        </a>
+                        <div class="blog-related__info">
+                          <span class="blog-related__date">
+                            <Icon name="ion:calendar-outline" class="blog-related__date-icon" aria-hidden="true" />
+                            {relDate}
+                          </span>
+                          <h4 class="blog-related__name">
+                            <a href={`/blog/${related.slug}`} set:html={related.title.rendered} />
+                          </h4>
+                        </div>
+                      </article>
+                    );
+                  })}
+                </div>
+              </section>
+            )}
+
+            <!-- Categories -->
+            {categories.length > 0 && (
+              <section class="blog-categories">
+                <h3 class="blog-categories__title">Categorias</h3>
+                <div class="blog-categories__list">
+                  {categories.map((cat: any) => (
+                    <span class="blog-categories__tag">{cat.name}</span>
+                  ))}
+                </div>
+              </section>
+            )}
+
+            <!-- CTA -->
+            <section class="blog-cta">
+              <h3 class="blog-cta__title">Planifica tu viaje</h3>
+              <p class="blog-cta__desc">
+                Descubre nuestros tours y vive una experiencia unica en Peru.
+              </p>
+              <a href="/contacto" class="blog-cta__btn">
+                <Icon name="ion:mail-outline" class="blog-cta__btn-icon" aria-hidden="true" />
+                Contactanos
+              </a>
+            </section>
+
+          </aside>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</Layout>
+
+<style lang="scss">
+  @use '../../styles/abstract/_variables' as *;
+  @use '../../styles/abstract/_mixins'   as *;
+
+  // ─── Variables locales ──────────────────────────────────────────────────────
+  $blog-sidebar-w:      340px;
+  $blog-radius:         8px;
+  $blog-shadow-card:    0 2px 12px rgba(0, 0, 0, 0.06);
+  $blog-color-muted:    rgba(80, 80, 80, 0.7);
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // HERO
+  // ═══════════════════════════════════════════════════════════════════════════
+  .blog-hero {
+    position: relative;
+    min-height: 480px;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+
+    @include md { min-height: 560px; }
+    @include lg { min-height: 620px; }
+  }
+
+  .blog-hero__bg {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+  }
+
+  .blog-hero__bg-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    transform-origin: center;
+    transition: transform 8s ease;
+    transform: scale(1.04);
+  }
+
+  .blog-hero__bg-overlay {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(
+        to top,
+        rgba(0, 0, 0, 0.85) 0%,
+        rgba(0, 0, 0, 0.45) 50%,
+        rgba(0, 0, 0, 0.3) 100%
+      ),
+      linear-gradient(
+        to right,
+        rgba($color-primary, 0.12) 0%,
+        transparent 60%
+      );
+  }
+
+  .blog-hero__bg-dots {
+    position: absolute;
+    inset: 0;
+    // Capa 1: puntos pequeños y densos (malla base)
+    // Capa 2: puntos medianos dispersos con color primario (acento)
+    // Capa 3: puntos grandes y suaves (profundidad)
+    background-image:
+      radial-gradient(circle, rgba($color-white, 0.14) 1px, transparent 1px),
+      radial-gradient(circle, rgba($color-primary, 0.2) 1.5px, transparent 1.5px),
+      radial-gradient(circle, rgba($color-white, 0.05) 3px, transparent 3px);
+    background-size:
+      22px 22px,
+      66px 66px,
+      110px 110px;
+    background-position:
+      0 0,
+      11px 11px,
+      33px 33px;
+    // Máscara: más visible arriba, desaparece en el centro-inferior
+    mask-image: linear-gradient(
+      to bottom,
+      rgba(0,0,0,0.7) 0%,
+      rgba(0,0,0,0.4) 40%,
+      rgba(0,0,0,0.15) 70%,
+      transparent 100%
+    );
+  }
+
+  .blog-hero__inner {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 1rem;
+    padding-block: 4rem;
+    max-width: 780px;
+    margin-inline: auto;
+  }
+
+  .blog-hero__categories {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    justify-content: center;
+  }
+
+  .blog-hero__category {
+    background-color: $color-primary;
+    color: $color-white;
+    font-size: 0.7rem;
+    font-weight: $font-weight-bold;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 0.2rem 0.75rem;
+    border-radius: 99px;
+  }
+
+  .blog-hero__title {
+    font-size: 1.75rem;
+    font-weight: $font-weight-bold;
+    line-height: 1.25;
+    color: $color-white;
+
+    @include md { font-size: 2.25rem; }
+    @include lg { font-size: 2.5rem; }
+  }
+
+  .blog-hero__meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem 0.75rem;
+  }
+
+  .blog-hero__meta-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-size: $font-size-sm;
+    color: rgba($color-white, 0.8);
+  }
+
+  .blog-hero__meta-icon {
+    font-size: 0.9rem;
+    color: $color-primary;
+  }
+
+  .blog-hero__meta-divider {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background-color: rgba($color-white, 0.4);
+
+    @media (max-width: 480px) { display: none; }
+  }
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // BREADCRUMB
+  // ═══════════════════════════════════════════════════════════════════════════
+  .blog-topbar {
+    border-bottom: 1px solid #e8e8e8;
+    background-color: $color-white;
+  }
+
+  .blog-topbar__breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding-block: 0.875rem;
+    font-size: $font-size-sm;
+  }
+
+  .blog-topbar__breadcrumb-link {
+    color: $color-text-muted;
+    transition: color 0.25s ease;
+    &:hover { color: $color-primary; }
+  }
+
+  .blog-topbar__breadcrumb-sep {
+    font-size: 0.7rem;
+    color: $color-text-muted;
+  }
+
+  .blog-topbar__breadcrumb-current {
+    color: $color-primary;
+    font-weight: $font-weight-semibold;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 300px;
+
+    @include md { max-width: 500px; }
+  }
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // LAYOUT
+  // ═══════════════════════════════════════════════════════════════════════════
+  .blog-layout {
+    padding-block: 2.5rem;
+    @include md { padding-block: 3.5rem; }
+  }
+
+  .blog-layout__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+    align-items: start;
+
+    @include lg {
+      grid-template-columns: minmax(0, 1fr) #{$blog-sidebar-w};
+    }
+  }
+
+  .blog-layout__main {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    width: 100%;
+    min-width: 0;
+  }
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // FEATURED IMAGE
+  // ═══════════════════════════════════════════════════════════════════════════
+  .blog-featured {
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: $blog-shadow-card;
+  }
+
+  .blog-featured__img {
+    width: 100%;
+    height: auto;
+    max-height: 480px;
+    object-fit: cover;
+    display: block;
+  }
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // SHARE
+  // ═══════════════════════════════════════════════════════════════════════════
+  .blog-share {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #ebebeb;
+  }
+
+  .blog-share__label {
+    font-size: $font-size-sm;
+    font-weight: $font-weight-semibold;
+    color: $color-text-dark;
+    white-space: nowrap;
+  }
+
+  .blog-share__links {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .blog-share__link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    color: $color-white;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    &--facebook  { background-color: #1877f2; }
+    &--twitter   { background-color: #1da1f2; }
+    &--whatsapp  { background-color: #25d366; }
+  }
+
+  .blog-share__icon {
+    font-size: 1.1rem;
+  }
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // AUTHOR BOX
+  // ═══════════════════════════════════════════════════════════════════════════
+  .blog-author {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.25rem;
+    background-color: #faf8f5;
+    border-radius: $blog-radius;
+    border: 1px solid #ebebeb;
+  }
+
+  .blog-author__avatar {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+    border: 2px solid rgba($color-primary, 0.2);
+  }
+
+  .blog-author__info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+  }
+
+  .blog-author__label {
+    font-size: 0.75rem;
+    color: $color-text-muted;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: $font-weight-semibold;
+  }
+
+  .blog-author__name {
+    font-size: $font-size-base;
+    font-weight: $font-weight-bold;
+    color: $color-text-dark;
+  }
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // SIDEBAR
+  // ═══════════════════════════════════════════════════════════════════════════
+  .blog-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    width: 100%;
+
+    @include lg {
+      max-width: $blog-sidebar-w;
+      position: sticky;
+      top: 2rem;
+    }
+  }
+
+  // ─── Related posts ────────────────────────────────────────────────────────
+  .blog-related {
+    border-radius: $blog-radius;
+    border: 1px solid #e8e8e8;
+    padding: 1.25rem;
+    background-color: $color-white;
+    box-shadow: $blog-shadow-card;
+  }
+
+  .blog-related__title {
+    font-size: 1.125rem;
+    font-weight: $font-weight-bold;
+    color: $color-text-dark;
+    margin-bottom: 1rem;
+    padding-bottom: 0.625rem;
+    border-bottom: 2px solid $color-primary;
+  }
+
+  .blog-related__list {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .blog-related__item {
+    display: flex;
+    gap: 0.75rem;
+    padding-block: 0.75rem;
+    border-bottom: 1px dashed #e8e8e8;
+    transition: opacity 0.2s ease;
+
+    &:first-child { padding-top: 0; }
+    &:last-child  { border-bottom: none; padding-bottom: 0; }
+    &:hover { opacity: 0.85; }
+  }
+
+  .blog-related__img-link {
+    width: 80px;
+    height: 64px;
+    flex-shrink: 0;
+    overflow: hidden;
+    border-radius: 6px;
+  }
+
+  .blog-related__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.3s ease;
+
+    .blog-related__item:hover & { transform: scale(1.05); }
+  }
+
+  .blog-related__info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    min-width: 0;
+  }
+
+  .blog-related__date {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: 0.7rem;
+    color: $color-primary;
+    font-weight: $font-weight-semibold;
+    letter-spacing: 0.02em;
+  }
+
+  .blog-related__date-icon {
+    font-size: 0.7rem;
+    flex-shrink: 0;
+  }
+
+  .blog-related__name {
+    font-size: $font-size-sm;
+    font-weight: $font-weight-semibold;
+    line-height: 1.35;
+    color: $color-text-dark;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+
+    a {
+      color: inherit;
+      transition: color 0.2s ease;
+    }
+
+    a:hover { color: $color-primary; }
+  }
+
+  // ─── Categories ───────────────────────────────────────────────────────────
+  .blog-categories {
+    border-radius: $blog-radius;
+    border: 1px solid #e8e8e8;
+    padding: 1.25rem;
+    background-color: $color-white;
+    box-shadow: $blog-shadow-card;
+  }
+
+  .blog-categories__title {
+    font-size: 1.125rem;
+    font-weight: $font-weight-bold;
+    color: $color-text-dark;
+    margin-bottom: 1rem;
+    padding-bottom: 0.625rem;
+    border-bottom: 2px solid $color-primary;
+  }
+
+  .blog-categories__list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .blog-categories__tag {
+    font-size: $font-size-sm;
+    font-weight: $font-weight-medium;
+    color: $color-primary;
+    background-color: rgba($color-primary, 0.08);
+    padding: 0.3rem 0.75rem;
+    border-radius: 99px;
+    border: 1px solid rgba($color-primary, 0.15);
+    transition: background-color 0.2s ease, color 0.2s ease;
+
+    &:hover {
+      background-color: $color-primary;
+      color: $color-white;
+    }
+  }
+
+  // ─── CTA ──────────────────────────────────────────────────────────────────
+  .blog-cta {
+    border-radius: $blog-radius;
+    padding: 1.5rem 1.25rem;
+    background-color: #faf8f5;
+    border: 1px solid #e8e8e8;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 0.75rem;
+  }
+
+  .blog-cta__title {
+    font-size: 1.125rem;
+    font-weight: $font-weight-bold;
+    color: $color-text-dark;
+  }
+
+  .blog-cta__desc {
+    font-size: $font-size-sm;
+    line-height: 1.6;
+    color: $blog-color-muted;
+  }
+
+  .blog-cta__btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background-color: $color-primary;
+    color: $color-white;
+    border: 2px solid $color-primary;
+    border-radius: 6px;
+    padding: 0.625rem 1.5rem;
+    font-size: $font-size-sm;
+    font-weight: $font-weight-semibold;
+    letter-spacing: 0.02em;
+    transition:
+      background-color 0.25s ease,
+      color            0.25s ease,
+      transform        0.2s ease,
+      box-shadow       0.25s ease;
+
+    &:hover {
+      background-color: $color-white;
+      color: $color-primary;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba($color-primary, 0.28);
+    }
+  }
+
+  .blog-cta__btn-icon {
+    font-size: 1rem;
+    transition: transform 0.2s ease;
+    .blog-cta__btn:hover & { transform: scale(1.1); }
+  }
+</style>
