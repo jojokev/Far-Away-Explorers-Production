@@ -1,0 +1,308 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { Icon } from "astro-icon/components";
+---
+
+<Layout title="Política de Protección de Datos | Far Away Explorers">
+  <div class="legal-page">
+
+    <!-- Hero -->
+    <section class="legal-hero">
+      <div class="legal-hero__overlay" aria-hidden="true"></div>
+      <div class="legal-hero__dots" aria-hidden="true"></div>
+      <div class="container">
+        <div class="legal-hero__inner">
+          <p class="legal-hero__eyebrow">Legal</p>
+          <h1 class="legal-hero__title">Política de Protección de Datos</h1>
+          <p class="legal-hero__desc">
+            Tu privacidad es importante para nosotros. Conoce cómo protegemos tu información.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Breadcrumb -->
+    <div class="legal-topbar">
+      <div class="container">
+        <nav class="legal-topbar__breadcrumb" aria-label="Breadcrumb">
+          <a href="/" class="legal-topbar__breadcrumb-link">Inicio</a>
+          <Icon name="ion:chevron-forward" class="legal-topbar__breadcrumb-sep" aria-hidden="true" />
+          <span class="legal-topbar__breadcrumb-current">Política de Protección de Datos</span>
+        </nav>
+      </div>
+    </div>
+
+    <!-- Content -->
+    <section class="legal-content">
+      <div class="container">
+        <div class="legal-content__inner">
+
+          <section class="legal-section">
+            <h2 class="legal-section__title">Introducción</h2>
+            <p>
+              Bienvenido al aviso de política de protección de datos personales de Far Away Explorers.
+            </p>
+            <p>
+              Far Away Explorers respeta su privacidad y se compromete a proteger la información personal tanto de nuestros viajeros como de los visitantes ocasionales de nuestro sitio web. Los datos que recopilamos se utilizan para proporcionar una experiencia de viaje única. Somos conscientes de que esta información es confidencial; no compartiremos ni revelaremos sus datos de contacto o datos importantes a terceros, a menos que así lo exija la ley. Tenga en cuenta que esta Política se aplica únicamente al sitio web de Far Away Explorers y no a otros sitios web o enlaces independientes.
+            </p>
+          </section>
+
+          <section class="legal-section">
+            <h2 class="legal-section__title">Información Recopilada</h2>
+            <p>
+              Al rellenar un formulario en línea o ponerse en contacto con nosotros directamente por correo electrónico, teléfono u otros medios, podemos pedirle información personal. Esto incluye solicitar la reserva de un viaje y obtener un itinerario detallado.
+            </p>
+            <p>Podemos recabar la siguiente información:</p>
+            <ul class="legal-list">
+              <li>Nombre y cargo de la persona.</li>
+              <li>Información de contacto (dirección de correo electrónico – número de teléfono).</li>
+              <li>Fecha de nacimiento.</li>
+              <li>Nacionalidad.</li>
+              <li>Datos del pasaporte.</li>
+              <li>Información de contacto en caso de emergencia.</li>
+              <li>Condiciones de salud y restricciones dietéticas.</li>
+              <li>Información de llegada y salida.</li>
+              <li>Otros datos relevantes para encuestas u ofertas a clientes.</li>
+            </ul>
+            <p>
+              Necesitamos esta información para comprender sus necesidades y ofrecerle un servicio de alta calidad, así como para mejorar nuestros servicios.
+            </p>
+            <p>
+              En el caso de los viajeros que contraten uno de nuestros viajes, la información necesaria se compartirá con nuestros proveedores de servicios como: hoteles, trenes, restaurantes, etc. Proporcionamos a estas empresas únicamente la información que necesitan para realizar su servicio.
+            </p>
+          </section>
+
+          <section class="legal-section">
+            <h2 class="legal-section__title">Nota</h2>
+            <p>
+              Nos reservamos el derecho a revelar información a las autoridades competentes si consideramos que tal acción es razonablemente necesaria para cumplir la ley o para proteger la propiedad o la seguridad de Far Away Explorers, sus empleados o usuarios, o para proteger la integridad de nuestro sitio web y nuestros datos.
+            </p>
+          </section>
+
+          <section class="legal-section">
+            <h2 class="legal-section__title">Seguridad</h2>
+            <p>
+              Nos comprometemos a proteger la seguridad de sus datos. Hemos establecido controles físicos, tecnológicos y administrativos adecuados para salvaguardar su información contra el acceso y divulgación no autorizados.
+            </p>
+          </section>
+
+          <section class="legal-section">
+            <h2 class="legal-section__title">Actualizaciones</h2>
+            <p>
+              Nuestra política puede cambiar de vez en cuando. Cualquier modificación se publicará en esta página, así que por favor vuelva a verificarla periódicamente.
+            </p>
+          </section>
+
+          <div class="legal-note">
+            <Icon name="ion:shield-checkmark-outline" class="legal-note__icon" aria-hidden="true" />
+            <p>
+              Tu información personal es tratada con total confidencialidad y utilizada exclusivamente para brindarte el mejor servicio de viaje posible.
+            </p>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+  </div>
+</Layout>
+
+<style lang="scss">
+  @use '../styles/abstract/variables' as *;
+  @use '../styles/abstract/mixins' as *;
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // HERO
+  // ═══════════════════════════════════════════════════════════════════════════
+  .legal-hero {
+    position: relative;
+    min-height: 260px;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    background-color: #1a1a2e;
+
+    @include md { min-height: 320px; }
+  }
+
+  .legal-hero__overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba($color-primary, 0.35) 0%, rgba(0,0,0,0.6) 100%);
+  }
+
+  .legal-hero__dots {
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(rgba($color-white, 0.07) 1px, transparent 1px);
+    background-size: 28px 28px;
+    opacity: 0.5;
+  }
+
+  .legal-hero__inner {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 1rem;
+    padding-block: 3.5rem;
+    max-width: 640px;
+    margin-inline: auto;
+  }
+
+  .legal-hero__eyebrow {
+    font-size: $font-size-sm;
+    font-weight: $font-weight-bold;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: $color-primary;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    &::before,
+    &::after {
+      content: '';
+      display: inline-block;
+      width: 1.5rem;
+      height: 2px;
+      background-color: $color-primary;
+      border-radius: 2px;
+    }
+  }
+
+  .legal-hero__title {
+    font-size: 2rem;
+    font-weight: $font-weight-bold;
+    line-height: 1.2;
+    color: $color-white;
+
+    @include md { font-size: 2.5rem; }
+  }
+
+  .legal-hero__desc {
+    font-size: $font-size-base;
+    line-height: 1.7;
+    color: rgba($color-white, 0.8);
+    max-width: 480px;
+  }
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // BREADCRUMB
+  // ═══════════════════════════════════════════════════════════════════════════
+  .legal-topbar {
+    border-bottom: 1px solid #e8e8e8;
+    background-color: $color-white;
+  }
+
+  .legal-topbar__breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding-block: 0.875rem;
+    font-size: $font-size-sm;
+  }
+
+  .legal-topbar__breadcrumb-link {
+    color: $color-text-muted;
+    transition: color 0.25s ease;
+    &:hover { color: $color-primary; }
+  }
+
+  .legal-topbar__breadcrumb-sep {
+    font-size: 0.7rem;
+    color: $color-text-muted;
+  }
+
+  .legal-topbar__breadcrumb-current {
+    color: $color-primary;
+    font-weight: $font-weight-semibold;
+  }
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // CONTENT
+  // ═══════════════════════════════════════════════════════════════════════════
+  .legal-content {
+    padding-block: 3rem;
+    @include md { padding-block: 4.5rem; }
+  }
+
+  .legal-content__inner {
+    max-width: 820px;
+    margin-inline: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+  }
+
+  .legal-section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid #ebebeb;
+
+    &:last-of-type {
+      border-bottom: none;
+    }
+  }
+
+  .legal-section__title {
+    font-size: 1.125rem;
+    font-weight: $font-weight-bold;
+    color: $color-text-dark;
+    padding-bottom: 0.5rem;
+    border-left: 4px solid $color-primary;
+    padding-left: 0.75rem;
+
+    @include md { font-size: 1.25rem; }
+  }
+
+  p {
+    font-size: $font-size-base;
+    line-height: 1.75;
+    color: #444;
+  }
+
+  .legal-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding-left: 1.25rem;
+
+    li {
+      font-size: $font-size-base;
+      line-height: 1.7;
+      color: #444;
+      list-style: disc;
+
+      &::marker {
+        color: $color-primary;
+      }
+    }
+  }
+
+  .legal-note {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    background-color: rgba($color-primary, 0.07);
+    border: 1px solid rgba($color-primary, 0.2);
+    border-radius: 8px;
+    padding: 1.25rem 1.5rem;
+
+    p {
+      margin: 0;
+      color: $color-text-dark;
+    }
+  }
+
+  .legal-note__icon {
+    font-size: 1.5rem;
+    color: $color-primary;
+    flex-shrink: 0;
+    margin-top: 0.1rem;
+  }
+</style>

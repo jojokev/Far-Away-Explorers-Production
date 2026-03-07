@@ -7,7 +7,9 @@ const tourImage = defaultImage.src;
 const navPrevIcon = prevIcon.src;
 const navNextIcon = nextIcon.src;
 
-const res = await fetch("https://wp.farawayexplorers.com/wp-json/wp/v2/tour?categories=3&per_page=5&_embed");
+const { idDestination = 3, title = "Los mejores lugares para visitar" } = Astro.props;
+
+const res = await fetch(`https://wp.farawayexplorers.com/wp-json/wp/v2/tour?categories=${idDestination}&per_page=5&_embed`);
 const data = await res.json();
 
 ---
@@ -18,7 +20,7 @@ const data = await res.json();
 
       <div class="tours__header">
         <p class="tours__eyebrow">EXPLORA</p>
-        <h2 class="tours__title">Los mejores lugares para visitar en Cusco y Perú</h2>
+        <h2 class="tours__title">{title}</h2>
       </div>
       <p class="tours__subtitle">Descubre las maravillas de nuestros destinos más populares.</p>
 

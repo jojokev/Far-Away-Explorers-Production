@@ -1,6 +1,6 @@
 ---
 import { Icon } from "astro-icon/components";
-import logo from "../assets/logo-far-away.webp";
+import logo from "../assets/logo-far-away-2.webp";
 
 const navLinks = [
   { label: "Inicio",    href: "/", icon: "ion:home-outline" },
@@ -420,7 +420,6 @@ const backgroundMode = background === "white" ? "dark" : background;
     }
 
     &:hover, .header__nav-item--has-submenu:hover & {
-      color: $color-white;
       background-color: rgba($color-white, 0.05);
       &::after { transform: scaleX(1); }
     }
