@@ -2,32 +2,25 @@
 import defaultImage from "../assets/default.webp";
 import { Icon } from "astro-icon/components";
 
-const blogs = [
-  {
-    title: "4-day Inca Trail Tour Frequently Asked Questions",
-    date: "16 FEB 2026",
-    category: "Trekking",
-    readTime: "5 min",
-    description: "Descubre cómo disfrutar de la libertad de viajar sin compañía con estos prácticos consejos para tu próxima aventura.",
-    image: defaultImage.src,
-  },
-  {
-    title: "Qeshuachaca Tourism",
-    date: "16 FEB 2026",
-    category: "Cultura",
-    readTime: "3 min",
-    description: "Explora el único puente inca de cuerda que sigue en pie, una tradición viva que conecta el pasado con el presente.",
-    image: defaultImage.src,
-  },
-  {
-    title: "Your Checklist for How to Train for Machu Picchu Hiking Tours",
-    date: "16 FEB 2026",
-    category: "Consejos",
-    readTime: "7 min",
-    description: "Todo lo que necesitas saber para prepararte físicamente y disfrutar al máximo tu caminata a Machu Picchu.",
-    image: defaultImage.src,
-  },
-];
+const res = await fetch("https://wp.farawayexplorers.com/wp-json/wp/v2/blog?per_page=3&_embed");
+const data = await res.json();
+
+const blogs = data.map((post: any) => {
+  const featured = post._embedded?.["wp:featuredmedia"]?.[0]?.media_details.sizes?.medium_large?.source_url;
+  const categories = post._embedded?.["wp:term"]?.[0];
+  const date = new Date(post.date);
+  const formattedDate = date.toLocaleDateString("es-PE", { day: "2-digit", month: "short", year: "numeric" }).toUpperCase();
+
+  return {
+    title: post.title.rendered,
+    date: formattedDate,
+    category: categories?.[0]?.name ?? "Blog",
+    readTime: `${Math.max(1, Math.ceil((post.content?.rendered?.replace(/<[^>]*>/g, "").split(/\s+/).length ?? 0) / 200))} min de lectura`,
+    description: post.excerpt.rendered.replace(/<[^>]*>/g, "").trim(),
+    image: featured ?? defaultImage.src,
+    link: `/blog/${post.slug}`,
+  };
+});
 ---
 
 <section class="blogs">
@@ -37,13 +30,13 @@ const blogs = [
       <!-- ── Header ───────────────────────────────── -->
       <div class="blogs__header">
         <div class="blogs__header-text">
-          <p class="blogs__eyebrow">OUR BLOGS</p>
-          <h2 class="blogs__title">Travel Tips and Advice</h2>
+          <p class="blogs__eyebrow">NUESTRO BLOG</p>
+          <h2 class="blogs__title">Consejos y recomendaciones de viaje</h2>
           <p class="blogs__lead">
             Inspírate con nuestras guías y consejos para vivir Peru al máximo.
           </p>
         </div>
-        <a href="#" class="blogs__header-cta">
+        <a href="/blog" class="blogs__header-cta">
           Ver todos los artículos
           <Icon name="ion:arrow-forward" class="blogs__header-cta-icon" aria-hidden="true" />
         </a>
@@ -51,10 +44,10 @@ const blogs = [
 
       <!-- ── Grid ─────────────────────────────────── -->
       <div class="blogs__grid">
-        {blogs.map((blog, index) => (
+        {blogs.map((blog: any, index:number) => (
           <article class={`blogs__card ${index === 0 ? "blogs__card--featured" : ""}`}>
 
-            <a href="#" class="blogs__card-img-link" tabindex="-1" aria-hidden="true">
+            <a href={blog.link} class="blogs__card-img-link" tabindex="-1" aria-hidden="true">
               <img
                 src={blog.image}
                 alt={blog.title}
@@ -75,18 +68,18 @@ const blogs = [
                 </span>
                 <span class="blogs__card-read-time">
                   <Icon name="ion:time-outline" class="blogs__card-meta-icon" aria-hidden="true" />
-                  {blog.readTime} lectura
+                  {blog.readTime}
                 </span>
               </div>
 
               <h3 class="blogs__card-title">
-                <a href="#" class="blogs__card-title-link">{blog.title}</a>
+                <a href={blog.link} class="blogs__card-title-link" set:html={blog.title} />
               </h3>
 
               <p class="blogs__card-desc">{blog.description}</p>
 
               <!-- ← CTA explícito dentro de la card -->
-              <a href="#" class="blogs__card-cta">
+              <a href={blog.link} class="blogs__card-cta">
                 Leer artículo
                 <Icon name="ion:arrow-forward" class="blogs__card-cta-icon" aria-hidden="true" />
               </a>

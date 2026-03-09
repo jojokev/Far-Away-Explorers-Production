@@ -1,2 +1,28 @@
 @use "./base/_reset";
 @use "./base/_typography";
+@use "./abstract/variables" as *;
+
+// ─── Botón WhatsApp reutilizable ──────────────────────────────────────────────
+.btn-whatsapp {
+  display:         inline-flex;
+  align-items:     center;
+  gap:             0.25rem;
+  padding:         0.45rem 0.75rem;
+  background:      #128c54;
+  color:           #fff;
+  font-size:       $font-size-sm;
+  font-weight:     $font-weight-semibold;
+  border-radius:   6px;
+  text-decoration: none;
+  white-space:     nowrap;
+  transition:      background $transition-fast, transform $transition-fast;
+
+  svg, [data-icon] { font-size: 1.1em; flex-shrink: 0; }
+
+  &:hover {
+    background: #0e6e62;
+    transform:  translateY(-1px);
+  }
+
+  &:active { transform: translateY(0); }
+}

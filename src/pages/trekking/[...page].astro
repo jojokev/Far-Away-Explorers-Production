@@ -1,29 +1,34 @@
 ---
-import Layout from "../layouts/Layout.astro";
-import defaultImage from "../assets/banners/panoramico-lima.webp";
+import type { GetStaticPaths } from "astro";
+import Layout from "../../layouts/Layout.astro";
+import defaultImage from "../../assets/banners/panoramico-trekking.webp";
 import { Icon } from "astro-icon/components";
 
-const res = await fetch("https://wp.farawayexplorers.com/wp-json/wp/v2/tour?categories=7&_embed");
-const data = await res.json();
+export const getStaticPaths = (async ({ paginate }) => {
+  const res = await fetch("https://wp.farawayexplorers.com/wp-json/wp/v2/tour?categories=13&_embed");
+  const data = await res.json();
+  return paginate(data, { pageSize: 12 });
+}) satisfies GetStaticPaths;
+
+const { page } = Astro.props;
+const basePath = "trekking";
 
 const category = {
-  name:        "Lima",
-  description: "Lima es historia, cultura y gastronomía frente al océano Pacífico. Su centro histórico colonial, barrios vibrantes como Miraflores y Barranco, y su reconocida cocina convierten a la capital del Perú en el inicio perfecto para descubrir el país.",
-  total:       data.length,
+  name:        "Trekking",
+  description: "Descubre los mejores senderos del Perú con nuestros tours de trekking. Desde rutas andinas hasta caminos ancestrales, te llevamos a explorar paisajes impresionantes, montañas majestuosas y culturas vivas en cada paso del camino.",
+  total:       page.total,
 };
 ---
 
 <Layout title={`${category.name} | Far Away Expeditions`}>
   <div class="category-page">
 
-    <!-- ══ Hero ══════════════════════════════════════════════════════════ -->
     <section class="cat-hero">
       <div class="cat-hero__bg" aria-hidden="true">
         <img src={defaultImage.src} alt="" class="cat-hero__bg-img" />
         <div class="cat-hero__bg-overlay"></div>
         <div class="cat-hero__bg-dots"></div>
       </div>
-
       <div class="container">
         <div class="cat-hero__inner">
           <h1 class="cat-hero__title">{category.name}</h1>
@@ -32,11 +37,9 @@ const category = {
       </div>
     </section>
 
-    <!-- ══ Breadcrumb + contador ══════════════════════════════════════════ -->
     <div class="cat-topbar">
       <div class="container">
         <div class="cat-topbar__inner">
-
           <nav class="cat-topbar__breadcrumb" aria-label="Breadcrumb">
             <a href="/" class="cat-topbar__breadcrumb-link">Inicio</a>
             <Icon name="ion:chevron-forward" class="cat-topbar__breadcrumb-sep" aria-hidden="true" />
@@ -44,10 +47,9 @@ const category = {
             <Icon name="ion:chevron-forward" class="cat-topbar__breadcrumb-sep" aria-hidden="true" />
             <span class="cat-topbar__breadcrumb-current">{category.name}</span>
           </nav>
-
           <div class="cat-topbar__right">
             <p class="cat-topbar__count">
-              <strong>{data.length}</strong> tours disponibles
+              <strong>{category.total}</strong> tours disponibles
             </p>
             <div class="cat-topbar__view-toggle" role="group" aria-label="Cambiar vista">
               <button type="button" class="cat-topbar__view-btn cat-topbar__view-btn--active" aria-label="Vista cuadrícula" data-view="grid">
@@ -58,18 +60,15 @@ const category = {
               </button>
             </div>
           </div>
-
         </div>
       </div>
     </div>
 
-    <!-- ══ Resultados ═════════════════════════════════════════════════════ -->
     <section class="cat-results">
       <div class="container">
         <div class="cat-grid" id="tours-grid">
-          {data.map((tour: any) => (
+          {page.data.map((tour: any) => (
             <article class="cat-card">
-
               <a href={`/tour/${tour.slug}`} class="cat-card__img-link" tabindex="-1" aria-hidden="true">
                 <img
                   src={tour._embedded?.["wp:featuredmedia"]?.[0]?.media_details?.sizes?.medium_large?.source_url ?? defaultImage.src}
@@ -78,9 +77,7 @@ const category = {
                   loading="lazy"
                 />
               </a>
-
               <div class="cat-card__body">
-
                 <div class="cat-card__meta">
                   <span class="cat-card__meta-item">
                     <Icon name="ion:time-outline" aria-hidden="true" />
@@ -88,32 +85,71 @@ const category = {
                   </span>
                   <span class="cat-card__meta-item">
                     <Icon name="ion:people-outline" aria-hidden="true" />
-                    Máx. {tour.acf.group}
+                    {tour.acf.group}
                   </span>
                 </div>
-
                 <h2 class="cat-card__title">
                   <a href={`/tour/${tour.slug}`} class="cat-card__title-link">
                     {tour.title_plain}
                   </a>
                 </h2>
-
                 <div class="cat-card__footer">
-                  <div class="cat-card__price-block">
-                    <span class="cat-card__price-from">Desde</span>
-                    <span class="cat-card__price">${tour.acf.price}</span>
-                    <span class="cat-card__price-per">/ persona</span>
-                  </div>
+                  {tour.acf.price ? (
+                    <div class="cat-card__price-block">
+                      <span class="cat-card__price-from">Desde</span>
+                      <span class="cat-card__price">${tour.acf.price}</span>
+                      <span class="cat-card__price-per">/ persona</span>
+                    </div>
+                  ) : (
+                    <a
+                      href={`https://wa.me/51900086730?text=${encodeURIComponent(`Hola Far Away Explorers, me gustaría saber más de los precios del tour ${tour.title_plain} - https://farawayexplorers.com/tour/${tour.slug}`)}`}
+                      class="btn-whatsapp"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <Icon name="ion:logo-whatsapp" aria-hidden="true" />
+                      Consultar precio
+                    </a>
+                  )}
                   <a href={`/tour/${tour.slug}`} class="cat-card__cta">
                     Ver tour
                     <Icon name="ion:arrow-forward" class="cat-card__cta-icon" aria-hidden="true" />
                   </a>
                 </div>
-
               </div>
             </article>
           ))}
         </div>
+
+        {page.lastPage > 1 && (
+          <nav class="cat-pagination" aria-label="Paginación de tours">
+            {page.url.prev ? (
+              <a href={page.url.prev} class="cat-pagination__btn" aria-label="Anterior">
+                <svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+              </a>
+            ) : (
+              <span class="cat-pagination__btn cat-pagination__btn--disabled">
+                <svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+              </span>
+            )}
+            {Array.from({ length: page.lastPage }, (_, i) => i + 1).map((num) =>
+              num === page.currentPage ? (
+                <span class="cat-pagination__btn cat-pagination__btn--active" aria-current="page">{num}</span>
+              ) : (
+                <a href={num === 1 ? `/${basePath}` : `/${basePath}/${num}`} class="cat-pagination__btn">{num}</a>
+              )
+            )}
+            {page.url.next ? (
+              <a href={page.url.next} class="cat-pagination__btn" aria-label="Siguiente">
+                <svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+              </a>
+            ) : (
+              <span class="cat-pagination__btn cat-pagination__btn--disabled">
+                <svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+              </span>
+            )}
+          </nav>
+        )}
       </div>
     </section>
 
@@ -121,14 +157,12 @@ const category = {
 </Layout>
 
 <style lang="scss">
-  @use '../styles/categories-page.scss';
+  @use '../../styles/categories-page.scss';
 </style>
 
 <script>
-  // ─── Toggle vista grid / lista ─────────────────────────────────────────────
   const viewBtns = document.querySelectorAll(".cat-topbar__view-btn");
   const grid     = document.getElementById("tours-grid");
-
   viewBtns.forEach((btn) => {
     btn.addEventListener("click", () => {
       viewBtns.forEach((b) => b.classList.remove("cat-topbar__view-btn--active"));
@@ -137,4 +171,3 @@ const category = {
     });
   });
 </script>
-

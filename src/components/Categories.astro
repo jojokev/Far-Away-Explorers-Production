@@ -3,12 +3,14 @@ import imgArequipa from "../assets/cards/card-arequipa.webp";
 import imgLima from "../assets/cards/card-lima.webp";
 import imgIca from "../assets/cards/card-ica.webp";
 import imgCusco from "../assets/cards/card-cusco.webp";
+import imgPuno from "../assets/cards/card-titi-caca.webp";
 
 const destinations = {
   arequipa: { title: "Arequipa", image: imgArequipa.src, link: "/arequipa" },
   lima:     { title: "Lima",     image: imgLima.src, link: "/lima" },
   ica:      { title: "Ica",      image: imgIca.src, link: "/ica" },
   cusco:    { title: "Cusco",    image: imgCusco.src, link: "/cusco" },
+  puno:     { title: "Puno",     image: imgPuno.src, link: "/puno" },
 };
 ---
 
@@ -60,10 +62,16 @@ const destinations = {
           <h3 class="destinations__card-label destinations__card-label--sm">{destinations.ica.title}</h3>
         </a>
 
-        <a href={destinations.cusco.link} class="destinations__card destinations__card--wide" aria-label={destinations.cusco.title}>
+        <a href={destinations.cusco.link} class="destinations__card" aria-label={destinations.cusco.title}>
           <img src={destinations.cusco.image} alt={destinations.cusco.title} class="destinations__card-img" loading="lazy" />
           <div class="destinations__card-overlay" aria-hidden="true"></div>
           <h3 class="destinations__card-label destinations__card-label--sm">{destinations.cusco.title}</h3>
+        </a>
+
+        <a href={destinations.puno.link} class="destinations__card" aria-label={destinations.puno.title}>
+          <img src={destinations.puno.image} alt={destinations.puno.title} class="destinations__card-img" loading="lazy" />
+          <div class="destinations__card-overlay" aria-hidden="true"></div>
+          <h3 class="destinations__card-label destinations__card-label--sm">{destinations.puno.title}</h3>
         </a>
 
       </div>

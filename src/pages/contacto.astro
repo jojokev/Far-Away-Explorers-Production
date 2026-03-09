@@ -11,7 +11,7 @@ const contactInfo = [
 ];
 
 const socials = [
-  { icon: "ion:logo-facebook", label: "Facebook", href: "#" },
+  { icon: "ion:logo-facebook", label: "Facebook", href: "https://www.facebook.com/FARAWAYEXPL?rdid=raG4ERrromunGh7Q&share_url=https%3A%2F%2Fwww.facebook.com%2Fshare%2F1DVDJHeDRC%2F#" },
   { icon: "ion:logo-instagram", label: "Instagram", href: "#" },
   { icon: "ion:logo-tiktok", label: "TikTok", href: "#" },
   { icon: "ion:logo-youtube", label: "YouTube", href: "#" },
@@ -87,7 +87,7 @@ const socials = [
               <p class="contact-info__social-label">Síguenos en redes:</p>
               <div class="contact-info__social-links">
                 {socials.map((s) => (
-                  <a href={s.href} class="contact-info__social-btn" aria-label={s.label}>
+                  <a href={s.href} class="contact-info__social-btn" aria-label={s.label} target="_blank" rel="noopener noreferrer">
                     <Icon name={s.icon} class="contact-info__social-icon" aria-hidden="true" />
                   </a>
                 ))}
@@ -121,10 +121,41 @@ const socials = [
                 <label for="contact-message" class="contact-form__label">Mensaje</label>
                 <textarea id="contact-message" name="message" class="contact-form__input contact-form__textarea" placeholder="Cuéntanos sobre tu viaje ideal..." rows="5" required></textarea>
               </div>
-              <button type="submit" class="contact-form__submit">
-                <Icon name="ion:send-outline" class="contact-form__submit-icon" aria-hidden="true" />
-                Enviar mensaje
+              <button type="submit" class="contact-form__submit" id="contact-submit">
+                <span class="contact-form__submit-idle">
+                  <Icon name="ion:send-outline" class="contact-form__submit-icon" aria-hidden="true" />
+                  Enviar mensaje
+                </span>
+                <span class="contact-form__submit-loading" aria-hidden="true">
+                  <svg class="contact-form__spinner" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3" stroke-dasharray="32" stroke-dashoffset="10"/>
+                  </svg>
+                  Enviando…
+                </span>
               </button>
+
+              <div class="contact-form__feedback contact-form__feedback--success" id="contact-success" role="alert" aria-live="polite">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                  <circle cx="12" cy="12" r="10"/>
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M8 12l3 3 5-5"/>
+                </svg>
+                <div>
+                  <strong>¡Mensaje enviado!</strong>
+                  <p>Gracias por contactarnos. Te responderemos lo antes posible.</p>
+                </div>
+              </div>
+
+              <div class="contact-form__feedback contact-form__feedback--error" id="contact-error" role="alert" aria-live="polite">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                  <circle cx="12" cy="12" r="10"/>
+                  <line x1="12" y1="8" x2="12" y2="12"/>
+                  <line x1="12" y1="16" x2="12.01" y2="16"/>
+                </svg>
+                <div>
+                  <strong>Error al enviar</strong>
+                  <p id="contact-error-msg">Ocurrió un problema. Por favor intenta nuevamente.</p>
+                </div>
+              </div>
             </form>
           </div>
 
@@ -561,6 +592,64 @@ const socials = [
     .contact-form__submit:hover & { transform: translateX(3px); }
   }
 
+  .contact-form__submit-loading {
+    display: none;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .contact-form__submit--loading {
+    pointer-events: none;
+    opacity: 0.85;
+
+    .contact-form__submit-idle   { display: none; }
+    .contact-form__submit-loading { display: inline-flex; }
+  }
+
+  .contact-form__spinner {
+    width: 1.1rem;
+    height: 1.1rem;
+    animation: spin 0.8s linear infinite;
+  }
+
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+
+  .contact-form__feedback {
+    display: none;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 1rem 1.125rem;
+    border-radius: 8px;
+    font-size: $font-size-sm;
+    line-height: 1.5;
+
+    svg {
+      width: 1.25rem;
+      height: 1.25rem;
+      flex-shrink: 0;
+      margin-top: 0.1rem;
+    }
+
+    strong { display: block; font-weight: $font-weight-semibold; }
+    p { margin: 0.15rem 0 0; opacity: 0.85; }
+
+    &--visible { display: flex; }
+
+    &--success {
+      background-color: #ecfdf5;
+      border: 1px solid #6ee7b7;
+      color: #065f46;
+    }
+
+    &--error {
+      background-color: #fef2f2;
+      border: 1px solid #fca5a5;
+      color: #991b1b;
+    }
+  }
+
   // ═══════════════════════════════════════════════════════════════════════════
   // MAP
   // ═══════════════════════════════════════════════════════════════════════════
@@ -604,3 +693,55 @@ const socials = [
     }
   }
 </style>
+
+<script>
+  async function sendForm(data: Record<string, string>) {
+    const res = await fetch(
+      "https://wp.farawayexplorers.com/wp-json/faraway/v1/contact",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      }
+    );
+    const json = await res.json();
+    if (!json.success) throw new Error(json.message || "Error al enviar el mensaje.");
+    return json;
+  }
+
+  const form    = document.querySelector<HTMLFormElement>(".contact-form")!;
+  const btn     = document.getElementById("contact-submit")!;
+  const success = document.getElementById("contact-success")!;
+  const error   = document.getElementById("contact-error")!;
+  const errorMsg = document.getElementById("contact-error-msg")!;
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    // Reset feedback
+    success.classList.remove("contact-form__feedback--visible");
+    error.classList.remove("contact-form__feedback--visible");
+
+    // Loading state
+    btn.classList.add("contact-form__submit--loading");
+    btn.setAttribute("disabled", "");
+
+    const fd = new FormData(form);
+    const payload: Record<string, string> = {};
+    fd.forEach((val, key) => { payload[key] = val.toString(); });
+
+    try {
+      await sendForm(payload);
+      form.reset();
+      success.classList.add("contact-form__feedback--visible");
+      success.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    } catch (err: any) {
+      errorMsg.textContent = err?.message || "Ocurrió un problema. Por favor intenta nuevamente.";
+      error.classList.add("contact-form__feedback--visible");
+      error.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    } finally {
+      btn.classList.remove("contact-form__submit--loading");
+      btn.removeAttribute("disabled");
+    }
+  });
+</script>

@@ -46,6 +46,8 @@ const formattedDate = dateObj.toLocaleDateString("es-PE", {
 // Tiempo de lectura estimado
 const wordCount = post.content.rendered.replace(/<[^>]+>/g, "").split(/\s+/).length;
 const readTime  = Math.max(1, Math.ceil(wordCount / 200));
+const postUrl = Astro.url.toString();
+const encodedPostUrl = encodeURIComponent(postUrl);
 
 // Posts relacionados (misma categoría)
 
@@ -131,7 +133,7 @@ let relatedPosts: any[] = [];
               <p class="blog-share__label">Comparte este articulo:</p>
               <div class="blog-share__links">
                 <a
-                  href={`https://www.facebook.com/sharer/sharer.php?u=${Astro.url}`}
+                  href={`https://www.facebook.com/sharer/sharer.php?u=${encodedPostUrl}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   class="blog-share__link blog-share__link--facebook"
@@ -140,7 +142,7 @@ let relatedPosts: any[] = [];
                   <Icon name="ion:logo-facebook" class="blog-share__icon" aria-hidden="true" />
                 </a>
                 <a
-                  href={`https://twitter.com/intent/tweet?url=${Astro.url}&text=${encodeURIComponent(post.title.rendered)}`}
+                  href={`https://twitter.com/intent/tweet?url=${encodedPostUrl}&text=${encodeURIComponent(post.title.rendered)}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   class="blog-share__link blog-share__link--twitter"
@@ -149,7 +151,7 @@ let relatedPosts: any[] = [];
                   <Icon name="ion:logo-twitter" class="blog-share__icon" aria-hidden="true" />
                 </a>
                 <a
-                  href={`https://api.whatsapp.com/send?text=${encodeURIComponent(post.title.rendered + ' ' + Astro.url)}`}
+                  href={`https://api.whatsapp.com/send?text=${encodeURIComponent(post.title.rendered + ' ' + postUrl)}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   class="blog-share__link blog-share__link--whatsapp"
