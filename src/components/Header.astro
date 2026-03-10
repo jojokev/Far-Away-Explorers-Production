@@ -4,7 +4,7 @@ import logo from "../assets/logo-far-away-2.webp";
 
 const navLinks = [
   { label: "Inicio",    href: "/", icon: "ion:home-outline" },
-  { label: "Destinos",  href: "#", icon: "ion:earth-outline",
+  { label: "Destinos",  href: "/destinos", icon: "ion:earth-outline",
     submenu: [
       { label: "Cusco",   href: "/cusco", icon: "ion:flag-outline" },
       { label: "Arequipa", href: "/arequipa", icon: "ion:flag-outline" },
@@ -54,6 +54,46 @@ const backgroundMode = background === "white" ? "dark" : background;
             <a href="/blog" class="header__link">Blogs</a>
             <a href="/about-us" class="header__link">Nosotros</a>
             <a href="/terminos-y-condiciones" class="header__link header__link--hidden-xs">Terminos y condiciones</a>
+            <span class="header__links-divider" aria-hidden="true"></span>
+
+            <!-- ── Selector de idioma ── -->
+            <div class="lang-switcher notranslate" id="lang-switcher" translate="no">
+              <button
+                type="button"
+                class="lang-switcher__btn"
+                id="lang-btn"
+                aria-expanded="false"
+                aria-haspopup="listbox"
+                aria-label="Cambiar idioma"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="lang-switcher__icon" aria-hidden="true">
+                  <circle cx="12" cy="12" r="10"/>
+                  <path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+                </svg>
+                <span id="lang-current">ES</span>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="lang-switcher__chevron" aria-hidden="true">
+                  <path d="m6 9 6 6 6-6"/>
+                </svg>
+              </button>
+
+              <ul class="lang-switcher__dropdown" id="lang-dropdown" role="listbox" aria-label="Seleccionar idioma">
+                <li role="none">
+                  <button type="button" class="lang-switcher__option" data-lang="es" data-label="ES" role="option">
+                    🇵🇪 <span>Español</span>
+                  </button>
+                </li>
+                <li role="none">
+                  <button type="button" class="lang-switcher__option" data-lang="en" data-label="EN" role="option">
+                    🇬🇧 <span>English</span>
+                  </button>
+                </li>
+                <li role="none">
+                  <button type="button" class="lang-switcher__option" data-lang="pt" data-label="PT" role="option">
+                    🇧🇷 <span>Português</span>
+                  </button>
+                </li>
+              </ul>
+            </div>
           </div>
           <div class="header__contact">
             <a href="tel:+51900086730" class="header__contact-item">
@@ -261,6 +301,109 @@ const backgroundMode = background === "white" ? "dark" : background;
     &:hover { color: $color-primary; &::after { transform: translateX(-50%) scaleX(1); } }
     &--hidden-xs { display: none; @include sm { display: inline; } }
   }
+
+  // ─── Selector de idioma ─────────────────────────────────────────────────────
+  .lang-switcher {
+    position: relative;
+  }
+
+  .lang-switcher__btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: $spacing-1 $spacing-2;
+    font-size: $font-size-sm;
+    font-weight: $font-weight-semibold;
+    color: #444;
+    background: transparent;
+    border: 1.5px solid transparent;
+    border-radius: 6px;
+    cursor: pointer;
+    letter-spacing: 0.04em;
+    transition: color 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
+
+    &:hover,
+    &[aria-expanded="true"] {
+      color: $color-primary;
+      border-color: rgba($color-primary, 0.35);
+      background-color: rgba($color-primary, 0.05);
+    }
+  }
+
+  .lang-switcher__icon {
+    width: 0.95rem;
+    height: 0.95rem;
+    flex-shrink: 0;
+    opacity: 0.7;
+  }
+
+  .lang-switcher__chevron {
+    width: 0.7rem;
+    height: 0.7rem;
+    flex-shrink: 0;
+    opacity: 0.6;
+    transition: transform 0.2s ease;
+
+    .lang-switcher__btn[aria-expanded="true"] & {
+      transform: rotate(180deg);
+    }
+  }
+
+  .lang-switcher__dropdown {
+    position: absolute;
+    top: calc(100% + 6px);
+    right: 0;
+    min-width: 140px;
+    list-style: none;
+    background-color: $color-white;
+    border: 1px solid rgba($color-primary, 0.2);
+    border-top: 2px solid $color-primary;
+    border-radius: 0 0 8px 8px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    padding: 0.25rem 0;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-6px);
+    pointer-events: none;
+    transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s ease;
+    z-index: 300;
+
+    &.is-open {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+  }
+
+  .lang-switcher__option {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    width: 100%;
+    padding: 0.5rem 0.875rem;
+    font-size: $font-size-sm;
+    font-weight: $font-weight-medium;
+    color: #333;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    text-align: left;
+    transition: background-color 0.15s ease, color 0.15s ease, padding-left 0.15s ease;
+
+    &:hover {
+      background-color: rgba($color-primary, 0.08);
+      color: $color-primary;
+      padding-left: 1.125rem;
+    }
+
+    &.is-active {
+      color: $color-primary;
+      font-weight: $font-weight-semibold;
+      background-color: rgba($color-primary, 0.06);
+    }
+  }
+
 
   .header__social {
     display: inline-flex;
@@ -789,4 +932,82 @@ const backgroundMode = background === "white" ? "dark" : background;
   mobileMenu?.querySelectorAll(".header__mobile-sublink, .header__mobile-link:not(.header__mobile-link--toggle)").forEach((link) => {
     link.addEventListener("click", closeMobileMenu);
   });
+
+  // ─── Selector de idioma ──────────────────────────────────────────────────────
+  (function () {
+    const langBtn      = document.getElementById("lang-btn") as HTMLButtonElement;
+    const langDropdown = document.getElementById("lang-dropdown") as HTMLElement;
+    const langCurrent  = document.getElementById("lang-current") as HTMLElement;
+    const options      = document.querySelectorAll<HTMLButtonElement>(".lang-switcher__option");
+
+    // Lee el idioma activo desde la cookie de Google Translate
+    function getActiveLang(): string {
+      const m = document.cookie.match(/googtrans=\/es\/([a-z]+)/);
+      return m ? m[1] : "es";
+    }
+
+    // Aplica el idioma usando el select interno de Google Translate.
+    function applyLanguage(lang: string) {
+      const select = document.querySelector<HTMLSelectElement>(".goog-te-combo");
+      if (select) {
+        select.value = lang === "es" ? "" : lang;
+        select.dispatchEvent(new Event("change"));
+      } else {
+        // Google Translate aún no cargó: guarda cookie y recarga
+        if (lang === "es") {
+          document.cookie = "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+          document.cookie = "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=." + location.hostname;
+        } else {
+          const exp = new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toUTCString();
+          document.cookie = `googtrans=/es/${lang}; expires=${exp}; path=/;`;
+        }
+        location.reload();
+      }
+    }
+
+    // Inicializa estado visual según cookie al cargar
+    function initLangUI() {
+      const active = getActiveLang();
+      options.forEach((btn) => {
+        const lang = btn.dataset.lang ?? "";
+        const isActive = lang === active;
+        btn.classList.toggle("is-active", isActive);
+        if (isActive && langCurrent) {
+          langCurrent.textContent = btn.dataset.label ?? lang.toUpperCase();
+        }
+      });
+    }
+
+    // Toggle dropdown
+    langBtn?.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const open = langDropdown.classList.toggle("is-open");
+      langBtn.setAttribute("aria-expanded", String(open));
+    });
+
+    // Cerrar al hacer click fuera
+    document.addEventListener("click", (e) => {
+      const switcher = document.getElementById("lang-switcher");
+      if (!switcher?.contains(e.target as Node)) {
+        langDropdown?.classList.remove("is-open");
+        langBtn?.setAttribute("aria-expanded", "false");
+      }
+    });
+
+    // Selección de idioma
+    options.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const lang = btn.dataset.lang ?? "es";
+        applyLanguage(lang);
+        // Actualiza UI de inmediato (útil cuando Google Translate ya cargó)
+        options.forEach((o) => o.classList.remove("is-active"));
+        btn.classList.add("is-active");
+        if (langCurrent) langCurrent.textContent = btn.dataset.label ?? lang.toUpperCase();
+        langDropdown?.classList.remove("is-open");
+        langBtn?.setAttribute("aria-expanded", "false");
+      });
+    });
+
+    initLangUI();
+  })();
 </script>

@@ -1,0 +1,403 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { Icon } from "astro-icon/components";
+import { Image } from "astro:assets";
+
+import cardCusco     from "../assets/cards/card-cusco.webp";
+import cardLima      from "../assets/cards/card-lima.webp";
+import cardArequipa  from "../assets/cards/card-arequipa.webp";
+import cardIca       from "../assets/cards/card-ica.webp";
+import cardPuno      from "../assets/cards/card-titi-caca.webp";
+import imgBolivia    from "../assets/banners/panoramico-bolivia.webp";
+import imgNazca      from "../assets/banners/panoramico-nazca.webp";
+import imgTrekking   from "../assets/banners/panoramico-trekking.webp";
+import imgFullDay    from "../assets/banners/panoramico-cusco.webp";
+import imgPaquetes   from "../assets/banners/panoramico-paquetes.webp";
+
+const destinations = [
+  {
+    name: "Cusco",
+    slug: "cusco",
+    tag: "Ciudad Imperial",
+    icon: "ion:business-outline",
+    description: "Historia viva, cultura andina y paisajes imponentes. El Valle Sagrado, Machu Picchu y sus calles empedradas te esperan en el corazón del Perú.",
+    image: cardCusco,
+  },
+  {
+    name: "Lima",
+    slug: "lima",
+    tag: "Capital",
+    icon: "ion:restaurant-outline",
+    description: "Historia, gastronomía y cultura frente al Pacífico. Miraflores, Barranco y su cocina reconocida mundialmente convierten a la capital en el punto de partida ideal.",
+    image: cardLima,
+  },
+  {
+    name: "Arequipa",
+    slug: "arequipa",
+    tag: "Ciudad Blanca",
+    icon: "ion:flag-outline",
+    description: "Arquitectura de sillar, volcanes majestuosos y el imponente Cañón del Colca. La Ciudad Blanca enamora con su gastronomía y su encanto colonial.",
+    image: cardArequipa,
+  },
+  {
+    name: "Ica",
+    slug: "ica",
+    tag: "Aventura & Mar",
+    icon: "ion:sunny-outline",
+    description: "Dunas, oasis y mar en la costa sur del Perú. Huacachina, las Islas Ballestas y las bodegas de pisco te ofrecen aventura, naturaleza y tradición.",
+    image: cardIca,
+  },
+  {
+    name: "Puno",
+    slug: "puno",
+    tag: "Lago Titicaca",
+    icon: "ion:water-outline",
+    description: "La puerta al lago Titicaca y las tradiciones del altiplano. Islas flotantes de los Uros, comunidades andinas y festivales únicos en el mundo.",
+    image: cardPuno,
+  },
+  {
+    name: "Bolivia",
+    slug: "bolivia",
+    tag: "Destino Internacional",
+    icon: "ion:globe-outline",
+    description: "El Salar de Uyuni, La Paz y el lago Titicaca en un solo viaje. Bolivia combina culturas andinas, ciudades coloniales y paisajes extremos que sorprenden.",
+    image: imgBolivia,
+  },
+  {
+    name: "Nazca",
+    slug: "nazca",
+    tag: "Misterio & Arqueología",
+    icon: "ion:search-outline",
+    description: "Las enigmáticas Líneas de Nazca, acueductos ancestrales y el desierto de la costa sur. Un destino único para quienes buscan historia y misterio.",
+    image: imgNazca,
+  },
+  {
+    name: "Trekking",
+    slug: "trekking",
+    tag: "Aventura",
+    icon: "ion:footsteps-outline",
+    description: "Rutas andinas, caminos ancestrales y montañas majestuosas. Explora paisajes impresionantes y culturas vivas en los mejores senderos del Perú.",
+    image: imgTrekking,
+  },
+  {
+    name: "Full Day",
+    slug: "full-day",
+    tag: "Un Día Completo",
+    icon: "ion:time-outline",
+    description: "Vive experiencias completas en un solo día. Recorre destinos emblemáticos del Perú con guías expertos y transporte incluido.",
+    image: imgFullDay,
+  },
+  {
+    name: "Paquetes en Perú",
+    slug: "paquetes",
+    tag: "Paquetes Turísticos",
+    icon: "ion:briefcase-outline",
+    description: "Rutas completas por Perú con itinerarios diseñados para aprovechar cada día. Cusco, Arequipa, Puno, Ica y más en un solo paquete.",
+    image: imgPaquetes,
+  },
+];
+---
+
+<Layout title="Destinos | Far Away Explorers">
+  <div class="destinos-page">
+
+    <!-- Hero -->
+    <section class="dest-hero">
+      <div class="dest-hero__overlay" aria-hidden="true"></div>
+      <div class="container">
+        <div class="dest-hero__inner">
+          <p class="dest-hero__eyebrow">Explora el mundo</p>
+          <h1 class="dest-hero__title">Nuestros Destinos</h1>
+          <p class="dest-hero__desc">
+            Descubre los destinos más fascinantes de Perú y Sudamérica con guías locales expertos y experiencias diseñadas para cada viajero.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Breadcrumb -->
+    <div class="dest-topbar">
+      <div class="container">
+        <nav class="dest-topbar__breadcrumb" aria-label="Breadcrumb">
+          <a href="/" class="dest-topbar__breadcrumb-link">Inicio</a>
+          <Icon name="ion:chevron-forward" class="dest-topbar__breadcrumb-sep" aria-hidden="true" />
+          <span class="dest-topbar__breadcrumb-current">Destinos</span>
+        </nav>
+        <p class="dest-topbar__count"><strong>{destinations.length}</strong> destinos disponibles</p>
+      </div>
+    </div>
+
+    <!-- Grid -->
+    <section class="dest-grid-section">
+      <div class="container">
+        <div class="dest-grid">
+          {destinations.map((dest) => (
+            <a href={`/${dest.slug}`} class="dest-card">
+              <div class="dest-card__img-wrap">
+                <Image
+                  src={dest.image}
+                  alt={dest.name}
+                  class="dest-card__img"
+                  widths={[400, 700]}
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                  loading="lazy"
+                />
+                <div class="dest-card__overlay" aria-hidden="true"></div>
+                <span class="dest-card__tag">
+                  <Icon name={dest.icon} class="dest-card__tag-icon" aria-hidden="true" />
+                  {dest.tag}
+                </span>
+              </div>
+              <div class="dest-card__body">
+                <h2 class="dest-card__name">{dest.name}</h2>
+                <p class="dest-card__desc">{dest.description}</p>
+                <span class="dest-card__cta">
+                  Ver tours
+                  <Icon name="ion:arrow-forward" class="dest-card__cta-icon" aria-hidden="true" />
+                </span>
+              </div>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+
+  </div>
+</Layout>
+
+<style lang="scss">
+  @use '../styles/abstract/variables' as *;
+  @use '../styles/abstract/mixins' as *;
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // HERO
+  // ═══════════════════════════════════════════════════════════════════════════
+  .dest-hero {
+    position: relative;
+    background-color: $color-primary;
+    padding-block: 4rem 3.5rem;
+    overflow: hidden;
+
+    &::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+      pointer-events: none;
+    }
+  }
+
+  .dest-hero__overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(0,0,0,0.15) 0%, transparent 70%);
+  }
+
+  .dest-hero__inner {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    color: $color-white;
+    gap: 1rem;
+    max-width: 640px;
+    margin-inline: auto;
+  }
+
+  .dest-hero__eyebrow {
+    font-size: $font-size-sm;
+    font-weight: $font-weight-semibold;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba($color-white, 0.85);
+  }
+
+  .dest-hero__title {
+    font-size: 2rem;
+    font-weight: $font-weight-bold;
+    line-height: 1.2;
+    color: $color-white;
+
+    @include md { font-size: 2.5rem; }
+  }
+
+  .dest-hero__desc {
+    font-size: $font-size-sm;
+    line-height: 1.7;
+    color: rgba($color-white, 0.88);
+    max-width: 520px;
+    margin-inline: auto;
+  }
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // TOPBAR
+  // ═══════════════════════════════════════════════════════════════════════════
+  .dest-topbar {
+    border-bottom: 1px solid #e8e8e8;
+    background-color: $color-white;
+
+    .container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+  }
+
+  .dest-topbar__breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding-block: 0.875rem;
+    font-size: $font-size-sm;
+  }
+
+  .dest-topbar__breadcrumb-link {
+    color: $color-text-muted;
+    transition: color 0.25s ease;
+    &:hover { color: $color-primary; }
+  }
+
+  .dest-topbar__breadcrumb-sep {
+    font-size: 0.7rem;
+    color: $color-text-muted;
+  }
+
+  .dest-topbar__breadcrumb-current {
+    color: $color-primary;
+    font-weight: $font-weight-semibold;
+  }
+
+  .dest-topbar__count {
+    font-size: $font-size-sm;
+    color: $color-text-muted;
+    padding-block: 0.875rem;
+
+    strong {
+      color: $color-primary;
+      font-weight: $font-weight-bold;
+    }
+  }
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // GRID SECTION
+  // ═══════════════════════════════════════════════════════════════════════════
+  .dest-grid-section {
+    padding-block: 3rem;
+    @include md { padding-block: 4.5rem; }
+  }
+
+  .dest-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.75rem;
+
+    @include sm { grid-template-columns: repeat(2, 1fr); }
+    @include lg { grid-template-columns: repeat(3, 1fr); }
+  }
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // CARD
+  // ═══════════════════════════════════════════════════════════════════════════
+  .dest-card {
+    display: flex;
+    flex-direction: column;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid #eee;
+    background-color: $color-white;
+    text-decoration: none;
+    transition: transform 0.28s ease, box-shadow 0.28s ease;
+
+    &:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 16px 40px rgba($color-primary, 0.13);
+
+      .dest-card__img { transform: scale(1.06); }
+      .dest-card__cta-icon { transform: translateX(4px); }
+    }
+  }
+
+  .dest-card__img-wrap {
+    position: relative;
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+
+  .dest-card__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.45s ease;
+  }
+
+  .dest-card__overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0.1) 50%, transparent 100%);
+  }
+
+  .dest-card__tag {
+    position: absolute;
+    top: 0.875rem;
+    left: 0.875rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    background-color: rgba($color-primary, 0.92);
+    color: $color-white;
+    font-size: 0.72rem;
+    font-weight: $font-weight-semibold;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    padding: 0.3rem 0.65rem;
+    border-radius: 20px;
+    backdrop-filter: blur(4px);
+  }
+
+  .dest-card__tag-icon {
+    font-size: 0.85rem;
+    flex-shrink: 0;
+  }
+
+  .dest-card__body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    padding: 1.25rem 1.5rem 1.5rem;
+    flex: 1;
+  }
+
+  .dest-card__name {
+    font-size: 1.125rem;
+    font-weight: $font-weight-bold;
+    color: $color-text-dark;
+    line-height: 1.2;
+  }
+
+  .dest-card__desc {
+    font-size: $font-size-sm;
+    line-height: 1.65;
+    color: $color-text-muted;
+    flex: 1;
+  }
+
+  .dest-card__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    color: $color-primary;
+    font-size: $font-size-sm;
+    font-weight: $font-weight-semibold;
+    margin-top: 0.25rem;
+  }
+
+  .dest-card__cta-icon {
+    font-size: 1rem;
+    transition: transform 0.25s ease;
+  }
+</style>

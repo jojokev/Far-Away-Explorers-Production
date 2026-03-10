@@ -1,7 +1,6 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import { Icon } from "astro-icon/components";
-import bannerImage from "../assets/banners/panoramico-cusco.webp";
 
 const contactInfo = [
   { icon: "ion:call-outline", label: "Teléfono", value: "+51 900 086 730", href: "tel:+51900086730" },
@@ -23,11 +22,7 @@ const socials = [
 
     <!-- Hero -->
     <section class="contact-hero">
-      <div class="contact-hero__bg" aria-hidden="true">
-        <img src={bannerImage.src} alt="" class="contact-hero__bg-img" />
-        <div class="contact-hero__bg-overlay"></div>
-        <div class="contact-hero__bg-dots"></div>
-      </div>
+      <div class="contact-hero__overlay" aria-hidden="true"></div>
       <div class="container">
         <div class="contact-hero__inner">
           <p class="contact-hero__eyebrow">Hablemos</p>
@@ -197,42 +192,23 @@ const socials = [
   // ═══════════════════════════════════════════════════════════════════════════
   .contact-hero {
     position: relative;
-    min-height: 320px;
-    display: flex;
-    align-items: center;
+    background-color: $color-primary;
+    padding-block: 4rem 3.5rem;
     overflow: hidden;
 
-    @include md { min-height: 380px; }
+    &::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+      pointer-events: none;
+    }
   }
 
-  .contact-hero__bg {
+  .contact-hero__overlay {
     position: absolute;
     inset: 0;
-    z-index: 0;
-  }
-
-  .contact-hero__bg-img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-
-  .contact-hero__bg-overlay {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(
-      to bottom,
-      rgba(0, 0, 0, 0.55) 0%,
-      rgba(0, 0, 0, 0.7) 100%
-    );
-  }
-
-  .contact-hero__bg-dots {
-    position: absolute;
-    inset: 0;
-    background-image: radial-gradient(rgba($color-white, 0.08) 1px, transparent 1px);
-    background-size: 28px 28px;
-    opacity: 0.5;
+    background: linear-gradient(135deg, rgba(0,0,0,0.15) 0%, transparent 70%);
   }
 
   .contact-hero__inner {
@@ -242,49 +218,34 @@ const socials = [
     flex-direction: column;
     align-items: center;
     text-align: center;
+    color: $color-white;
     gap: 1rem;
-    padding-block: 4rem;
     max-width: 640px;
     margin-inline: auto;
   }
 
   .contact-hero__eyebrow {
     font-size: $font-size-sm;
-    font-weight: $font-weight-bold;
+    font-weight: $font-weight-semibold;
     letter-spacing: 0.14em;
     text-transform: uppercase;
-    color: $color-primary;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-
-    &::before,
-    &::after {
-      content: '';
-      display: inline-block;
-      width: 1.5rem;
-      height: 2px;
-      background-color: $color-primary;
-      border-radius: 2px;
-    }
+    opacity: 0.85;
   }
 
   .contact-hero__title {
     font-size: 2rem;
     font-weight: $font-weight-bold;
     line-height: 1.2;
-    color: $color-white;
 
-    @include md { font-size: 2.75rem; }
+    @include md { font-size: 2.5rem; }
   }
 
   .contact-hero__desc {
-    font-size: $font-size-base;
+    font-size: $font-size-sm;
     line-height: 1.7;
-    color: rgba($color-white, 0.85);
+    opacity: 0.88;
     max-width: 520px;
-
-    @include md { font-size: $font-size-lg; }
+    margin-inline: auto;
   }
 
   // ═══════════════════════════════════════════════════════════════════════════

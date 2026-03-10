@@ -114,29 +114,27 @@ import { Icon } from "astro-icon/components";
   // ═══════════════════════════════════════════════════════════════════════════
   // HERO
   // ═══════════════════════════════════════════════════════════════════════════
+  .legal-hero__dots { display: none; }
+
   .legal-hero {
     position: relative;
-    min-height: 260px;
-    display: flex;
-    align-items: center;
+    background-color: $color-primary;
+    padding-block: 4rem 3.5rem;
     overflow: hidden;
-    background-color: #1a1a2e;
 
-    @include md { min-height: 320px; }
+    &::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+      pointer-events: none;
+    }
   }
 
   .legal-hero__overlay {
     position: absolute;
     inset: 0;
-    background: linear-gradient(135deg, rgba($color-primary, 0.35) 0%, rgba(0,0,0,0.6) 100%);
-  }
-
-  .legal-hero__dots {
-    position: absolute;
-    inset: 0;
-    background-image: radial-gradient(rgba($color-white, 0.07) 1px, transparent 1px);
-    background-size: 28px 28px;
-    opacity: 0.5;
+    background: linear-gradient(135deg, rgba(0,0,0,0.15) 0%, transparent 70%);
   }
 
   .legal-hero__inner {
@@ -146,31 +144,18 @@ import { Icon } from "astro-icon/components";
     flex-direction: column;
     align-items: center;
     text-align: center;
+    color: $color-white;
     gap: 1rem;
-    padding-block: 3.5rem;
     max-width: 640px;
     margin-inline: auto;
   }
 
   .legal-hero__eyebrow {
     font-size: $font-size-sm;
-    font-weight: $font-weight-bold;
+    font-weight: $font-weight-semibold;
     letter-spacing: 0.14em;
     text-transform: uppercase;
-    color: $color-primary;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-
-    &::before,
-    &::after {
-      content: '';
-      display: inline-block;
-      width: 1.5rem;
-      height: 2px;
-      background-color: $color-primary;
-      border-radius: 2px;
-    }
+    color: rgba($color-white, 0.85);
   }
 
   .legal-hero__title {
@@ -183,10 +168,11 @@ import { Icon } from "astro-icon/components";
   }
 
   .legal-hero__desc {
-    font-size: $font-size-base;
+    font-size: $font-size-sm;
     line-height: 1.7;
-    color: rgba($color-white, 0.8);
+    color: rgba($color-white, 0.88);
     max-width: 480px;
+    margin-inline: auto;
   }
 
   // ═══════════════════════════════════════════════════════════════════════════

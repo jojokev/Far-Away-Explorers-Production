@@ -25,15 +25,11 @@ const aboutLinks = [
   { text: "Nuestros Blogs", link: "/blog" },
   { text: "Terminos y condiciones", link: "/terminos-y-condiciones" },
   { text: "Politica de Datos", link: "/politica-de-datos" },
+  { text: "Libro de Reclamaciones", link: "/libro-de-reclamaciones" },
 ];
-const packages = [
-  { text: "Huacachina, Machupicchu, Isla Uros Puno", link: "/paquetes/huacachina-machupicchu-isla-uros-puno" },
-  { text: "Huacachina, MachupicLima, Isla Palomino", link: "/paquetes/huacachina-machupiclima-isla-palomino" },
-  { text: "Lima, Ica, Huacachina, Machupicchu", link: "/paquetes/lima-ica-huacachina-machupicchu" },
-  { text: "Senderismo en la Naturaleza", link: "/paquetes/senderismo-en-la-naturaleza" },
-  { text: "Trekking en las Montanas", link: "/paquetes/trekking-en-las-montanas" },
-  { text: "Cusco, Machupicchu, Laguna Humantay", link: "/paquetes/cusco-machupicchu-laguna-humantay" },
-];
+const packagesRes = await fetch("https://wp.farawayexplorers.com/wp-json/wp/v2/tour?categories=11&per_page=6&_fields=title_plain,slug");
+const packagesData: { title_plain: string; slug: string }[] = await packagesRes.json();
+const packages = packagesData.map((p) => ({ text: p.title_plain, link: `/tour/${p.slug}` }));
 ---
 
 <footer class="footer">
@@ -97,7 +93,8 @@ const packages = [
 
           <div class="footer__badges">
             <a href="https://wp.farawayexplorers.com/wp-content/uploads/2026/03/ESNNA.pdf" target="_blank" aria-label="ESNNA"><img src={protectedBadge} alt="ProtÃ©genos" class="footer__badge" /></a>
-            <img src={claimsBook} alt="Libro de Reclamaciones" class="footer__badge footer__badge--claims" />
+            <a href="/libro-de-reclamaciones" aria-label="Libro de Reclamaciones"><img src={claimsBook} alt="Libro de Reclamaciones" class="footer__badge footer__badge--claims" /></a>
+            
           </div>
         </div>
 
