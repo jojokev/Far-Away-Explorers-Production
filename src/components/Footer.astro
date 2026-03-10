@@ -27,9 +27,16 @@ const aboutLinks = [
   { text: "Politica de Datos", link: "/politica-de-datos" },
   { text: "Libro de Reclamaciones", link: "/libro-de-reclamaciones" },
 ];
-const packagesRes = await fetch("https://wp.farawayexplorers.com/wp-json/wp/v2/tour?categories=11&per_page=6&_fields=title_plain,slug");
-const packagesData: { title_plain: string; slug: string }[] = await packagesRes.json();
-const packages = packagesData.map((p) => ({ text: p.title_plain, link: `/tour/${p.slug}` }));
+let packages: { text: string; link: string }[] = [];
+try {
+  const packagesRes = await fetch("https://wp.farawayexplorers.com/wp-json/wp/v2/tour?categories=11&per_page=6&_fields=title_plain,slug");
+  if (packagesRes.ok) {
+    const packagesData: { title_plain: string; slug: string }[] = await packagesRes.json();
+    packages = packagesData.map((p) => ({ text: p.title_plain, link: `/tour/${p.slug}` }));
+  }
+} catch {
+  // fallback: lista vacía si la API no responde
+}
 ---
 
 <footer class="footer">
