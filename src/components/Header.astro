@@ -946,7 +946,7 @@ const backgroundMode = background === "white" ? "dark" : background;
       return m ? m[1] : "es";
     }
 
-    // Aplica el idioma usando cookies y recarga — el método más confiable con Google Translate.
+    // Aplica el idioma via cookie + reload.
     function applyLanguage(lang: string) {
       if (lang === "es") {
         document.cookie = "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
