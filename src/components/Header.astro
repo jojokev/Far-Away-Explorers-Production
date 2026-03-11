@@ -946,23 +946,17 @@ const backgroundMode = background === "white" ? "dark" : background;
       return m ? m[1] : "es";
     }
 
-    // Aplica el idioma usando el select interno de Google Translate.
+    // Aplica el idioma usando cookies y recarga — el método más confiable con Google Translate.
     function applyLanguage(lang: string) {
-      const select = document.querySelector<HTMLSelectElement>(".goog-te-combo");
-      if (select) {
-        select.value = lang === "es" ? "" : lang;
-        select.dispatchEvent(new Event("change"));
+      if (lang === "es") {
+        document.cookie = "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+        document.cookie = "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=." + location.hostname;
       } else {
-        // Google Translate aún no cargó: guarda cookie y recarga
-        if (lang === "es") {
-          document.cookie = "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-          document.cookie = "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=." + location.hostname;
-        } else {
-          const exp = new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toUTCString();
-          document.cookie = `googtrans=/es/${lang}; expires=${exp}; path=/;`;
-        }
-        location.reload();
+        const exp = new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toUTCString();
+        document.cookie = `googtrans=/es/${lang}; expires=${exp}; path=/;`;
+        document.cookie = `googtrans=/es/${lang}; expires=${exp}; path=/; domain=.${location.hostname};`;
       }
+      location.reload();
     }
 
     // Inicializa estado visual según cookie al cargar
