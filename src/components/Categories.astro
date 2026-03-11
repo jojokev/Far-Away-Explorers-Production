@@ -31,23 +31,23 @@ const destinations = {
     <!-- ── Grid ─────────────────────────────────────── -->
     <div class="destinations__grid">
 
-      <!-- Tarjeta principal (Arequipa) -->
+      <!-- Tarjeta principal (Cusco) -->
       <a
-        href={destinations.arequipa.link}
+        href={destinations.cusco.link}
         class="destinations__card destinations__card--featured"
-        aria-label={destinations.arequipa.title}
+        aria-label={destinations.cusco.title}
       >
         <img
-          src={destinations.arequipa.image}
-          alt={destinations.arequipa.title}
+          src={destinations.cusco.image}
+          alt={destinations.cusco.title}
           class="destinations__card-img"
           loading="lazy"
         />
         <div class="destinations__card-overlay" aria-hidden="true"></div>
-        <h3 class="destinations__card-label">{destinations.arequipa.title}</h3>
+        <h3 class="destinations__card-label">{destinations.cusco.title}</h3>
       </a>
 
-      <!-- Sub-grid (Lima, Ica, Cusco) -->
+      <!-- Sub-grid (Lima, Ica, Arequipa) -->
       <div class="destinations__subgrid">
 
         <a href={destinations.lima.link} class="destinations__card" aria-label={destinations.lima.title}>
@@ -62,10 +62,10 @@ const destinations = {
           <h3 class="destinations__card-label destinations__card-label--sm">{destinations.ica.title}</h3>
         </a>
 
-        <a href={destinations.cusco.link} class="destinations__card" aria-label={destinations.cusco.title}>
-          <img src={destinations.cusco.image} alt={destinations.cusco.title} class="destinations__card-img" loading="lazy" />
+        <a href={destinations.arequipa.link} class="destinations__card" aria-label={destinations.arequipa.title}>
+          <img src={destinations.arequipa.image} alt={destinations.arequipa.title} class="destinations__card-img" loading="lazy" />
           <div class="destinations__card-overlay" aria-hidden="true"></div>
-          <h3 class="destinations__card-label destinations__card-label--sm">{destinations.cusco.title}</h3>
+          <h3 class="destinations__card-label destinations__card-label--sm">{destinations.arequipa.title}</h3>
         </a>
 
         <a href={destinations.puno.link} class="destinations__card" aria-label={destinations.puno.title}>

@@ -268,12 +268,15 @@ const data = await res.json();
     background-color: $color-white;
     text-align: left;
     box-shadow: $tours-shadow-card;
-    border: 1px solid rgba(0, 0, 0, 0.05); // ← borde sutil en reposo
+    border: 1px solid rgba(0, 0, 0, 0.05);
     transition:
       box-shadow 0.3s ease,
       transform  0.3s ease,
       border-color 0.3s ease;
-    overflow: visible;                   // ← necesario para la meta flotante
+    overflow: visible;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
 
     &:hover {
       box-shadow: $tours-shadow-hover;
@@ -356,13 +359,15 @@ const data = await res.json();
     display: flex;
     flex-direction: column;
     gap: 0.75rem;
-    padding: 1.75rem 1rem 1rem;        // ← pt generoso por la meta flotante
+    padding: 1.75rem 1rem 1rem;
+    flex: 1;
   }
 
   // ─── Info ───────────────────────────────────────────────────────────────────
   .tours__card-info {
     border-bottom: 1px solid $tours-border;
     padding-bottom: 0.625rem;
+    flex: 1;
   }
 
   .tours__card-title-link {
@@ -516,6 +521,14 @@ const data = await res.json();
     cursor: not-allowed;
     pointer-events: none;
   }
+
+  :global(.tours-swiper .swiper-wrapper) {
+    align-items: stretch;
+  }
+
+  :global(.tours-swiper .swiper-slide) {
+    height: auto;
+  }
 </style>
 
 <script>
@@ -528,6 +541,7 @@ const data = await res.json();
     modules: [Navigation, Pagination],
     slidesPerView: 1.1,
     spaceBetween: 12,
+    watchSlidesProgress: true,
     pagination: {
       el: ".tours-pagination",
       clickable: true,
