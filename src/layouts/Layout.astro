@@ -3,7 +3,25 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import '../styles/global.scss';
 
-const { title = "Far Away Explorers" } = Astro.props;
+const {
+	title = "Far Away Explorers",
+	description,
+	canonical,
+	ogTitle,
+	ogDescription,
+	ogImage,
+	twitterTitle,
+	twitterDescription,
+	twitterImage,
+	noindex = false,
+	schema,
+	yoastHead,
+} = Astro.props;
+
+const resolvedOgTitle = ogTitle ?? title;
+const resolvedOgDesc  = ogDescription ?? description;
+const resolvedTwTitle = twitterTitle ?? resolvedOgTitle;
+const resolvedTwDesc  = twitterDescription ?? resolvedOgDesc;
 ---
 <!doctype html>
 <html lang="es">
@@ -17,7 +35,29 @@ const { title = "Far Away Explorers" } = Astro.props;
 		<link rel="icon" href="/favicon.svg" type="image/svg+xml">
 		<link rel="icon" href="/favicon.ico" sizes="any">
 		<link rel="apple-touch-icon" href="/apple-touch-icon.png">
-		<title>{title}</title>
+		{yoastHead
+			? <Fragment set:html={yoastHead} />
+			: <>
+				<title>{title}</title>
+				{description && <meta name="description" content={description} />}
+				{noindex
+					? <meta name="robots" content="noindex,nofollow" />
+					: <meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1" />
+				}
+				{canonical && <link rel="canonical" href={canonical} />}
+				<meta property="og:type" content="website" />
+				<meta property="og:site_name" content="Far Away Explorers" />
+				{resolvedOgTitle && <meta property="og:title" content={resolvedOgTitle} />}
+				{resolvedOgDesc && <meta property="og:description" content={resolvedOgDesc} />}
+				{canonical && <meta property="og:url" content={canonical} />}
+				{ogImage && <meta property="og:image" content={ogImage} />}
+				<meta name="twitter:card" content="summary_large_image" />
+				{resolvedTwTitle && <meta name="twitter:title" content={resolvedTwTitle} />}
+				{resolvedTwDesc && <meta name="twitter:description" content={resolvedTwDesc} />}
+				{twitterImage && <meta name="twitter:image" content={twitterImage} />}
+				{schema && <script is:inline type="application/ld+json" set:html={JSON.stringify(schema)} />}
+			</>
+		}
 		<style>
 			/* Oculta el toolbar de Google Translate sin eliminarlo del DOM */
 			.skiptranslate,

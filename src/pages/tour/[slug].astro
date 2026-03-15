@@ -14,8 +14,17 @@ export const getStaticPaths = (async () => {
 }) satisfies GetStaticPaths;
 
 const { slug } = Astro.params;
-const res       = await fetch(`https://wp.farawayexplorers.com/wp-json/wp/v2/tour?slug=${slug}&_embed&_fields=id,categories,featured_media,acf,title_plain,content,descripcion_formatted,incluye_formatted,recomendaciones_formatted,informacion_formatted`);
+const res       = await fetch(`https://wp.farawayexplorers.com/wp-json/wp/v2/tour?slug=${slug}&_embed&_fields=id,categories,featured_media,acf,title_plain,content,descripcion_formatted,incluye_formatted,recomendaciones_formatted,informacion_formatted,yoast_head`);
 const [data]    = await res.json();
+
+// SEO desde Yoast
+const rawYoastHead = data.yoast_head as string | undefined;
+const yoastHead = rawYoastHead?.replace(/https:\/\/wp\.farawayexplorers\.com/g, 'https://farawayexplorers.com');
+const seo = {
+  title:     `${data.title_plain} | Far Away Explorers`,
+  canonical: `https://farawayexplorers.com/tour/${slug}`,
+  yoastHead,
+};
 
 const imagesID = [
   data.featured_media,
@@ -91,7 +100,7 @@ if (categoryId) {
 }
 ---
 
-<Layout title="Tour">
+<Layout {...seo}>
 
   <!-- ── Galería ──────────────────────────────────── -->
   <GalleryTour galleryImages={images} imagesBanner={imagesBanner}></GalleryTour>

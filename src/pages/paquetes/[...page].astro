@@ -13,14 +13,33 @@ export const getStaticPaths = (async ({ paginate }) => {
 const { page } = Astro.props;
 const basePath = "paquetes";
 
+let yoastHead: string | undefined;
+try {
+  const yoastRes = await fetch(`https://wp.farawayexplorers.com/wp-json/wp/v2/categories?slug=${basePath}`);
+  if (yoastRes.ok) {
+    const yoastData = await yoastRes.json();
+    yoastHead = yoastData?.[0]?.yoast_head as string | undefined;
+  }
+} catch (e) {}
+
 const category = {
   name:        "Paquetes en Peru",
   description: "Descubre paquetes de viaje por Perú con rutas completas, experiencias culturales y aventura. Recorre destinos como Cusco, Arequipa, Puno, Ica y la Amazonía con itinerarios diseñados para aprovechar al máximo cada viaje.",
   total:       page.total,
 };
+
+const seo = {
+  title: `${category.name} | Far Away Explorers`,
+  description: category.description,
+  canonical: page.currentPage === 1
+    ? `https://farawayexplorers.com/${basePath}`
+    : `https://farawayexplorers.com/${basePath}/${page.currentPage}`,
+  ogImage: defaultImage.src,
+  yoastHead: page.currentPage === 1 ? yoastHead : undefined,
+};
 ---
 
-<Layout title={`${category.name} | Far Away Expeditions`}>
+<Layout {...seo}>
   <div class="category-page">
 
     <section class="cat-hero">

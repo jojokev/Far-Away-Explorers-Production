@@ -13,14 +13,33 @@ export const getStaticPaths = (async ({ paginate }) => {
 const { page } = Astro.props;
 const basePath = "bolivia";
 
+let yoastHead: string | undefined;
+try {
+  const yoastRes = await fetch(`https://wp.farawayexplorers.com/wp-json/wp/v2/categories?slug=${basePath}`);
+  if (yoastRes.ok) {
+    const yoastData = await yoastRes.json();
+    yoastHead = yoastData?.[0]?.yoast_head as string | undefined;
+  }
+} catch (e) {}
+
 const category = {
   name:        "Bolivia",
   description: "Bolivia ofrece una mezcla única de cultura andina, ciudades coloniales y paisajes extremos. Desde el Salar de Uyuni y el lago Titicaca hasta La Paz y Sucre, es ideal para aventura, historia y naturaleza.",
   total:       page.total,
 };
+
+const seo = {
+  title: `Tours en ${category.name} | Far Away Explorers`,
+  description: category.description,
+  canonical: page.currentPage === 1
+    ? `https://farawayexplorers.com/${basePath}`
+    : `https://farawayexplorers.com/${basePath}/${page.currentPage}`,
+  ogImage: defaultImage.src,
+  yoastHead: page.currentPage === 1 ? yoastHead : undefined,
+};
 ---
 
-<Layout title={`${category.name} | Far Away Expeditions`}>
+<Layout {...seo}>
   <div class="category-page">
 
     <section class="cat-hero">

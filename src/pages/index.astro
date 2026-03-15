@@ -8,9 +8,26 @@ import Comments from '../components/Comments.astro';
 import Blogs from '../components/Blogs.astro';
 import LayoutHome from '../layouts/LayoutHome.astro';
 
+let yoastHead: string | undefined;
+try {
+  const res = await fetch('https://wp.farawayexplorers.com/wp-json/wp/v2/pages/131');
+  if (res.ok) {
+    const data = await res.json();
+    yoastHead = data?.yoast_head as string | undefined;
+  }
+} catch (e) {
+  // Si el fetch falla, el layout usará los meta tags manuales de fallback
+}
+
+const seo = {
+  title: "Far Away Explorers | Tours en Perú y Bolivia",
+  description: "Agencia de turismo con sede en Cusco. Descubre tours auténticos por Machu Picchu, Valle Sagrado, Arequipa, Puno, Ica, Nazca y Bolivia con guías locales expertos.",
+  canonical: "https://farawayexplorers.com",
+  yoastHead,
+};
 ---
 
-<LayoutHome>
+<LayoutHome {...seo}>
 	<BannerHome></BannerHome>
 	<AboutHome></AboutHome>
 	<Tours title="Los mejores lugares para visitar en Cusco y Perú"></Tours>

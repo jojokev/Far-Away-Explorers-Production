@@ -96,9 +96,25 @@ const destinations = [
     image: imgPaquetes,
   },
 ];
+
+let yoastHead: string | undefined;
+try {
+  const yoastRes = await fetch('https://wp.farawayexplorers.com/wp-json/wp/v2/pages?slug=destinos');
+  if (yoastRes.ok) {
+    const yoastData = await yoastRes.json();
+    yoastHead = yoastData?.[0]?.yoast_head as string | undefined;
+  }
+} catch (e) {}
+
+const seo = {
+  title: "Destinos en Perú y Bolivia | Far Away Explorers",
+  description: "Explora nuestros destinos en Perú y Bolivia: Cusco, Machu Picchu, Arequipa, Puno, Lima, Ica, Nazca y más. Tours con guías locales expertos.",
+  canonical: "https://farawayexplorers.com/destinos",
+  yoastHead,
+};
 ---
 
-<Layout title="Destinos | Far Away Explorers">
+<Layout {...seo}>
   <div class="destinos-page">
 
     <!-- Hero -->

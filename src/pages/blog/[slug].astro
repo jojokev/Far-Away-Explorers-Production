@@ -18,6 +18,16 @@ const { slug } = Astro.params;
 const res     = await fetch(`https://wp.farawayexplorers.com/wp-json/wp/v2/blog?slug=${slug}&_embed`);
 const [post]  = await res.json();
 
+// SEO desde Yoast
+const rawYoastHead = post.yoast_head as string | undefined;
+const yoastHead = rawYoastHead?.replace(/https:\/\/wp\.farawayexplorers\.com/g, 'https://farawayexplorers.com');
+const seo = {
+  title:       `${post.title.rendered} | Blog - Far Away Explorers`,
+  description: post.excerpt?.rendered?.replace(/<[^>]*>/g, "").trim(),
+  canonical:   `https://farawayexplorers.com/blog/${slug}`,
+  yoastHead,
+};
+
 // Imagen destacada
 const featuredImage =
   post._embedded?.["wp:featuredmedia"]?.[0]?.media_details?.sizes?.large?.source_url ??
@@ -56,7 +66,7 @@ let relatedPosts: any[] = [];
   relatedPosts  = await relRes.json();
 ---
 
-<Layout title={`${post.title.rendered} | Blog - Far Away Explorers`}>
+<Layout {...seo}>
   <div class="blog-post">
 
     <!-- Hero -->

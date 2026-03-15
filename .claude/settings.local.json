@@ -2,7 +2,13 @@
   "permissions": {
     "allow": [
       "Bash(npm run:*)",
-      "Bash(grep:*)"
+      "Bash(grep:*)",
+      "Bash(for f:*)",
+      "Bash(do echo:*)",
+      "Bash(do)",
+      "Bash(echo \"=== $f ===\")",
+      "Read(//c/Users/USER/Documents/kevin/farawayexplorers/src/pages/$f/**)",
+      "Bash(done)"
     ]
   }
 }

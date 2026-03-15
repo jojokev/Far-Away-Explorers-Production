@@ -1,9 +1,26 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import { Icon } from "astro-icon/components";
+
+let yoastHead: string | undefined;
+try {
+  const yoastRes = await fetch('https://wp.farawayexplorers.com/wp-json/wp/v2/pages?slug=politica-de-datos');
+  if (yoastRes.ok) {
+    const yoastData = await yoastRes.json();
+    yoastHead = yoastData?.[0]?.yoast_head as string | undefined;
+  }
+} catch (e) {}
+
+const seo = {
+  title: "Política de Protección de Datos | Far Away Explorers",
+  description: "Política de privacidad y protección de datos personales de Far Away Explorers.",
+  canonical: "https://farawayexplorers.com/politica-de-datos",
+  noindex: true,
+  yoastHead,
+};
 ---
 
-<Layout title="Política de Protección de Datos | Far Away Explorers">
+<Layout {...seo}>
   <div class="legal-page">
 
     <!-- Hero -->

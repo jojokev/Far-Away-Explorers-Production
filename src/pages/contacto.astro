@@ -15,9 +15,25 @@ const socials = [
   { icon: "ion:logo-tiktok", label: "TikTok", href: "#" },
   { icon: "ion:logo-youtube", label: "YouTube", href: "#" },
 ];
+
+let yoastHead: string | undefined;
+try {
+  const yoastRes = await fetch('https://wp.farawayexplorers.com/wp-json/wp/v2/pages?slug=contacto');
+  if (yoastRes.ok) {
+    const yoastData = await yoastRes.json();
+    yoastHead = yoastData?.[0]?.yoast_head as string | undefined;
+  }
+} catch (e) {}
+
+const seo = {
+  title: "Contáctanos | Far Away Explorers",
+  description: "¿Listo para tu próxima aventura? Contacta a Far Away Explorers y planifica tu viaje a Perú o Bolivia con nuestro equipo de expertos locales.",
+  canonical: "https://farawayexplorers.com/contacto",
+  yoastHead,
+};
 ---
 
-<Layout title="Contáctanos | Far Away Explorers">
+<Layout {...seo}>
   <div class="contact-page">
 
     <!-- Hero -->

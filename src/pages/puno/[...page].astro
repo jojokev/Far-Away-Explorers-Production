@@ -13,14 +13,33 @@ export const getStaticPaths = (async ({ paginate }) => {
 const { page } = Astro.props;
 const basePath = "puno";
 
+let yoastHead: string | undefined;
+try {
+  const yoastRes = await fetch(`https://wp.farawayexplorers.com/wp-json/wp/v2/categories?slug=${basePath}`);
+  if (yoastRes.ok) {
+    const yoastData = await yoastRes.json();
+    yoastHead = yoastData?.[0]?.yoast_head as string | undefined;
+  }
+} catch (e) {}
+
 const category = {
   name:        "Puno",
   description: "Puno es la puerta de entrada al lago Titicaca y a las tradiciones andinas del altiplano peruano. Sus islas flotantes de los Uros, comunidades locales y celebraciones folclóricas lo convierten en un destino ideal para cultura y naturaleza.",
   total:       page.total,
 };
+
+const seo = {
+  title: `Tours en ${category.name}, Perú | Far Away Explorers`,
+  description: category.description,
+  canonical: page.currentPage === 1
+    ? `https://farawayexplorers.com/${basePath}`
+    : `https://farawayexplorers.com/${basePath}/${page.currentPage}`,
+  ogImage: defaultImage.src,
+  yoastHead: page.currentPage === 1 ? yoastHead : undefined,
+};
 ---
 
-<Layout title={`${category.name} | Far Away Expeditions`}>
+<Layout {...seo}>
   <div class="category-page">
 
     <section class="cat-hero">

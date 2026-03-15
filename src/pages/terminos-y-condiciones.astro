@@ -1,9 +1,25 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import { Icon } from "astro-icon/components";
+
+let yoastHead: string | undefined;
+try {
+  const yoastRes = await fetch('https://wp.farawayexplorers.com/wp-json/wp/v2/pages?slug=terminos-y-condiciones');
+  if (yoastRes.ok) {
+    const yoastData = await yoastRes.json();
+    yoastHead = yoastData?.[0]?.yoast_head as string | undefined;
+  }
+} catch (e) {}
+
+const seo = {
+  title: "Términos y Condiciones | Far Away Explorers",
+  description: "Conoce los términos y condiciones de servicio de Far Away Explorers, agencia de tours en Perú y Bolivia.",
+  canonical: "https://farawayexplorers.com/terminos-y-condiciones",
+  yoastHead,
+};
 ---
 
-<Layout title="Términos y Condiciones | Far Away Explorers">
+<Layout {...seo}>
   <div class="legal-page">
 
     <!-- Hero -->

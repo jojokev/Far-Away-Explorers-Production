@@ -13,14 +13,33 @@ export const getStaticPaths = (async ({ paginate }) => {
 const { page } = Astro.props;
 const basePath = "lima";
 
+let yoastHead: string | undefined;
+try {
+  const yoastRes = await fetch(`https://wp.farawayexplorers.com/wp-json/wp/v2/categories?slug=${basePath}`);
+  if (yoastRes.ok) {
+    const yoastData = await yoastRes.json();
+    yoastHead = yoastData?.[0]?.yoast_head as string | undefined;
+  }
+} catch (e) {}
+
 const category = {
   name:        "Lima",
   description: "Lima es historia, cultura y gastronomía frente al océano Pacífico. Su centro histórico colonial, barrios vibrantes como Miraflores y Barranco, y su reconocida cocina convierten a la capital del Perú en el punto de partida perfecto para descubrir el país.",
   total:       page.total,
 };
+
+const seo = {
+  title: `Tours en ${category.name}, Perú | Far Away Explorers`,
+  description: category.description,
+  canonical: page.currentPage === 1
+    ? `https://farawayexplorers.com/${basePath}`
+    : `https://farawayexplorers.com/${basePath}/${page.currentPage}`,
+  ogImage: defaultImage.src,
+  yoastHead: page.currentPage === 1 ? yoastHead : undefined,
+};
 ---
 
-<Layout title={`${category.name} | Far Away Expeditions`}>
+<Layout {...seo}>
   <div class="category-page">
 
     <section class="cat-hero">

@@ -15,9 +15,25 @@ const stats = [
   { number: "7", label: "Destinos en Perú" },
   { number: "5", label: "Años de experiencia" },
 ];
+
+let yoastHead: string | undefined;
+try {
+  const yoastRes = await fetch('https://wp.farawayexplorers.com/wp-json/wp/v2/pages?slug=about-us');
+  if (yoastRes.ok) {
+    const yoastData = await yoastRes.json();
+    yoastHead = yoastData?.[0]?.yoast_head as string | undefined;
+  }
+} catch (e) {}
+
+const seo = {
+  title: "Sobre Nosotros | Far Away Explorers",
+  description: "Somos Far Away Explorers, agencia de turismo con sede en Cusco. Más de 5 años creando experiencias auténticas por Perú y Bolivia para viajeros de todo el mundo.",
+  canonical: "https://farawayexplorers.com/about-us",
+  yoastHead,
+};
 ---
 
-<Layout title="Sobre Nosotros | Far Away Explorers">
+<Layout {...seo}>
   <div class="about-page">
 
     <!-- Hero -->
