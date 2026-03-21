@@ -10,7 +10,11 @@ const navNextIcon = nextIcon.src;
 const { idDestination = 3, title = "Los mejores lugares para visitar" } = Astro.props;
 
 const res = await fetch(`https://wp.farawayexplorers.com/wp-json/wp/v2/tour?categories=${idDestination}&per_page=5&_embed`);
-const data = await res.json();
+const raw = await res.json();
+const data = raw.map((tour: any) => ({
+  ...tour,
+  link: tour.link?.replace(/wp\.farawayexplorers\.com/g, 'farawayexplorers.com') ?? '#',
+}));
 
 ---
 

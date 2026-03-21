@@ -19,7 +19,7 @@ const [data]    = await res.json();
 
 // SEO desde Yoast
 const rawYoastHead = data.yoast_head as string | undefined;
-const yoastHead = rawYoastHead?.replace(/https:\/\/wp\.farawayexplorers\.com/g, 'https://farawayexplorers.com');
+const yoastHead = rawYoastHead?.replace(/wp\.farawayexplorers\.com/g, 'farawayexplorers.com');
 const seo = {
   title:     `${data.title_plain} | Far Away Explorers`,
   canonical: `https://farawayexplorers.com/tour/${slug}`,

@@ -37,7 +37,7 @@ try {
   if (yoastRes.ok) {
     const yoastData = await yoastRes.json();
     const rawHead = yoastData?.[0]?.yoast_head as string | undefined;
-    yoastHead = rawHead?.replace(/https:\/\/wp\.farawayexplorers\.com/g, 'https://farawayexplorers.com');
+    yoastHead = rawHead?.replace(/wp\.farawayexplorers\.com/g, 'farawayexplorers.com');
   }
 } catch (e) {}
 

@@ -13,7 +13,7 @@ try {
   const res = await fetch('https://wp.farawayexplorers.com/wp-json/wp/v2/pages/131');
   if (res.ok) {
     const data = await res.json();
-    yoastHead = data?.yoast_head as string | undefined;
+    yoastHead = (data?.yoast_head as string | undefined)?.replace(/wp\.farawayexplorers\.com/g, 'farawayexplorers.com');
   }
 } catch (e) {
   // Si el fetch falla, el layout usará los meta tags manuales de fallback
