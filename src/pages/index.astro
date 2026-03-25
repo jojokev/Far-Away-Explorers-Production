@@ -10,7 +10,7 @@ import LayoutHome from '../layouts/LayoutHome.astro';
 
 let yoastHead: string | undefined;
 try {
-  const res = await fetch('https://wp.farawayexplorers.com/wp-json/wp/v2/pages/131');
+  const res = await fetch(`${import.meta.env.PUBLIC_WP_API_URL}/wp/v2/pages/131`);
   if (res.ok) {
     const data = await res.json();
     yoastHead = (data?.yoast_head as string | undefined)?.replace(/wp\.farawayexplorers\.com/g, 'farawayexplorers.com');

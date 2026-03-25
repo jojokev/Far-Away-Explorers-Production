@@ -8,13 +8,13 @@ import { Icon } from "astro-icon/components";
 interface tourSlug { slug: String }
 
 export const getStaticPaths = (async () => {
-  const res  = await fetch("https://wp.farawayexplorers.com/wp-json/wp/v2/tour?per_page=100&_fields=slug");
+  const res  = await fetch(`${import.meta.env.PUBLIC_WP_API_URL}/wp/v2/tour?per_page=100&_fields=slug`);
   const data = await res.json();
   return data.map((tour: tourSlug) => ({ params: { slug: tour.slug } }));
 }) satisfies GetStaticPaths;
 
 const { slug } = Astro.params;
-const res       = await fetch(`https://wp.farawayexplorers.com/wp-json/wp/v2/tour?slug=${slug}&_embed&_fields=id,categories,featured_media,acf,title_plain,content,descripcion_formatted,incluye_formatted,recomendaciones_formatted,informacion_formatted,yoast_head`);
+const res       = await fetch(`${import.meta.env.PUBLIC_WP_API_URL}/wp/v2/tour?slug=${slug}&_embed&_fields=id,categories,featured_media,acf,title_plain,content,descripcion_formatted,incluye_formatted,recomendaciones_formatted,informacion_formatted,yoast_head`);
 const [data]    = await res.json();
 
 // SEO desde Yoast
@@ -36,7 +36,7 @@ const imagesID = [
 
 const images = await Promise.all(
   imagesID.map(async (id: number) => {
-    const res = await fetch(`https://wp.farawayexplorers.com/wp-json/wp/v2/media/${id}`);
+    const res = await fetch(`${import.meta.env.PUBLIC_WP_API_URL}/wp/v2/media/${id}`);
     const imgData = await res.json();
     const previewSrc =
       imgData?.media_details?.sizes?.medium_large?.source_url ??
@@ -52,7 +52,7 @@ const images = await Promise.all(
 
 const imagesBanner = await Promise.all(
   imagesID.map(async (id: number) => {
-    const res = await fetch(`https://wp.farawayexplorers.com/wp-json/wp/v2/media/${id}`);
+    const res = await fetch(`${import.meta.env.PUBLIC_WP_API_URL}/wp/v2/media/${id}`);
     const imgData = await res.json();
     const fullSrc =
       imgData?.media_details?.sizes?.full?.source_url ??
@@ -72,7 +72,7 @@ let similarTours: { slug: string; title: string; type: string; price: string; im
 
 if (categoryId) {
   const simRes     = await fetch(
-    `https://wp.farawayexplorers.com/wp-json/wp/v2/tour?categories=${categoryId}&exclude=${data.id}&per_page=5&_fields=slug,title_plain,acf,featured_media`
+    `${import.meta.env.PUBLIC_WP_API_URL}/wp/v2/tour?categories=${categoryId}&exclude=${data.id}&per_page=5&_fields=slug,title_plain,acf,featured_media`
   );
   const simData: any[] = await simRes.json();
 
@@ -80,7 +80,7 @@ if (categoryId) {
     simData.map(async (t) => {
       let image = defaultImage.src;
       if (t.featured_media) {
-        const mediaRes  = await fetch(`https://wp.farawayexplorers.com/wp-json/wp/v2/media/${t.featured_media}`);
+        const mediaRes  = await fetch(`${import.meta.env.PUBLIC_WP_API_URL}/wp/v2/media/${t.featured_media}`);
         const mediaData = await mediaRes.json();
         image =
           mediaData?.media_details?.sizes?.thumbnail?.source_url ??
@@ -1307,7 +1307,7 @@ if (categoryId) {
 
     try {
       const res = await fetch(
-        "https://wp.farawayexplorers.com/wp-json/faraway/v1/booking",
+        `${import.meta.env.PUBLIC_WP_API_URL}/faraway/v1/booking`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

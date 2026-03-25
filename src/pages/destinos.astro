@@ -99,7 +99,7 @@ const destinations = [
 
 let yoastHead: string | undefined;
 try {
-  const yoastRes = await fetch('https://wp.farawayexplorers.com/wp-json/wp/v2/pages?slug=destinos');
+  const yoastRes = await fetch(`${import.meta.env.PUBLIC_WP_API_URL}/wp/v2/pages?slug=destinos`);
   if (yoastRes.ok) {
     const yoastData = await yoastRes.json();
     yoastHead = (yoastData?.[0]?.yoast_head as string | undefined)?.replace(/wp\.farawayexplorers\.com/g, 'farawayexplorers.com');

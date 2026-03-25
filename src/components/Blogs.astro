@@ -2,7 +2,7 @@
 import defaultImage from "../assets/default.webp";
 import { Icon } from "astro-icon/components";
 
-const res = await fetch("https://wp.farawayexplorers.com/wp-json/wp/v2/blog?per_page=3&_embed");
+const res = await fetch(`${import.meta.env.PUBLIC_WP_API_URL}/wp/v2/blog?per_page=3&_embed`);
 const data = await res.json();
 
 const blogs = data.map((post: any) => {

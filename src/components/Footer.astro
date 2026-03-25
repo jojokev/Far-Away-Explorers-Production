@@ -1,4 +1,4 @@
-﻿---
+---
 import logoAsset from "../assets/logo-far-away-2.webp";
 import avatar from "../assets/icons/metodos-pago.webp";
 import reclamaciones from "../assets/icons/reclamaciones.webp";
@@ -29,7 +29,7 @@ const aboutLinks = [
 ];
 let packages: { text: string; link: string }[] = [];
 try {
-  const packagesRes = await fetch("https://wp.farawayexplorers.com/wp-json/wp/v2/tour?categories=11&per_page=6&_fields=title_plain,slug");
+  const packagesRes = await fetch(`${import.meta.env.PUBLIC_WP_API_URL}/wp/v2/tour?categories=11&per_page=6&_fields=title_plain,slug`);
   if (packagesRes.ok) {
     const packagesData: { title_plain: string; slug: string }[] = await packagesRes.json();
     packages = packagesData.map((p) => ({ text: p.title_plain, link: `/tour/${p.slug}` }));
@@ -78,7 +78,7 @@ try {
           <div class="footer__social">
             <p class="footer__social-title">Síguenos :</p>
             <div class="footer__social-links">
-              <a href="#" aria-label="TikTok" class="footer__social-btn">
+              <a href="https://www.tiktok.com/@farawayexplorers" target="_blank" aria-label="TikTok" class="footer__social-btn">
                 <Icon name="ion:logo-tiktok" class="footer__social-icon" aria-hidden="true" />
               </a>
               <a href="https://www.facebook.com/share/1DVDJHeDRC/" target="_blank" aria-label="Facebook" class="footer__social-btn">

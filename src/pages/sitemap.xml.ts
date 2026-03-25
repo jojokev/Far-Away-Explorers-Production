@@ -1,7 +1,7 @@
 import type { APIRoute } from 'astro';
 
 const BASE      = 'https://farawayexplorers.com';
-const WP        = 'https://wp.farawayexplorers.com/wp-json/wp/v2';
+const WP        = `${import.meta.env.PUBLIC_WP_API_URL}/wp/v2`;
 const PAGE_SIZE = 12;
 
 // Categorías con sus IDs de WordPress

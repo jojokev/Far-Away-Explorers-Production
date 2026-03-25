@@ -5,7 +5,7 @@ import defaultImage from "../../assets/banners/panoramico-arequipa.webp";
 import { Icon } from "astro-icon/components";
 
 export const getStaticPaths = (async ({ paginate }) => {
-  const res = await fetch("https://wp.farawayexplorers.com/wp-json/wp/v2/tour?categories=2&_embed");
+  const res = await fetch(`${import.meta.env.PUBLIC_WP_API_URL}/wp/v2/tour?categories=2&_embed`);
   const data = await res.json();
   return paginate(data, { pageSize: 12 });
 }) satisfies GetStaticPaths;
@@ -15,7 +15,7 @@ const basePath = "arequipa";
 
 let yoastHead: string | undefined;
 try {
-  const yoastRes = await fetch(`https://wp.farawayexplorers.com/wp-json/wp/v2/categories?slug=${basePath}`);
+  const yoastRes = await fetch(`${import.meta.env.PUBLIC_WP_API_URL}/wp/v2/categories?slug=${basePath}`);
   if (yoastRes.ok) {
     const yoastData = await yoastRes.json();
     yoastHead = (yoastData?.[0]?.yoast_head as string | undefined)?.replace(/wp\.farawayexplorers\.com/g, 'farawayexplorers.com');

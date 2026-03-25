@@ -7,7 +7,7 @@ import defaultImage from "../../assets/default.webp";
 interface PostSlug { slug: string }
 
 export const getStaticPaths = (async () => {
-  const res  = await fetch("https://wp.farawayexplorers.com/wp-json/wp/v2/blog?per_page=100&_fields=slug");
+  const res  = await fetch(`${import.meta.env.PUBLIC_WP_API_URL}/wp/v2/blog?per_page=100&_fields=slug`);
   const data = await res.json();
   return data.map((post: PostSlug) => ({ params: { slug: post.slug } }));
 }) satisfies GetStaticPaths;
@@ -15,7 +15,7 @@ export const getStaticPaths = (async () => {
 const { slug } = Astro.params;
 
 // Post actual
-const res     = await fetch(`https://wp.farawayexplorers.com/wp-json/wp/v2/blog?slug=${slug}&_embed`);
+const res     = await fetch(`${import.meta.env.PUBLIC_WP_API_URL}/wp/v2/blog?slug=${slug}&_embed`);
 const [post]  = await res.json();
 
 // SEO desde Yoast
@@ -62,7 +62,7 @@ const encodedPostUrl = encodeURIComponent(postUrl);
 // Posts relacionados (misma categoría)
 
 let relatedPosts: any[] = [];
-  const relRes  = await fetch(`https://wp.farawayexplorers.com/wp-json/wp/v2/blog?exclude=${post.id}&per_page=3&_embed&_fields=id,slug,title,date,_links,_embedded`);
+  const relRes  = await fetch(`${import.meta.env.PUBLIC_WP_API_URL}/wp/v2/blog?exclude=${post.id}&per_page=3&_embed&_fields=id,slug,title,date,_links,_embedded`);
   relatedPosts  = await relRes.json();
 ---
 
