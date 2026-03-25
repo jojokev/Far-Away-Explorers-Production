@@ -13,7 +13,7 @@ const res = await fetch(`${import.meta.env.PUBLIC_WP_API_URL}/wp/v2/tour?categor
 const raw = await res.json();
 const data = raw.map((tour: any) => ({
   ...tour,
-  link: tour.link?.replace(/wp\.farawayexplorers\.com/g, 'farawayexplorers.com') ?? '#',
+  link: tour.link?.replace(/travel\.farawayexplorers\.com/g, 'farawayexplorers.com') ?? '#',
 }));
 
 ---

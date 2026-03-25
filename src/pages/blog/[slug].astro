@@ -20,7 +20,7 @@ const [post]  = await res.json();
 
 // SEO desde Yoast
 const rawYoastHead = post.yoast_head as string | undefined;
-const yoastHead = rawYoastHead?.replace(/wp\.farawayexplorers\.com/g, 'farawayexplorers.com');
+const yoastHead = rawYoastHead?.replace(/travel\.farawayexplorers\.com/g, 'farawayexplorers.com');
 const seo = {
   title:       `${post.title.rendered} | Blog - Far Away Explorers`,
   description: post.excerpt?.rendered?.replace(/<[^>]*>/g, "").trim(),
