@@ -15,8 +15,12 @@ const {
 	twitterImage,
 	noindex = false,
 	schema,
-	yoastHead,
+	yoastHead: rawYoastHead,
 } = Astro.props;
+
+const yoastHead = rawYoastHead
+	?.replace(/wp\.farawayexplorers\.com/g, 'farawayexplorers.com')
+	?.replace(/travel\.farawayexplorers\.com/g, 'farawayexplorers.com');
 
 const resolvedOgTitle = ogTitle ?? title;
 const resolvedOgDesc  = ogDescription ?? description;
