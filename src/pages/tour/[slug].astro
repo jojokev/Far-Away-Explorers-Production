@@ -111,12 +111,8 @@ if (categoryId) {
       <div class="tour-title__inner">
         <h1 class="tour-title__heading">{data.title_plain}</h1>
         <div class="text-page">
-          <p>
-            Embárcate en una aventura única hacia la Laguna Humantay, ubicada a 3,880 metros de altitud.
-            Explora sus cristalinas aguas rodeadas de imponentes montañas, conecta con la tradición andina y
-            disfruta de paisajes naturales únicos. <a href="#">Enlace</a> Este viaje es perfecto para quienes buscan escapar del
-            bullicio de la ciudad y respirar la pureza de los Andes.
-          </p>
+          <div class="text-page" set:html={data.descripcion_formatted}>
+          </div>
         </div>
       </div>
     </div>
