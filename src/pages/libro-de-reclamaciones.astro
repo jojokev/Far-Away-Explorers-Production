@@ -1,6 +1,7 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import { Icon } from "astro-icon/components";
+import AntiSpamFields from "../components/AntiSpamFields.astro";
 
 let yoastHead: string | undefined;
 try {
@@ -209,6 +210,8 @@ const seo = {
                   ></textarea>
                 </div>
               </fieldset>
+
+              <AntiSpamFields />
 
               <!-- Feedback error -->
               <div class="lr-form__feedback lr-form__feedback--error" id="lr-error" role="alert" aria-live="polite">
@@ -850,11 +853,14 @@ const seo = {
 </style>
 
 <script>
+  import { setupAntiSpam } from "../lib/antispam";
+
   const form      = document.getElementById("lr-form") as HTMLFormElement;
   const submitBtn = document.getElementById("lr-submit") as HTMLButtonElement;
   const errorBox  = document.getElementById("lr-error")!;
   const errorMsg  = document.getElementById("lr-error-msg")!;
   const success   = document.getElementById("lr-success")!;
+  const antispam  = form ? setupAntiSpam(form, "reclamaciones") : null;
 
   form?.addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -873,6 +879,8 @@ const seo = {
     fd.forEach((val, key) => { payload[key] = val.toString(); });
 
     try {
+      await antispam?.prepare(payload);
+
       const res = await fetch(
         `${import.meta.env.PUBLIC_WP_API_URL}/faraway/v1/libro-reclamaciones`,
         {
@@ -896,6 +904,7 @@ const seo = {
     } finally {
       submitBtn.classList.remove("lr-form__submit--loading");
       submitBtn.disabled = false;
+      antispam?.reset();
     }
   });
 </script>

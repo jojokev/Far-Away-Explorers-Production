@@ -4,6 +4,7 @@ import Layout from "../../layouts/Layout.astro";
 import defaultImage from "../../assets/default.webp";
 import GalleryTour from "../../components/GalleryTour.astro";
 import { Icon } from "astro-icon/components";
+import AntiSpamFields from "../../components/AntiSpamFields.astro";
 
 interface tourSlug { slug: String }
 
@@ -444,6 +445,8 @@ if (categoryId) {
         <label for="booking-message">Mensaje (opcional)</label>
         <textarea id="booking-message" name="message" rows="4" placeholder="Cuéntanos sobre tu viaje ideal..."></textarea>
       </div>
+
+      <AntiSpamFields />
 
       <div class="booking-form__feedback booking-form__feedback--error" id="booking-error" role="alert" aria-live="polite">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
@@ -1211,6 +1214,8 @@ if (categoryId) {
 </style>
 
 <script>
+  import { setupAntiSpam } from "../../lib/antispam";
+
   // ─── Tabs ────────────────────────────────────────────────────────────────────
   const tabsRoots      = document.querySelectorAll("[data-tabs-root]");
   const tabFadeDuration = 220;
@@ -1264,6 +1269,7 @@ if (categoryId) {
   const bookingErrorMsg = document.getElementById("booking-error-msg")!;
   const bookingSuccess = document.getElementById("booking-success")!;
   const successClose   = document.getElementById("booking-success-close");
+  const antispam       = bookingForm ? setupAntiSpam(bookingForm, "booking") : null;
 
   const openDialog = (e: Event) => {
     e.preventDefault();
@@ -1274,6 +1280,7 @@ if (categoryId) {
     bookingForm.style.display = "";
     bookingDialog?.showModal();
     document.body.style.overflow = "hidden";
+    antispam?.render(); // Turnstile se crea ahora que el formulario es visible
   };
   const closeDialog = () => { bookingDialog?.close(); };
 
@@ -1302,6 +1309,8 @@ if (categoryId) {
     fd.forEach((val, key) => { payload[key] = val.toString(); });
 
     try {
+      await antispam?.prepare(payload);
+
       const res = await fetch(
         `${import.meta.env.PUBLIC_WP_API_URL}/faraway/v1/booking`,
         {
@@ -1322,6 +1331,7 @@ if (categoryId) {
     } finally {
       bookingSubmit.classList.remove("booking-form__btn--submit--loading");
       bookingSubmit.disabled = false;
+      antispam?.reset();
     }
   });
 </script>

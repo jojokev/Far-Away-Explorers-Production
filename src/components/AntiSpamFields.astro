@@ -1,0 +1,21 @@
+---
+// Campos anti-spam para poner DENTRO de un <form>. La lógica está en src/lib/antispam.ts.
+// - Honeypot "website": invisible para personas; si un bot lo llena, el servidor descarta el envío.
+// - Contenedor de Cloudflare Turnstile (normalmente invisible).
+---
+
+<div class="fa-hp" aria-hidden="true">
+  <label>No llenar este campo <input type="text" name="website" tabindex="-1" autocomplete="off" value="" /></label>
+</div>
+<div class="fa-turnstile" data-fa-turnstile></div>
+
+<style>
+  .fa-hp {
+    position: absolute !important;
+    left: -10000px !important;
+    top: auto !important;
+    width: 1px !important;
+    height: 1px !important;
+    overflow: hidden !important;
+  }
+</style>

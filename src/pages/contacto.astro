@@ -1,6 +1,7 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import { Icon } from "astro-icon/components";
+import AntiSpamFields from "../components/AntiSpamFields.astro";
 
 const contactInfo = [
   { icon: "ion:call-outline", label: "Teléfono", value: "+51 900 086 730", href: "tel:+51900086730" },
@@ -132,6 +133,7 @@ const seo = {
                 <label for="contact-message" class="contact-form__label">Mensaje</label>
                 <textarea id="contact-message" name="message" class="contact-form__input contact-form__textarea" placeholder="Cuéntanos sobre tu viaje ideal..." rows="5" required></textarea>
               </div>
+              <AntiSpamFields />
               <button type="submit" class="contact-form__submit" id="contact-submit">
                 <span class="contact-form__submit-idle">
                   <Icon name="ion:send-outline" class="contact-form__submit-icon" aria-hidden="true" />
@@ -672,6 +674,8 @@ const seo = {
 </style>
 
 <script>
+  import { setupAntiSpam } from "../lib/antispam";
+
   async function sendForm(data: Record<string, string>) {
     const res = await fetch(
       `${import.meta.env.PUBLIC_WP_API_URL}/faraway/v1/contact`,
@@ -691,6 +695,7 @@ const seo = {
   const success = document.getElementById("contact-success")!;
   const error   = document.getElementById("contact-error")!;
   const errorMsg = document.getElementById("contact-error-msg")!;
+  const antispam = setupAntiSpam(form, "contact");
 
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -708,6 +713,7 @@ const seo = {
     fd.forEach((val, key) => { payload[key] = val.toString(); });
 
     try {
+      await antispam.prepare(payload);
       await sendForm(payload);
       form.reset();
       success.classList.add("contact-form__feedback--visible");
@@ -719,6 +725,7 @@ const seo = {
     } finally {
       btn.classList.remove("contact-form__submit--loading");
       btn.removeAttribute("disabled");
+      antispam.reset();
     }
   });
 </script>
